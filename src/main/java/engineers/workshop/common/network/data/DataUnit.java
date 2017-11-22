@@ -1,6 +1,6 @@
 package engineers.workshop.common.network.data;
 
-import engineers.workshop.client.page.unit.Unit;
+import engineers.workshop.common.unit.Unit;
 import engineers.workshop.common.table.TileTable;
 import net.minecraft.nbt.NBTTagCompound;
 

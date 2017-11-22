@@ -1,4 +1,4 @@
-package engineers.workshop.client.page.unit;
+package engineers.workshop.common.unit;
 
 import engineers.workshop.client.container.slot.storage.SlotUnitStorage;
 import engineers.workshop.client.page.Page;

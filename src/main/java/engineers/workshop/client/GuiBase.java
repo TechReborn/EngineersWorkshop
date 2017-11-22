@@ -4,12 +4,12 @@ import engineers.workshop.client.container.slot.SlotBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,8 +52,8 @@ public abstract class GuiBase extends GuiContainer {
 
 	public void prepare() {
 		mc.getTextureManager().bindTexture(ELEMENTS);
-		GL11.glColor4f(1, 1, 1, 1);
-		GL11.glDisable(GL11.GL_LIGHTING);
+		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.disableLighting();
 	}
 
 	public boolean inBounds(int x, int y, int w, int h, int mX, int mY) {
@@ -69,11 +69,11 @@ public abstract class GuiBase extends GuiContainer {
 	}
 
 	public void drawString(String str, int x, int y, float multiplier, int color) {
-		GL11.glPushMatrix();
-		GL11.glScalef(multiplier, multiplier, 1F);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(multiplier, multiplier, 1F);
 		fontRenderer.drawString(str, (int) (x / multiplier), (int) (y / multiplier), color);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public void drawCenteredString(String str, int x, int y, int width, float multiplier, int color) {
@@ -137,12 +137,12 @@ public abstract class GuiBase extends GuiContainer {
 	}
 
 	public void drawCursor(int x, int y, int z, float size, int color) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef(x, y, z);
-		GL11.glScalef(size, size, 0);
-		GL11.glTranslatef(-x, -y, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
+		GlStateManager.scale(size, size, 0);
+		GlStateManager.translate(-x, -y, 0);
 		Gui.drawRect(x, y + 1, x + 1, y + 10, color);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public void drawMouseOver(String str) {
@@ -201,8 +201,8 @@ public abstract class GuiBase extends GuiContainer {
 			y = this.height - h - 6 - guiTop;
 		}
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef(0, 0, 300);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0, 300);
 		this.zLevel = 300.0F;
 		int bg = -267386864;
 		this.drawGradientRect(x - 3, y - 4, x + w + 3, y - 3, bg, bg);
@@ -216,7 +216,7 @@ public abstract class GuiBase extends GuiContainer {
 		this.drawGradientRect(x + w + 2, y - 3 + 1, x + w + 3, y + h + 3 - 1, border1, border2);
 		this.drawGradientRect(x - 3, y - 3, x + w + 3, y - 3 + 1, border1, border1);
 		this.drawGradientRect(x - 3, y + h + 2, x + w + 3, y + h + 3, border2, border2);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GlStateManager.disableDepth();
 
 		for (int i = 0; i < mouseOver.size(); i++) {
 			String line = mouseOver.get(i);
@@ -230,9 +230,9 @@ public abstract class GuiBase extends GuiContainer {
 		}
 
 		this.zLevel = 0.0F;
-		GL11.glPopMatrix();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.popMatrix();
+		GlStateManager.enableDepth();
+		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 
 	public String getItemName(ItemStack item) {

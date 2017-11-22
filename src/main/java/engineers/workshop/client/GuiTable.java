@@ -10,8 +10,8 @@ import engineers.workshop.common.table.TileTable;
 import engineers.workshop.common.util.helpers.ColorHelper;
 import engineers.workshop.common.util.helpers.FormattingHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,13 +42,13 @@ public class GuiTable extends GuiBase {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int mX, int mY) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef(guiLeft, guiTop, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(guiLeft, guiTop, 0);
 		mX -= guiLeft;
 		mY -= guiTop;
 
 		mc.getTextureManager().bindTexture(BACKGROUND);
-		GL11.glColor3ub((byte) 255, (byte) 255, (byte) 255);
+		GlStateManager.color(1F, 1F, 1F);
 		drawTexturedModalRect(0, 0, 0, 0, xSize, ySize);
 
 		drawSlots();
@@ -59,7 +59,7 @@ public class GuiTable extends GuiBase {
 		} else {
 			table.getMenu().draw(this, mX, mY);
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override
@@ -177,7 +177,7 @@ public class GuiTable extends GuiBase {
 
 		int height = POWER_INNER_HEIGHT * containerTable.power / table.maxFuel;
 		int offset = POWER_INNER_HEIGHT - height;
-		GL11.glColor3f(ColorHelper.getRed(containerTable.power, getTable().maxFuel), ColorHelper.getGreen(containerTable.power, getTable().maxFuel), ColorHelper.getBlue(containerTable.power, getTable().maxFuel));
+		GlStateManager.color(ColorHelper.getRed(containerTable.power, getTable().maxFuel), ColorHelper.getGreen(containerTable.power, getTable().maxFuel), ColorHelper.getBlue(containerTable.power, getTable().maxFuel));
 		drawRect(POWER_X + POWER_INNER_OFFSET_X, POWER_Y + POWER_INNER_OFFSET_Y + offset, POWER_INNER_SRC_X, POWER_INNER_SRC_Y + offset, POWER_INNER_WIDTH, height);
 		drawRect(POWER_X, POWER_Y + POWER_INNER_OFFSET_Y + offset - 1, POWER_SRC_X, POWER_SRC_Y - 1, POWER_WIDTH, 1);
 		int srcX = POWER_SRC_X;
@@ -185,7 +185,7 @@ public class GuiTable extends GuiBase {
 		if (hover)
 			srcX += POWER_WIDTH;
 		drawRect(POWER_X, POWER_Y, srcX, POWER_SRC_Y, POWER_WIDTH, POWER_HEIGHT);
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		GlStateManager.color(1.0f, 1.0f, 1.0f);
 
 		if (hover) {
 			String str = ColorHelper.getPowerColor(containerTable.power, getTable().maxFuel) + "Fuel: " + FormattingHelper.formatNumber(containerTable.power) + " / " + FormattingHelper.formatNumber((int) table.maxFuel);

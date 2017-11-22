@@ -1,7 +1,7 @@
 package engineers.workshop.client.container.slot;
 
 import engineers.workshop.client.page.Page;
-import engineers.workshop.client.page.unit.Unit;
+import engineers.workshop.common.unit.Unit;
 import engineers.workshop.common.table.TileTable;
 import net.minecraft.item.ItemStack;
 

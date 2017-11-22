@@ -1,4 +1,4 @@
-package engineers.workshop.client.page.unit;
+package engineers.workshop.common.unit;
 
 import engineers.workshop.client.GuiBase;
 import engineers.workshop.client.container.slot.crafting.SlotUnitCraftingGrid;

@@ -4,7 +4,7 @@ public class Reference {
 
 	public static final class Info {
 		public static final String MODID = "engineersworkshop";
-		public static final String NAME = "Engineers Workshop";
+		public static final String NAME = "Engineers Workshop Reborn";
 	}
 
 	public static final class Paths {

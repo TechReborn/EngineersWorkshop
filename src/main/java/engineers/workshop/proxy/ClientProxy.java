@@ -19,11 +19,6 @@ import static engineers.workshop.common.util.Reference.Info.MODID;
 public class ClientProxy extends CommonProxy {
 
 	@Override
-	public Side getSide() {
-		return Side.CLIENT;
-	}
-
-	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		MinecraftForge.EVENT_BUS.register(new EventLoader());
@@ -32,16 +27,6 @@ public class ClientProxy extends CommonProxy {
 			ModelLoader.setCustomModelResourceLocation(ItemLoader.itemUpgrade, i, new ModelResourceLocation(MODID + ":upgrades/" + upgrades[i].getName()));
 		}
 		BlockLoader.registerModels();
-	}
-
-	@Override
-	public void init(FMLInitializationEvent event) {
-		super.init(event);
-	}
-
-	@Override
-	public void postInit(FMLPostInitializationEvent event) {
-		super.postInit(event);
 	}
 
 	@Override

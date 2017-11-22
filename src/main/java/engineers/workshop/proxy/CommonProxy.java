@@ -13,10 +13,6 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonProxy {
 
-	public Side getSide() {
-		return Side.SERVER;
-	}
-
 	public void preInit(FMLPreInitializationEvent event) {
 
 		RecipeLoader.loadRecipes();
@@ -27,8 +23,6 @@ public class CommonProxy {
 		NetworkRegistry.INSTANCE.registerGuiHandler(EngineersWorkshop.instance, new GuiHandler());
 
 	}
-
-	public void postInit(FMLPostInitializationEvent event) {}
 
 	public EntityPlayer getPlayer() {
 		throw new RuntimeException("Not supported on the server");

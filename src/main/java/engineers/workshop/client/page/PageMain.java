@@ -1,10 +1,10 @@
 package engineers.workshop.client.page;
 
 import engineers.workshop.client.GuiBase;
-import engineers.workshop.client.page.unit.Unit;
-import engineers.workshop.client.page.unit.UnitCraft;
-import engineers.workshop.client.page.unit.UnitSmelt;
-import engineers.workshop.client.page.unit.UnitStorage;
+import engineers.workshop.common.unit.Unit;
+import engineers.workshop.common.unit.UnitCraft;
+import engineers.workshop.common.unit.UnitSmelt;
+import engineers.workshop.common.unit.UnitStorage;
 import engineers.workshop.common.table.TileTable;
 
 import java.util.ArrayList;

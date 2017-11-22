@@ -2,7 +2,7 @@ package engineers.workshop.client.container.slot.crafting;
 
 import engineers.workshop.client.container.slot.SlotUnit;
 import engineers.workshop.client.page.Page;
-import engineers.workshop.client.page.unit.UnitCraft;
+import engineers.workshop.common.unit.UnitCraft;
 import engineers.workshop.common.table.TileTable;
 import net.minecraft.item.ItemStack;
 

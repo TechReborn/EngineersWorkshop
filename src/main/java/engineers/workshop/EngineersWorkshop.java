@@ -9,11 +9,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import reborncore.RebornCore;
 import reborncore.common.network.RegisterPacketEvent;
 
 import static engineers.workshop.common.util.Reference.Info.MODID;
@@ -43,14 +45,14 @@ public class EngineersWorkshop {
 		proxy.init(event);
 	}
 
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		proxy.postInit(event);
-	}
-
 	@SubscribeEvent
 	public void packetEvent(RegisterPacketEvent event) {
 		event.registerPacket(DataPacket.class, Side.SERVER);
 		event.registerPacket(DataPacket.class, Side.CLIENT);
+	}
+
+	@Mod.EventHandler
+	public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
+		RebornCore.proxy.invalidFingerprints.add("Invalid fingerprint detected for Engineers Workshop Reborn!");
 	}
 }

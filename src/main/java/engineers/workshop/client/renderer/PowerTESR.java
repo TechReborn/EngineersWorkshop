@@ -7,9 +7,8 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 /**
  * Created by EwyBoy
  */
+//TODO get rid of this, and either replace it with a static render, or use block models.
 public class PowerTESR extends TileEntitySpecialRenderer<TileTable> {
-
-	//(double) te.getStoredPower() / (double) te.getCapacity()
 
 	@Override
 	public void render(TileTable te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
