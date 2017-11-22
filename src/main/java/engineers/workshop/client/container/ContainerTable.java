@@ -190,8 +190,8 @@ public class ContainerTable extends ContainerBase {
 
 		for (int i = 0; i < this.listeners.size(); ++i) {
 			IContainerListener icontainerlistener = this.listeners.get(i);
-			if (this.power != table.getPower()) {
-				icontainerlistener.sendWindowProperty(this, 0, table.getPower());
+			if (this.power != table.getFuel()) {
+				icontainerlistener.sendWindowProperty(this, 0, table.getFuel());
 			}
 		}
 	}

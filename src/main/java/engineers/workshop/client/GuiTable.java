@@ -175,9 +175,9 @@ public class GuiTable extends GuiBase {
 
 		drawRect(POWER_X + POWER_INNER_OFFSET_X, POWER_Y + POWER_INNER_OFFSET_Y, POWER_INNER_SRC_X + POWER_INNER_WIDTH, POWER_INNER_SRC_Y, POWER_INNER_WIDTH, POWER_INNER_HEIGHT);
 
-		int height = POWER_INNER_HEIGHT * containerTable.power / table.maxPower;
+		int height = POWER_INNER_HEIGHT * containerTable.power / table.maxFuel;
 		int offset = POWER_INNER_HEIGHT - height;
-		GL11.glColor3f(ColorHelper.getRed(containerTable.power, getTable().maxPower), ColorHelper.getGreen(containerTable.power, getTable().maxPower), ColorHelper.getBlue(containerTable.power, getTable().maxPower));
+		GL11.glColor3f(ColorHelper.getRed(containerTable.power, getTable().maxFuel), ColorHelper.getGreen(containerTable.power, getTable().maxFuel), ColorHelper.getBlue(containerTable.power, getTable().maxFuel));
 		drawRect(POWER_X + POWER_INNER_OFFSET_X, POWER_Y + POWER_INNER_OFFSET_Y + offset, POWER_INNER_SRC_X, POWER_INNER_SRC_Y + offset, POWER_INNER_WIDTH, height);
 		drawRect(POWER_X, POWER_Y + POWER_INNER_OFFSET_Y + offset - 1, POWER_SRC_X, POWER_SRC_Y - 1, POWER_WIDTH, 1);
 		int srcX = POWER_SRC_X;
@@ -188,7 +188,7 @@ public class GuiTable extends GuiBase {
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 
 		if (hover) {
-			String str = ColorHelper.getPowerColor(containerTable.power, getTable().maxPower) + "Fuel: " + FormattingHelper.formatNumber(containerTable.power) + " / " + FormattingHelper.formatNumber((int) table.maxPower);
+			String str = ColorHelper.getPowerColor(containerTable.power, getTable().maxFuel) + "Fuel: " + FormattingHelper.formatNumber(containerTable.power) + " / " + FormattingHelper.formatNumber((int) table.maxFuel);
 			drawMouseOver(str);
 		}
 	}

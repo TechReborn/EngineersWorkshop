@@ -57,20 +57,20 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 
 	private GuiMenu menu;
 
-	private int power;
-	public int maxPower = 8000;
+	private int fuel;
+	public int maxFuel = 8000;
 	private SlotFuel fuelSlot;
 
-	public int getPower() {
-		return power;
+	public int getFuel() {
+		return fuel;
 	}
 
 	public void setCapacity(int newCap) {
-		this.maxPower = newCap;
+		this.maxFuel = newCap;
 	}
 
-	public void setPower(int power) {
-		this.power = power;
+	public void setFuel(int fuel) {
+		this.fuel = fuel;
 	}
 
 	public TileTable() {
@@ -498,9 +498,6 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 		}
 	}
 
-	// TODO: updateFuel bookmark
-	private int lastPower;
-
 	private void updateFuel() {
 		if (lastLit != lit) {
 			lastLit = lit;
@@ -510,8 +507,8 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 		ItemStack fuel = fuelSlot.getStack();
 		if (!fuel.isEmpty() && fuelSlot.isItemValid(fuel)) {
 			int fuelLevel = TileEntityFurnace.getItemBurnTime(fuel);
-			if (fuelLevel > 0 && fuelLevel + power <= maxPower) {
-				power += fuelLevel;
+			if (fuelLevel > 0 && fuelLevel + this.fuel <= maxFuel) {
+				this.fuel += fuelLevel;
 				if (fuel.getItem().hasContainerItem(fuel)) {
 					fuelSlot.putStack(fuel.getItem().getContainerItem(fuel).copy());
 				} else {
@@ -520,10 +517,8 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 			}
 		}
 
-		if (power > maxPower)
-			power = maxPower;
-		if (power != lastPower)
-			lastPower = power;
+		if (this.fuel > maxFuel)
+			this.fuel = maxFuel;
 	}
 
 	public void onUpgradeChangeDistribute() {
@@ -624,7 +619,7 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 	private static final String NBT_INPUT = "input";
 	private static final String NBT_OUTPUT = "output";
 	private static final String NBT_SLOT = "slot";
-	private static final String NBT_POWER = "power";
+	private static final String NBT_POWER = "fuel";
 	private static final String NBT_MAX_POWER = "max_power";
 	private static final int COMPOUND_ID = 10;
 
@@ -648,8 +643,8 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		compound.setInteger(NBT_POWER, power);
-		compound.setInteger(NBT_MAX_POWER, maxPower);
+		compound.setInteger(NBT_POWER, fuel);
+		compound.setInteger(NBT_MAX_POWER, maxFuel);
 
 		NBTTagList itemList = new NBTTagList();
 		for (int i = 0; i < items.size(); i++) {
@@ -695,8 +690,8 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		power = compound.getInteger(NBT_POWER);
-		maxPower = compound.getInteger(NBT_MAX_POWER);
+		fuel = compound.getInteger(NBT_POWER);
+		maxFuel = compound.getInteger(NBT_MAX_POWER);
 
 		items = NonNullList.withSize(getSizeInventory(), ItemStack.EMPTY);
 

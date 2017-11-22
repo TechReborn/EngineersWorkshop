@@ -49,7 +49,7 @@ public class TextureRenderer {
 	 * @param z2 The max Z position.
 	 */
 	public static void renderTexture(TileTable te, BlockPos pos, double x, double y, double z, double x1, double y1, double z1, double x2, double y2, double z2) {
-		renderTexture(pos, x, y, z, x1, y1, z1, x2, y2, z2, ColorHelper.getRGB(te.getPower(), te.maxPower));
+		renderTexture(pos, x, y, z, x1, y1, z1, x2, y2, z2, ColorHelper.getRGB(te.getFuel(), te.maxFuel));
 	}
 
 	/**

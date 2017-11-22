@@ -163,8 +163,8 @@ public abstract class Unit {
 						} else {
 							int powerConsumption = getPowerConsumption(false);
 
-							if (table.getPower() >= powerConsumption) {
-								table.setPower(table.getPower() - powerConsumption);
+							if (table.getFuel() >= powerConsumption) {
+								table.setFuel(table.getFuel() - powerConsumption);
 								productionProgress += getProductionSpeed(false);
 								while (productionProgress >= PRODUCTION_TIME) {
 									productionProgress -= PRODUCTION_TIME;
@@ -195,8 +195,8 @@ public abstract class Unit {
 				while (canCharge() && !done) {
 					done = true;
 					int powerConsumption = getPowerConsumption(true);
-					if (table.getPower() >= powerConsumption) {
-						table.setPower(table.getPower() - powerConsumption);
+					if (table.getFuel() >= powerConsumption) {
+						table.setFuel(table.getFuel() - powerConsumption);
 						productionProgress += getProductionSpeed(true);
 						if (productionProgress >= PRODUCTION_TIME) {
 							productionProgress -= PRODUCTION_TIME;
