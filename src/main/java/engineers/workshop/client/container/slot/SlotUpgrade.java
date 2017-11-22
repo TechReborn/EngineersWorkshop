@@ -44,7 +44,8 @@ public class SlotUpgrade extends SlotTable {
 
 	private boolean isUpgradeItem(ItemStack itemstack) {
 		Upgrade upgrade = ItemUpgrade.getUpgrade(itemstack);
-		return upgrade != null && upgrade.isValid(main != null ? main.getStack() : ItemStack.EMPTY) && (upgrade.getDependency() == null || table.getUpgradePage().getUpgradeCount(upgradeSection, upgrade.getDependency()) > 0);
+		return upgrade != null && upgrade.isValid(
+			main != null ? main.getStack() : ItemStack.EMPTY) && (upgrade.getDependency() == null || table.getUpgradePage().getUpgradeCount(upgradeSection, upgrade.getDependency()) > 0);
 	}
 
 	private boolean isMainItem(ItemStack stack) {

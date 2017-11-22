@@ -133,7 +133,6 @@ public class BlockTable extends Block implements ITileEntityProvider {
 		}
 		return true;
 	}
-	
 
 	@Override
 	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
@@ -160,22 +159,22 @@ public class BlockTable extends Block implements ITileEntityProvider {
 			 * inventory.getSizeInventory(); i++) { ItemStack itemStack =
 			 * inventory.getStackInSlot(i); if (itemStack != null &&
 			 * itemStack.stackSize > 0) { Random random = new Random();
-			 * 
+			 *
 			 * float dX = random.nextFloat() * 0.8F + 0.1F; float dY =
 			 * random.nextFloat() * 0.8F + 0.1F; float dZ = random.nextFloat() *
 			 * 0.8F + 0.1F;
-			 * 
+			 *
 			 * EntityItem entityItem = new EntityItem(world, (double) ((float) x
 			 * + dX), (double) ((float) y + dY), (double) ((float) z + dZ),
 			 * itemStack.copy()); if (itemStack.hasTagCompound()) {
 			 * entityItem.getEntityItem().setTagCompound(itemStack.getTagCompound().copy());
 			 * } float factor = 0.05F;
-			 * 
+			 *
 			 * entityItem.motionX = random.nextGaussian() * (double) factor;
 			 * entityItem.motionX = random.nextGaussian() * (double) factor +
 			 * 0.2D; entityItem.motionX = random.nextGaussian() * (double)
 			 * factor;
-			 * 
+			 *
 			 * world.spawnEntityInWorld(entityItem); itemStack.stackSize = 0; }
 			 * } }
 			 */
@@ -192,7 +191,7 @@ public class BlockTable extends Block implements ITileEntityProvider {
 							float dZ = random.nextFloat() * 0.8F + 0.1F;
 
 							EntityItem entityItem = new EntityItem(world, (double) ((float) x + dX),
-									(double) ((float) y + dY), (double) ((float) z + dZ), itemStack.copy());
+								(double) ((float) y + dY), (double) ((float) z + dZ), itemStack.copy());
 							if (itemStack.hasTagCompound()) {
 								entityItem.getItem().setTagCompound(itemStack.getTagCompound().copy());
 							}

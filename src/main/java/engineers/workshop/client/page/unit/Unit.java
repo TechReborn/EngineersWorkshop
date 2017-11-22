@@ -1,10 +1,5 @@
 package engineers.workshop.client.page.unit;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import engineers.workshop.client.GuiBase;
 import engineers.workshop.client.container.slot.SlotBase;
 import engineers.workshop.client.page.Page;
@@ -16,6 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Unit {
 
@@ -53,7 +52,7 @@ public abstract class Unit {
 			GL11.glColor4f(0.11F, 0.35F, 0.17F, 1);
 			int count = Math.min(chargeCount, max);
 			gui.drawRect(this.x + x, this.y + y, ARROW_SRC_X, ARROW_SRC_Y + ARROW_HEIGHT, count * ARROW_WIDTH / max,
-					ARROW_HEIGHT);
+				ARROW_HEIGHT);
 		}
 
 		if (isCharging()) {
@@ -65,7 +64,7 @@ public abstract class Unit {
 		}
 		int progress = Math.min(productionProgress, PRODUCTION_TIME);
 		gui.drawRect(this.x + x, this.y + y + PROGRESS_OFFSET, ARROW_SRC_X, ARROW_SRC_Y + ARROW_HEIGHT,
-				progress * ARROW_WIDTH / PRODUCTION_TIME, ARROW_HEIGHT);
+			progress * ARROW_WIDTH / PRODUCTION_TIME, ARROW_HEIGHT);
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 

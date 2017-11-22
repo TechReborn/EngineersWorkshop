@@ -3,9 +3,9 @@ package engineers.workshop.client.container.slot;
 public enum SlotValidity {
 
 	BOTH(true, true),
-    INPUT(true, false),
-    OUTPUT(false, true),
-    NONE(false, false);
+	INPUT(true, false),
+	OUTPUT(false, true),
+	NONE(false, false);
 
 	private boolean isInput;
 	private boolean isOutput;

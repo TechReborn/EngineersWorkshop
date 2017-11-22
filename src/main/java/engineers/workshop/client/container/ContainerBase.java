@@ -14,8 +14,6 @@ import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /*
     This is a client and therefore extends Container, however, to clean it all up all the Container code is included
@@ -27,71 +25,71 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public abstract class ContainerBase extends Container {
 
-    @SideOnly(Side.CLIENT)
-    private short transactionID;
+	@SideOnly(Side.CLIENT)
+	private short transactionID;
 
 	private int dragMouseButton = -1;
-    private int dragMode;
-    private final Set<Slot> draggedSlots = new HashSet<>();
+	private int dragMode;
+	private final Set<Slot> draggedSlots = new HashSet<>();
 
-    private Set<EntityPlayer> invalidPlayers = new HashSet<>();
+	private Set<EntityPlayer> invalidPlayers = new HashSet<>();
 
-    private List<ItemStack> getItems() {
-        return inventoryItemStacks;
-    }
+	private List<ItemStack> getItems() {
+		return inventoryItemStacks;
+	}
 
-    private List<Slot> getSlots() {
-        return inventorySlots;
-    }
+	private List<Slot> getSlots() {
+		return inventorySlots;
+	}
 
-    @Override
-    protected Slot addSlotToContainer(Slot slot) {
-        slot.slotNumber = this.inventorySlots.size();
-        getSlots().add(slot);
-        getItems().add(ItemStack.EMPTY);
-        return slot;
-    }
+	@Override
+	protected Slot addSlotToContainer(Slot slot) {
+		slot.slotNumber = this.inventorySlots.size();
+		getSlots().add(slot);
+		getItems().add(ItemStack.EMPTY);
+		return slot;
+	}
 
-    @Override
-    public NonNullList<ItemStack> getInventory() {
+	@Override
+	public NonNullList<ItemStack> getInventory() {
 
-	    NonNullList<ItemStack> result = NonNullList.create();
-	    getSlots().forEach(slot -> result.add(slot.getStack()));
-        return result;
-    }
+		NonNullList<ItemStack> result = NonNullList.create();
+		getSlots().forEach(slot -> result.add(slot.getStack()));
+		return result;
+	}
 
-    @Override
-    public boolean enchantItem(EntityPlayer player, int slotId) {
-        return false;
-    }
+	@Override
+	public boolean enchantItem(EntityPlayer player, int slotId) {
+		return false;
+	}
 
-    @Override
-    public Slot getSlot(int slotId) {
-        return getSlots().get(slotId);
-    }
+	@Override
+	public Slot getSlot(int slotId) {
+		return getSlots().get(slotId);
+	}
 
-    @Override
-    @Nonnull
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
-        return ItemStack.EMPTY;
-    }
+	@Override
+	@Nonnull
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
+		return ItemStack.EMPTY;
+	}
 
-    private static final int MOUSE_LEFT_CLICK = 0;
-    private static final int MOUSE_RIGHT_CLICK = 1;
+	private static final int MOUSE_LEFT_CLICK = 0;
+	private static final int MOUSE_RIGHT_CLICK = 1;
 
-    private static final int FAKE_SLOT_ID = -999;
+	private static final int FAKE_SLOT_ID = -999;
 
-    private static final int CLICK_MODE_NORMAL = 0;
-    private static final int CLICK_MODE_SHIFT = 1;
-    private static final int CLICK_MODE_KEY = 2;
-    private static final int CLICK_MODE_PICK_ITEM = 3;
-    private static final int CLICK_MODE_OUTSIDE = 4;
-    private static final int CLICK_DRAG_RELEASE = 5;
-    private static final int CLICK_MODE_DOUBLE_CLICK = 6;
+	private static final int CLICK_MODE_NORMAL = 0;
+	private static final int CLICK_MODE_SHIFT = 1;
+	private static final int CLICK_MODE_KEY = 2;
+	private static final int CLICK_MODE_PICK_ITEM = 3;
+	private static final int CLICK_MODE_OUTSIDE = 4;
+	private static final int CLICK_DRAG_RELEASE = 5;
+	private static final int CLICK_MODE_DOUBLE_CLICK = 6;
 
-    private static final int CLICK_DRAG_MODE_PRE = 0;
-    private static final int CLICK_DRAG_MODE_SLOT = 1;
-    private static final int CLICK_DRAG_MODE_POST = 2;
+	private static final int CLICK_DRAG_MODE_PRE = 0;
+	private static final int CLICK_DRAG_MODE_SLOT = 1;
+	private static final int CLICK_DRAG_MODE_POST = 2;
 
     /*@Override
     public ItemStack slotClick(int slotId, int mouseButton, ClickType clickMode, EntityPlayer player) {
@@ -385,144 +383,137 @@ public abstract class ContainerBase extends Container {
         return result;
     }*/
 
-    public static boolean canItemBePickedUp(Slot slot, ItemStack playerItem, boolean partiallyMove) {
-        if (slot != null && slot.getHasStack()) {
-            ItemStack slotItem = slot.getStack();
-            if (playerItem != null && playerItem.isItemEqual(slotItem) && ItemStack.areItemStackTagsEqual(slotItem, playerItem)) {
-                int moveSize = partiallyMove ? 0 : playerItem.getCount();
-                return slot.getStack().getCount() + moveSize <= playerItem.getMaxStackSize();
-            }else{
-                return false;
-            }
-        }else{
-            return true;
-        }
-    }
+	public static boolean canItemBePickedUp(Slot slot, ItemStack playerItem, boolean partiallyMove) {
+		if (slot != null && slot.getHasStack()) {
+			ItemStack slotItem = slot.getStack();
+			if (playerItem != null && playerItem.isItemEqual(slotItem) && ItemStack.areItemStackTagsEqual(slotItem, playerItem)) {
+				int moveSize = partiallyMove ? 0 : playerItem.getCount();
+				return slot.getStack().getCount() + moveSize <= playerItem.getMaxStackSize();
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
 
-    protected boolean canItemBePickedUpByDoubleClick(ItemStack itemStack, Slot slot) {
-        return true;
-    }
+	protected boolean canItemBePickedUpByDoubleClick(ItemStack itemStack, Slot slot) {
+		return true;
+	}
 
-    @Override
-    public void onCraftMatrixChanged(IInventory inventory) {
-        detectAndSendChanges();
-    }
+	@Override
+	public void onCraftMatrixChanged(IInventory inventory) {
+		detectAndSendChanges();
+	}
 
-    @Override
-    public void putStackInSlot(int slotId, ItemStack item) {
-        getSlot(slotId).putStack(item);
-    }
+	@Override
+	public void putStackInSlot(int slotId, ItemStack item) {
+		getSlot(slotId).putStack(item);
+	}
 
-//    @Override
-//    @SideOnly(Side.CLIENT)
-//    public void putStacksInSlots(ItemStack[] items) {
-//        for (int i = 0; i < items.length; ++i) {
-//            putStackInSlot(i, items[i]);
-//        }
-//    }
+	//    @Override
+	//    @SideOnly(Side.CLIENT)
+	//    public void putStacksInSlots(ItemStack[] items) {
+	//        for (int i = 0; i < items.length; ++i) {
+	//            putStackInSlot(i, items[i]);
+	//        }
+	//    }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void updateProgressBar(int id, int data) {}
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void updateProgressBar(int id, int data) {}
 
+	@SideOnly(Side.CLIENT)
+	public short getNextTransactionID(InventoryPlayer inventory) {
+		transactionID++;
+		return transactionID;
+	}
 
-    @SideOnly(Side.CLIENT)
-    public short getNextTransactionID(InventoryPlayer inventory) {
-        transactionID++;
-        return transactionID;
-    }
+	protected boolean isPlayerValid(EntityPlayer player) {
+		return !invalidPlayers.contains(player);
+	}
 
+	protected void setValidState(EntityPlayer player, boolean valid) {
+		if (valid) {
+			invalidPlayers.remove(player);
+		} else {
+			invalidPlayers.add(player);
+		}
+	}
 
-    protected boolean isPlayerValid(EntityPlayer player) {
-        return !invalidPlayers.contains(player);
-    }
+	@Override
+	public abstract boolean canInteractWith(EntityPlayer player);
 
+	@Override
+	protected boolean mergeItemStack(ItemStack item, int start, int end, boolean invert) {
+		boolean moved = false;
+		int index = start;
 
-    protected void setValidState(EntityPlayer player, boolean valid) {
-        if (valid) {
-            invalidPlayers.remove(player);
-        }else{
-            invalidPlayers.add(player);
-        }
-    }
+		if (invert) {
+			index = end - 1;
+		}
 
+		if (item.isStackable()) {
+			while (item.getCount() > 0 && (!invert && index < end || invert && index >= start)) {
+				Slot slot = getSlot(index);
+				ItemStack slotItem = slot.getStack();
 
-    @Override
-    public abstract boolean canInteractWith(EntityPlayer player);
+				if (!slotItem.isEmpty() && slotItem.getItem() == item.getItem() && (!item.getHasSubtypes() || item.getItemDamage() == slotItem.getItemDamage()) && ItemStack.areItemStackTagsEqual(item, slotItem)) {
+					int newSize = slotItem.getCount() + item.getCount();
 
-    @Override
-    protected boolean mergeItemStack(ItemStack item, int start, int end, boolean invert) {
-        boolean moved = false;
-        int index = start;
+					if (newSize <= item.getMaxStackSize()) {
+						item.setCount(0);
+						slotItem.setCount(newSize);
+						slot.onSlotChanged();
+						moved = true;
 
-        if (invert) {
-            index = end - 1;
-        }
+					} else if (slotItem.getCount() < item.getMaxStackSize()) {
+						item.shrink(item.getMaxStackSize() - slotItem.getCount());
+						slotItem.setCount(item.getMaxStackSize());
+						slot.onSlotChanged();
+						moved = true;
+					}
+				}
 
+				index += invert ? -1 : 1;
+			}
+		}
 
-        if (item.isStackable()) {
-            while (item.getCount() > 0 && (!invert && index < end || invert && index >= start)) {
-                Slot slot = getSlot(index);
-                ItemStack slotItem = slot.getStack();
+		if (item.getCount() > 0) {
+			if (invert) {
+				index = end - 1;
+			} else {
+				index = start;
+			}
 
-                if (!slotItem.isEmpty() && slotItem.getItem() == item.getItem() && (!item.getHasSubtypes() || item.getItemDamage() == slotItem.getItemDamage()) && ItemStack.areItemStackTagsEqual(item, slotItem)) {
-                    int newSize = slotItem.getCount() + item.getCount();
+			while (!invert && index < end || invert && index >= start) {
+				Slot slot = getSlot(index);
+				ItemStack slotItem = slot.getStack();
 
-                    if (newSize <= item.getMaxStackSize()) {
-                        item.setCount(0);
-                        slotItem.setCount(newSize);
-                        slot.onSlotChanged();
-                        moved = true;
+				if (slotItem.isEmpty()) {
+					slot.putStack(item.copy());
+					slot.onSlotChanged();
+					item.setCount(0);
+					moved = true;
+					break;
+				}
 
-                    }else if (slotItem.getCount() < item.getMaxStackSize()) {
-                        item.shrink(item.getMaxStackSize() - slotItem.getCount());
-                        slotItem.setCount(item.getMaxStackSize());
-                        slot.onSlotChanged();
-                        moved = true;
-                    }
-                }
+				index += invert ? -1 : 1;
+			}
+		}
 
-                index += invert ? -1 : 1;
-            }
-        }
+		return moved;
+	}
 
-        if (item.getCount() > 0) {
-            if (invert) {
-                index = end - 1;
-            }else {
-                index = start;
-            }
+	protected void resetDragging() {
+		dragMode = 0;
+		draggedSlots.clear();
+	}
 
-            while (!invert && index < end || invert && index >= start) {
-                Slot slot = getSlot(index);
-                ItemStack slotItem = slot.getStack();
-
-                if (slotItem.isEmpty()) {
-                    slot.putStack(item.copy());
-                    slot.onSlotChanged();
-                    item.setCount(0);
-                    moved = true;
-                    break;
-                }
-
-                index += invert ? -1 : 1;
-            }
-        }
-
-        return moved;
-    }
-
-
-
-    protected void resetDragging() {
-        dragMode = 0;
-        draggedSlots.clear();
-    }
-
-    @Override
-    public boolean canDragIntoSlot(Slot slot) {
-        return true;
-    }
+	@Override
+	public boolean canDragIntoSlot(Slot slot) {
+		return true;
+	}
 
       /*
        =============================================
@@ -536,9 +527,9 @@ public abstract class ContainerBase extends Container {
        classes.
      */
 
-    protected int getSlotStackLimit(Slot slot, ItemStack itemStack) {
-        return slot.getSlotStackLimit();
-    }
+	protected int getSlotStackLimit(Slot slot, ItemStack itemStack) {
+		return slot.getSlotStackLimit();
+	}
 
 
     /*

@@ -4,13 +4,11 @@ import engineers.workshop.common.loaders.CreativeTabLoader;
 import engineers.workshop.common.loaders.ItemLoader;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.GameData;
 
 import java.util.List;
@@ -42,7 +40,7 @@ public class ItemUpgrade extends Item {
 
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> lst) {
-		if(!isInCreativeTab(tab)){
+		if (!isInCreativeTab(tab)) {
 			return;
 		}
 		for (int i = 0; i < Upgrade.values().length; ++i) {

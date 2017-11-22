@@ -1,11 +1,11 @@
 package engineers.workshop.client.page.setting;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import engineers.workshop.client.container.slot.SlotBase;
 import engineers.workshop.common.table.TileTable;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Setting {
 	private int x;
@@ -43,7 +43,7 @@ public abstract class Setting {
 	public int getId() {
 		return id;
 	}
-	
+
 	public abstract List<SlotBase> getSlots();
 
 	public abstract String getName();

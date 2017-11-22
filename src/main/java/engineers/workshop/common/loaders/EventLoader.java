@@ -13,11 +13,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class EventLoader {
 
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void textureHook(TextureStitchEvent.Pre event) {
-        if (event.getMap().equals(Minecraft.getMinecraft().getTextureMapBlocks())) {
-            event.getMap().registerSprite(new ResourceLocation(Reference.Info.MODID + ":" + "blocks/power_animation"));
-        }
-    }
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void textureHook(TextureStitchEvent.Pre event) {
+		if (event.getMap().equals(Minecraft.getMinecraft().getTextureMapBlocks())) {
+			event.getMap().registerSprite(new ResourceLocation(Reference.Info.MODID + ":" + "blocks/power_animation"));
+		}
+	}
 }

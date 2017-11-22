@@ -1,8 +1,8 @@
 package engineers.workshop.client.page.setting;
 
-import engineers.workshop.common.table.TileTable;
 import engineers.workshop.client.container.slot.SlotBase;
 import engineers.workshop.client.page.unit.Unit;
+import engineers.workshop.common.table.TileTable;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;

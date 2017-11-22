@@ -1,10 +1,5 @@
 package engineers.workshop;
 
-import static engineers.workshop.common.util.Reference.Info.MODID;
-import static engineers.workshop.common.util.Reference.Info.NAME;
-import static engineers.workshop.common.util.Reference.Paths.CLIENT_PROXY;
-import static engineers.workshop.common.util.Reference.Paths.COMMON_PROXY;
-
 import engineers.workshop.common.loaders.BlockLoader;
 import engineers.workshop.common.loaders.ItemLoader;
 import engineers.workshop.common.network.DataPacket;
@@ -20,6 +15,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import reborncore.common.network.RegisterPacketEvent;
+
+import static engineers.workshop.common.util.Reference.Info.MODID;
+import static engineers.workshop.common.util.Reference.Info.NAME;
+import static engineers.workshop.common.util.Reference.Paths.CLIENT_PROXY;
+import static engineers.workshop.common.util.Reference.Paths.COMMON_PROXY;
 
 @Mod(modid = MODID, name = NAME, dependencies = "required-after:reborncore", certificateFingerprint = "8727a3141c8ec7f173b87aa78b9b9807867c4e6b")
 public class EngineersWorkshop {
@@ -49,7 +49,7 @@ public class EngineersWorkshop {
 	}
 
 	@SubscribeEvent
-	public void packetEvent(RegisterPacketEvent event){
+	public void packetEvent(RegisterPacketEvent event) {
 		event.registerPacket(DataPacket.class, Side.SERVER);
 		event.registerPacket(DataPacket.class, Side.CLIENT);
 	}

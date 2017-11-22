@@ -1,8 +1,10 @@
 package engineers.workshop.client.page;
 
 import engineers.workshop.client.GuiBase;
-import engineers.workshop.client.page.unit.*;
-import engineers.workshop.common.loaders.ConfigLoader;
+import engineers.workshop.client.page.unit.Unit;
+import engineers.workshop.client.page.unit.UnitCraft;
+import engineers.workshop.client.page.unit.UnitSmelt;
+import engineers.workshop.client.page.unit.UnitStorage;
 import engineers.workshop.common.table.TileTable;
 
 import java.util.ArrayList;
@@ -59,8 +61,8 @@ public class PageMain extends Page {
 
 	@Override
 	public void onUpdate() {
-		for(Unit unit : units){
-			if(unit.isEnabled()){
+		for (Unit unit : units) {
+			if (unit.isEnabled()) {
 				unit.onUpdate();
 			}
 		}
@@ -134,14 +136,14 @@ public class PageMain extends Page {
 	}
 
 	private boolean isUnitLoaded(int id) {
-		
-		if(craftingList.size() <= id || smeltingList.size() <= id || storageList.size() <= id)
+
+		if (craftingList.size() <= id || smeltingList.size() <= id || storageList.size() <= id)
 			return false;
-		
+
 		return (
-				craftingList.get(id) != null && craftingList.get(id).isEnabled())
-				|| (smeltingList.get(id) != null && smeltingList.get(id).isEnabled()
-				|| (storageList.get(id) != null && storageList.get(id).isEnabled())
+			craftingList.get(id) != null && craftingList.get(id).isEnabled())
+			|| (smeltingList.get(id) != null && smeltingList.get(id).isEnabled()
+			|| (storageList.get(id) != null && storageList.get(id).isEnabled())
 		);
 	}
 

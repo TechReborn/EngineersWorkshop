@@ -18,20 +18,20 @@ import static engineers.workshop.common.util.Reference.Info.MODID;
 
 public class ClientProxy extends CommonProxy {
 
-    @Override
-    public Side getSide() {
-        return Side.CLIENT;
-    }
+	@Override
+	public Side getSide() {
+		return Side.CLIENT;
+	}
 
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		MinecraftForge.EVENT_BUS.register(new EventLoader());
-        for (int i = 0; i < Upgrade.values().length; ++i) {
-            Upgrade[] upgrades = Upgrade.values().clone();
-            ModelLoader.setCustomModelResourceLocation(ItemLoader.itemUpgrade, i, new ModelResourceLocation(MODID + ":upgrades/" + upgrades[i].getName()));
-        }
-        BlockLoader.registerModels();
+		for (int i = 0; i < Upgrade.values().length; ++i) {
+			Upgrade[] upgrades = Upgrade.values().clone();
+			ModelLoader.setCustomModelResourceLocation(ItemLoader.itemUpgrade, i, new ModelResourceLocation(MODID + ":upgrades/" + upgrades[i].getName()));
+		}
+		BlockLoader.registerModels();
 	}
 
 	@Override

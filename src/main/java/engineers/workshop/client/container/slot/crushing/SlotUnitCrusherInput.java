@@ -14,7 +14,7 @@ public class SlotUnitCrusherInput extends SlotUnit {
 
 	@Override
 	public boolean isItemValid(ItemStack itemstack) {
-		return super.isItemValid(itemstack) ;//&& (SagMillRecipeManager.getInstance().getRecipeForInput(itemstack) != null) ;
+		return super.isItemValid(itemstack);//&& (SagMillRecipeManager.getInstance().getRecipeForInput(itemstack) != null) ;
 	}
 
 	@Override

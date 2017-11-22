@@ -5,9 +5,9 @@ import net.minecraft.item.Item;
 
 public class ItemLoader {
 
-    public static Item itemUpgrade;
+	public static Item itemUpgrade;
 
-    public static void registerItems() {
-        itemUpgrade = new ItemUpgrade();
-    }
+	public static void registerItems() {
+		itemUpgrade = new ItemUpgrade();
+	}
 }

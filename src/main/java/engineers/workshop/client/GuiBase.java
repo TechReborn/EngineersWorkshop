@@ -82,7 +82,8 @@ public abstract class GuiBase extends GuiContainer {
 
 	public void drawItem(ItemStack item, int x, int y) {
 		RenderHelper.enableGUIStandardItemLighting();
-		if (item != null) itemRender.renderItemAndEffectIntoGUI(item, x, y);
+		if (item != null)
+			itemRender.renderItemAndEffectIntoGUI(item, x, y);
 	}
 
 	/**
@@ -91,19 +92,19 @@ public abstract class GuiBase extends GuiContainer {
 	 * drawBlockIcon(IIcon icon, int x, int y) {
 	 * mc.getTextureManager().bindTexture(BLOCK_TEXTURE); drawIcon(icon, x, y);
 	 * }
-	 * 
+	 *
 	 * public void drawIcon(IIcon icon, int x, int y) { drawIcon(icon, x, y, 1F,
 	 * 1F, 0F, 0F); }
-	 * 
+	 *
 	 * public void drawIcon(IIcon icon, int targetX, int targetY, float sizeX,
 	 * float sizeY, float offsetX, float offsetY) { Tessellator tessellator =
 	 * Tessellator.instance; tessellator.startDrawingQuads();
-	 * 
+	 *
 	 * float x = icon.getMinU() + offsetX * (icon.getMaxU() - icon.getMinU());
 	 * float y = icon.getMinV() + offsetY * (icon.getMaxV() - icon.getMinV());
 	 * float width = (icon.getMaxU() - icon.getMinU()) * sizeX; float height =
 	 * (icon.getMaxV() - icon.getMinV()) * sizeY;
-	 * 
+	 *
 	 * tessellator.addVertexWithUV(targetX, targetY + 16 * sizeY, this.zLevel,
 	 * x, y + height); tessellator.addVertexWithUV(targetX + 16 * sizeX, targetY
 	 * + 16 * sizeY, this.zLevel, x + width, y + height);

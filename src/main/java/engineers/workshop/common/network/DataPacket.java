@@ -9,7 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import reborncore.common.network.ExtendedPacketBuffer;
@@ -40,7 +39,7 @@ public class DataPacket implements INetworkPacket<DataPacket> {
 			buffer.writeBlockPos(new BlockPos(0, 0, 0));
 		}
 
-		if(compound != null){
+		if (compound != null) {
 			buffer.writeBoolean(true);
 			buffer.writeCompoundTag(compound);
 		} else {
@@ -48,7 +47,7 @@ public class DataPacket implements INetworkPacket<DataPacket> {
 			buffer.writeCompoundTag(new NBTTagCompound());
 		}
 
-		if(dataType != null){
+		if (dataType != null) {
 			buffer.writeBoolean(true);
 			buffer.writeInt(dataType.ordinal());
 		} else {
@@ -67,13 +66,13 @@ public class DataPacket implements INetworkPacket<DataPacket> {
 			buffer.readBlockPos();
 			tablePos = null;
 		}
-		if(buffer.readBoolean()){
+		if (buffer.readBoolean()) {
 			compound = buffer.readCompoundTag();
 		} else {
 			buffer.readCompoundTag();
 		}
 
-		if(buffer.readBoolean()){
+		if (buffer.readBoolean()) {
 			dataType = DataType.values()[buffer.readInt()];
 		} else {
 			buffer.readInt();

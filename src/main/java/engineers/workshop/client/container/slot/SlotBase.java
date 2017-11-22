@@ -1,8 +1,8 @@
 package engineers.workshop.client.container.slot;
 
-import engineers.workshop.common.table.TileTable;
 import engineers.workshop.client.GuiBase;
 import engineers.workshop.client.page.setting.Transfer;
+import engineers.workshop.common.table.TileTable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -40,8 +40,8 @@ public class SlotBase extends Slot {
 			table.spitOutItem(getStack());
 			putStack(ItemStack.EMPTY);
 		}
-		
-		if(getHasStack() && getStack().getCount() == 0){
+
+		if (getHasStack() && getStack().getCount() == 0) {
 			putStack(ItemStack.EMPTY);
 		}
 	}
@@ -54,13 +54,14 @@ public class SlotBase extends Slot {
 	public boolean isVisible() {
 		return table.getMenu() == null;
 	}
-	
+
 	protected boolean isEnabled = true;
+
 	public boolean isEnabled() {
 		return isEnabled;
 	}
-	
-	public void setEnabled(boolean f){
+
+	public void setEnabled(boolean f) {
 		isEnabled = f;
 	}
 
@@ -142,8 +143,8 @@ public class SlotBase extends Slot {
 	@SideOnly(Side.CLIENT)
 	protected static boolean shouldHighlight(SlotBase slot, SlotBase other) {
 		return Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty() && slot != null
-				&& !slot.getHasStack() && other != null && other.getHasStack() && slot.isItemValid(other.getStack())
-				&& slot.getSlotStackLimit(other.getStack()) > (slot.getHasStack() ? slot.getStack().getCount() : 0);
+			&& !slot.getHasStack() && other != null && other.getHasStack() && slot.isItemValid(other.getStack())
+			&& slot.getSlotStackLimit(other.getStack()) > (slot.getHasStack() ? slot.getStack().getCount() : 0);
 	}
 
 	public boolean shouldDropOnClosing() {

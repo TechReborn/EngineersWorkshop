@@ -33,7 +33,7 @@ public class PageTransfer extends Page {
 		super(table, name);
 		settings = new ArrayList<>();
 
-        for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; i++) {
 			int x = SETTING_X + (i % 2) * SETTING_OFFSET;
 			int y = SETTING_Y + (i / 2) * SETTING_OFFSET;
 			settings.add(new SettingNormal(table, i, x, y));
@@ -108,7 +108,7 @@ public class PageTransfer extends Page {
 			@Override
 			public boolean isVisible() {
 				return selectedTransfer != null
-						&& PageTransfer.this.table.getUpgradePage().hasGlobalUpgrade(Upgrade.AUTO_TRANSFER);
+					&& PageTransfer.this.table.getUpgradePage().hasGlobalUpgrade(Upgrade.AUTO_TRANSFER);
 			}
 		});
 
@@ -159,7 +159,7 @@ public class PageTransfer extends Page {
 			@Override
 			public boolean isVisible() {
 				return selectedTransfer != null
-						&& PageTransfer.this.table.getUpgradePage().hasGlobalUpgrade(Upgrade.FILTER);
+					&& PageTransfer.this.table.getUpgradePage().hasGlobalUpgrade(Upgrade.FILTER);
 			}
 
 			@Override
@@ -205,9 +205,7 @@ public class PageTransfer extends Page {
 	private static final int ITEM_Y = 125;
 	private static final int ITEM_OFFSET = 20;
 	private static final int ITEM_SIZE = 18;
-    private static final int SIDE_ITEM_OFFSET = 1;
-    
-    
+	private static final int SIDE_ITEM_OFFSET = 1;
 
 	@Override
 	public int createSlots(int id) {
@@ -292,7 +290,6 @@ public class PageTransfer extends Page {
 			arrow.draw(gui, mX, mY);
 		}
 	}
-	
 
 	@Override
 	public void onClick(GuiBase gui, int mX, int mY, int button) {
@@ -349,12 +346,12 @@ public class PageTransfer extends Page {
 						if (newInput != input) {
 							side.setInputEnabled(newInput);
 							table.updateServer(DataType.SIDE_ENABLED,
-									DataSide.getId(selectedSetting, side, side.getInput()));
+								DataSide.getId(selectedSetting, side, side.getInput()));
 						}
 						if (newOutput != output) {
 							side.setOutputEnabled(newOutput);
 							table.updateServer(DataType.SIDE_ENABLED,
-									DataSide.getId(selectedSetting, side, side.getOutput()));
+								DataSide.getId(selectedSetting, side, side.getOutput()));
 						}
 
 						table.onSideChange();
@@ -413,54 +410,54 @@ public class PageTransfer extends Page {
 	// EnumFacing
 	private int getInterfaceX(EnumFacing enumFacing) {
 		switch (enumFacing) {
-		case DOWN: // BOTTOM
-			return 1;
-		case EAST: // RIGHT
-			return 0;
-		case NORTH: // BACK
-			return 3;
-		case SOUTH: // FRONT
-			return 1;
-		case UP: // TOP
-			return 1;
-		case WEST: // LEFT
-			return 2;
+			case DOWN: // BOTTOM
+				return 1;
+			case EAST: // RIGHT
+				return 0;
+			case NORTH: // BACK
+				return 3;
+			case SOUTH: // FRONT
+				return 1;
+			case UP: // TOP
+				return 1;
+			case WEST: // LEFT
+				return 2;
 		}
 		return -1;
 	}
 
 	private int getInterfaceY(EnumFacing enumFacing) {
 		switch (enumFacing) {
-		case DOWN: // BOTTOM
-			return 2;
-		case EAST: // RIGHT
-			return 1;
-		case NORTH: // BACK
-			return 1;
-		case SOUTH: // FRONT
-			return 1;
-		case UP: // TOP
-			return 0;
-		case WEST: // LEFT
-			return 1;
+			case DOWN: // BOTTOM
+				return 2;
+			case EAST: // RIGHT
+				return 1;
+			case NORTH: // BACK
+				return 1;
+			case SOUTH: // FRONT
+				return 1;
+			case UP: // TOP
+				return 0;
+			case WEST: // LEFT
+				return 1;
 		}
 		return -1;
 	}
-	
-	private int getTextureOffsetFromSide(Side side){
-		switch(side.getDirection()){
-		case WEST:
-			return 0;
-		case SOUTH:
-			return 1;
-		case UP:
-			return 2;
-		case DOWN:
-			return 3;
-		case NORTH:
-			return 4;
-		case EAST:
-			return 5;
+
+	private int getTextureOffsetFromSide(Side side) {
+		switch (side.getDirection()) {
+			case WEST:
+				return 0;
+			case SOUTH:
+				return 1;
+			case UP:
+				return 2;
+			case DOWN:
+				return 3;
+			case NORTH:
+				return 4;
+			case EAST:
+				return 5;
 		}
 		return -1;
 	}

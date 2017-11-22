@@ -3,7 +3,6 @@ package engineers.workshop.client.page;
 import engineers.workshop.client.GuiBase;
 import engineers.workshop.client.page.security.Security;
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.client.gui.Gui;
 
 public class PageSecurity extends Page {
 
@@ -32,7 +31,7 @@ public class PageSecurity extends Page {
 
 		if (!hasSecurity()) {
 			gui.prepare();
-			gui.drawRect(100, 10, 2, 0, HEADER_WIDTH+3, HEADER_HEIGHT);
+			gui.drawRect(100, 10, 2, 0, HEADER_WIDTH + 3, HEADER_HEIGHT);
 
 			gui.drawCenteredString("Claim!", 100, 15, HEADER_WIDTH + 3, 1, 0xDECADE);
 		}

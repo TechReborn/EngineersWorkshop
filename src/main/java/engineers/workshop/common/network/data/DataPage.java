@@ -12,7 +12,7 @@ public class DataPage extends DataBase {
 
 	@Override
 	public void load(TileTable table, NBTTagCompound dr, int id) {
-		if(id >= table.getPages().size()){
+		if (id >= table.getPages().size()) {
 			return;
 		}
 		table.setSelectedPage(table.getPages().get(dr.getInteger("page")));
