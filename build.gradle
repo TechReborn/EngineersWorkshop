@@ -55,6 +55,16 @@ processResources {
     }
 }
 
+task deobfJar(type: Jar) {
+	from sourceSets.main.output
+	exclude "**/*.psd"
+	classifier = 'dev'
+}
+
+artifacts {
+	archives deobfJar
+}
+
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
 	onlyIf {
@@ -101,6 +111,7 @@ task curseTools {
 		logger.lifecycle(":launching CurseTools")
 		ant.java(jar: curseTools.getAbsolutePath(), fork: true, spawn: false) {
 			arg(value: jar.archivePath.getAbsolutePath())
+			arg(value: deobfJar.archivePath.getAbsolutePath())
 		}
 	}
 }
