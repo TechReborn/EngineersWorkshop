@@ -2,7 +2,6 @@ package engineers.workshop.common.table;
 
 import engineers.workshop.EngineersWorkshop;
 import engineers.workshop.client.container.slot.SlotBase;
-import engineers.workshop.common.loaders.CreativeTabLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -17,22 +16,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.GameData;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 
 import static engineers.workshop.common.util.Reference.Info.MODID;
@@ -44,7 +39,7 @@ public class BlockTable extends Block implements ITileEntityProvider {
 	public BlockTable() {
 		super(Material.ROCK);
 		setHardness(3.5f);
-		setCreativeTab(CreativeTabLoader.tabWorkshop);
+		setCreativeTab(EngineersWorkshop.tabWorkshop);
 		setRegistryName(MODID + ":" + "blockTable");
 		setUnlocalizedName(MODID + ":" + "blockTable");
 		GameData.register_impl(this);

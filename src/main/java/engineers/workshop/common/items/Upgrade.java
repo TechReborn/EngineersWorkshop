@@ -1,7 +1,7 @@
 package engineers.workshop.common.items;
 
-import engineers.workshop.common.loaders.ConfigLoader;
-import engineers.workshop.common.loaders.ItemLoader;
+import engineers.workshop.EngineersWorkshop;
+import engineers.workshop.common.Config;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -73,11 +73,11 @@ public enum Upgrade {
 
 	@Nonnull
 	public ItemStack getItemStack() {
-		return new ItemStack(ItemLoader.itemUpgrade, 1, ordinal());
+		return new ItemStack(EngineersWorkshop.itemUpgrade, 1, ordinal());
 	}
 
 	public static ItemStack getInvalidItemStack() {
-		return new ItemStack(ItemLoader.itemUpgrade, 1, values().length);
+		return new ItemStack(EngineersWorkshop.itemUpgrade, 1, values().length);
 	}
 
 	public void addInfo(List<String> info) {
@@ -130,7 +130,7 @@ public enum Upgrade {
 				@Nonnull
 					ItemStack item) {
 				if (!item.isEmpty()) {
-					for (String parent : ConfigLoader.MACHINES.CRAFTER_BLOCKS) {
+					for (String parent : Config.MACHINES.CRAFTER_BLOCKS) {
 						String[] _s = parent.replace(",", "").split("/");
 						String regName = parent;
 						int meta = -1;
@@ -154,7 +154,7 @@ public enum Upgrade {
 				@Nonnull
 					ItemStack item) {
 				if (!item.isEmpty()) {
-					for (String parent : ConfigLoader.MACHINES.FURNACE_BLOCKS) {
+					for (String parent : Config.MACHINES.FURNACE_BLOCKS) {
 						String[] _s = parent.replace(",", "").split("/");
 						String regName = parent;
 						int meta = -1;
@@ -178,7 +178,7 @@ public enum Upgrade {
 				@Nonnull
 					ItemStack item) {
 				if (!item.isEmpty()) {
-					for (String parent : ConfigLoader.MACHINES.CRUSHER_BLOCKS) {
+					for (String parent : Config.MACHINES.CRUSHER_BLOCKS) {
 						String[] _s = parent.replace(",", "").split("/");
 						String regName = parent;
 						int meta = -1;
@@ -205,7 +205,7 @@ public enum Upgrade {
 				@Nonnull
 					ItemStack item) {
 				if (!item.isEmpty()) {
-					for (String parent : ConfigLoader.MACHINES.ALLOY_BLOCKS) {
+					for (String parent : Config.MACHINES.ALLOY_BLOCKS) {
 						String[] _s = parent.replace(",", "").split("/");
 						String regName = parent;
 						int meta = -1;
@@ -231,7 +231,7 @@ public enum Upgrade {
 				@Nonnull
 					ItemStack item) {
 				if (!item.isEmpty()) {
-					for (String parent : ConfigLoader.MACHINES.STORAGE_BLOCKS) {
+					for (String parent : Config.MACHINES.STORAGE_BLOCKS) {
 						String[] _s = parent.replace(",", "").split("/");
 						String regName = parent;
 						int meta = -1;

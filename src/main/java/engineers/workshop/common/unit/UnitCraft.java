@@ -178,12 +178,6 @@ public class UnitCraft extends Unit {
 					ItemStack containerItem = itemStack.getItem().getContainerItem(itemStack);
 					if (!containerItem.isItemStackDamageable()
 						|| containerItem.getItemDamage() <= containerItem.getMaxDamage()) {
-						// TODO where should the client go?
-						// if (false) {
-						// if (!fake) {
-						// table.spitOutItem(containerItem);
-						// }
-						// }
 						crafting.setInventorySlotContents(id, containerItem);
 					}
 				}

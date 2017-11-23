@@ -45,7 +45,6 @@ public abstract class Unit {
 		int y = getArrowY();
 		gui.drawRect(this.x + x, this.y + y, ARROW_SRC_X, ARROW_SRC_Y, ARROW_WIDTH, ARROW_HEIGHT);
 		int max = getMaxCharges();
-		@SuppressWarnings("unused")
 		boolean charging = false;
 		if (max > 0 && chargeCount > 0) {
 			charging = true;

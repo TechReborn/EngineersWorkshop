@@ -1,7 +1,6 @@
 package engineers.workshop.common.items;
 
-import engineers.workshop.common.loaders.CreativeTabLoader;
-import engineers.workshop.common.loaders.ItemLoader;
+import engineers.workshop.EngineersWorkshop;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -18,7 +17,7 @@ import static engineers.workshop.common.util.Reference.Info.MODID;
 public class ItemUpgrade extends Item {
 
 	public ItemUpgrade() {
-		setCreativeTab(CreativeTabLoader.tabWorkshop);
+		setCreativeTab(EngineersWorkshop.tabWorkshop);
 		setHasSubtypes(true);
 		setRegistryName(MODID + ":" + "upgrade");
 		GameData.register_impl(this);
@@ -35,7 +34,7 @@ public class ItemUpgrade extends Item {
 	}
 
 	public static Upgrade getUpgrade(ItemStack item) {
-		return !item.isEmpty() && ItemLoader.itemUpgrade.equals(item.getItem()) ? getUpgrade(item.getItemDamage()) : null;
+		return !item.isEmpty() && EngineersWorkshop.itemUpgrade.equals(item.getItem()) ? getUpgrade(item.getItemDamage()) : null;
 	}
 
 	@Override
