@@ -1,23 +1,35 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "engineersworkshop:workshop0"
+    "transform": "forge:default-block",
+    "model": "orientable",
+    "textures": {
+      "particle": "engineersworkshop:blocks/top",
+      "down": "engineersworkshop:blocks/bot",
+      "up": "engineersworkshop:blocks/top",
+      "east": "engineersworkshop:blocks/left",
+      "west": "engineersworkshop:blocks/right",
+      "north": "engineersworkshop:blocks/back",
+      "south": "engineersworkshop:blocks/back"
+    }
   },
   "variants": {
-    "normal": [{
-      "model": "engineersworkshop:workshop0"
-    }],
-    "inventory": [{
-      "model": "engineersworkshop:workshop0",
-      "transform": "forge:default-block"
-    }],
+    "inventory": {
+      "transform": "forge:default-block",
+      "model": "orientable"
+    },
     "facing": {
-      "north": {"y" : 180},
-      "south": {"y": 0},
-      "west": {"y": 90},
-      "east": {"y": 270},
-      "up": {"x": 0},
-      "down": {"x": 0}
+      "north": {
+      },
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      }
     }
   }
 }

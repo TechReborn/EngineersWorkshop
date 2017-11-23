@@ -45,11 +45,6 @@ import java.util.List;
 
 public class TileTable extends TileEntity implements IInventory, ISidedInventory, ITickable {
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-		return oldState.getBlock() != newSate.getBlock();
-	}
-
 	private List<Page> pages;
 	private Page selectedPage;
 	private List<SlotBase> slots;
@@ -359,9 +354,6 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 
 		if (!world.isRemote && ++slotTick >= SLOT_DELAY) {
 			slotTick = 0;
-			// Logger.info(slots.stream().filter(SlotBase::getHasStack).filter(slot
-			// -> slot instanceof SlotUpgrade)
-			// .toArray(SlotUpgrade[]::new).length);
 			slots.stream().filter(SlotBase::isEnabled).forEach(SlotBase::updateServer);
 		}
 
@@ -782,6 +774,11 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 			// EnumFacing.UP, Integer.MAX_VALUE);
 		}
 	}
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+		return false;
+	}
+
 
 	@Override
 	public String getName() {

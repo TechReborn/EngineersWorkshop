@@ -2,7 +2,6 @@ package engineers.workshop.common.table;
 
 import engineers.workshop.EngineersWorkshop;
 import engineers.workshop.client.container.slot.SlotBase;
-import engineers.workshop.client.renderer.PowerTESR;
 import engineers.workshop.common.loaders.CreativeTabLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -40,9 +39,7 @@ import static engineers.workshop.common.util.Reference.Info.MODID;
 
 public class BlockTable extends Block implements ITileEntityProvider {
 
-	// public static final PropertyInteger STATE =
-	// PropertyInteger.create("state", 0, 8);
-	public static final PropertyDirection FACING = PropertyDirection.create("facing");
+	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
 	public BlockTable() {
 		super(Material.ROCK);
@@ -60,21 +57,20 @@ public class BlockTable extends Block implements ITileEntityProvider {
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		world.setBlockState(pos, state.withProperty(FACING, getFacingFromEntity(pos, placer)), 2);
-	}
-
-	public static EnumFacing getFacingFromEntity(BlockPos clickedBlock, EntityLivingBase entity) {
-		return EnumFacing.getFacingFromVector((float) (entity.posX - clickedBlock.getX()), (float) (entity.posY - clickedBlock.getY()), (float) (entity.posZ - clickedBlock.getZ()));
+		world.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7));
+		if(meta >= EnumFacing.HORIZONTALS.length){
+			meta = 0;
+		}
+		return getDefaultState().withProperty(FACING, EnumFacing.HORIZONTALS[meta]);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		return state.getValue(FACING).getIndex();
+		return state.getValue(FACING).ordinal();
 	}
 
 	@Override
@@ -82,28 +78,6 @@ public class BlockTable extends Block implements ITileEntityProvider {
 		return new BlockStateContainer(this, FACING);
 	}
 
-	@Nonnull
-	@Override
-	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer() {
-		return BlockRenderLayer.CUTOUT_MIPPED;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-		return false;
-	}
-
-	@Override
-	public boolean isBlockNormalCube(IBlockState blockState) {
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState blockState) {
-		return false;
-	}
 
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
@@ -112,7 +86,6 @@ public class BlockTable extends Block implements ITileEntityProvider {
 
 	@SideOnly(Side.CLIENT)
 	public void registerModel() {
-		ClientRegistry.bindTileEntitySpecialRenderer(TileTable.class, new PowerTESR());
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
 	}
 
@@ -153,31 +126,6 @@ public class BlockTable extends Block implements ITileEntityProvider {
 
 			TileEntity tileEntity = world.getTileEntity(pos);
 
-			/**
-			 * if (tileEntity instanceof IInventory) { IInventory inventory =
-			 * (IInventory) tileEntity; for (int i = 0; i <
-			 * inventory.getSizeInventory(); i++) { ItemStack itemStack =
-			 * inventory.getStackInSlot(i); if (itemStack != null &&
-			 * itemStack.stackSize > 0) { Random random = new Random();
-			 *
-			 * float dX = random.nextFloat() * 0.8F + 0.1F; float dY =
-			 * random.nextFloat() * 0.8F + 0.1F; float dZ = random.nextFloat() *
-			 * 0.8F + 0.1F;
-			 *
-			 * EntityItem entityItem = new EntityItem(world, (double) ((float) x
-			 * + dX), (double) ((float) y + dY), (double) ((float) z + dZ),
-			 * itemStack.copy()); if (itemStack.hasTagCompound()) {
-			 * entityItem.getEntityItem().setTagCompound(itemStack.getTagCompound().copy());
-			 * } float factor = 0.05F;
-			 *
-			 * entityItem.motionX = random.nextGaussian() * (double) factor;
-			 * entityItem.motionX = random.nextGaussian() * (double) factor +
-			 * 0.2D; entityItem.motionX = random.nextGaussian() * (double)
-			 * factor;
-			 *
-			 * world.spawnEntityInWorld(entityItem); itemStack.stackSize = 0; }
-			 * } }
-			 */
 			if (tileEntity instanceof TileTable) {
 				TileTable table = (TileTable) tileEntity;
 				for (SlotBase slot : table.getSlots()) {
@@ -208,5 +156,12 @@ public class BlockTable extends Block implements ITileEntityProvider {
 				}
 			}
 		}
+	}
+
+	//Removes the tile from the world
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+		super.breakBlock(worldIn, pos, state);
+		worldIn.removeTileEntity(pos);
 	}
 }
