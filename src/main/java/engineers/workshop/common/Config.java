@@ -10,6 +10,15 @@ import static engineers.workshop.common.util.Reference.Info.MODID;
 @GameRegistry.ObjectHolder(MODID)
 public final class Config {
 
+	public static void loadConfig(File file) {
+		Configuration config = new Configuration(file);
+		config.load();
+		new TWEAKS(config, "Tweaks").load();
+		new POWER(config, "Power").load();
+		new MACHINES(config, "Machines").load();
+		config.save();
+	}
+
 	private abstract static class ConfigHandler {
 		protected String category;
 		protected Configuration config;
@@ -67,14 +76,5 @@ public final class Config {
 			ALLOY_BLOCKS = config.getStringList("Alloy Blocks", "Machines", new String[] { "enderio:blockAlloySmelter" }, "What blocks should the table accept for alloy smelters.");
 			STORAGE_BLOCKS = config.getStringList("Storage Blocks", "Machines", new String[] { "minecraft:chest" }, "What blocks should the table accept for storage.");
 		}
-	}
-
-	public static void loadConfig(File file) {
-		Configuration config = new Configuration(file);
-		config.load();
-		new TWEAKS(config, "Tweaks").load();
-		new POWER(config, "Power").load();
-		new MACHINES(config, "Machines").load();
-		config.save();
 	}
 }

@@ -21,10 +21,7 @@ import javax.annotation.Nonnull;
 
 public class UnitCraft extends Unit {
 
-	public UnitCraft(TileTable table, Page page, int id, int x, int y) {
-		super(table, page, id, x, y);
-	}
-
+	public static final int RESULT_AUTO_OFFSET = -5;
 	private static final int START_X = 5;
 	private static final int START_Y = 5;
 	private static final int SLOT_SIZE = 18;
@@ -33,16 +30,28 @@ public class UnitCraft extends Unit {
 	public static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
 	private static final int RESULT_OFFSET_X = 94;
 	private static final int RESULT_OFFSET_Y = 18;
-	public static final int RESULT_AUTO_OFFSET = -5;
 	private static final int STORAGE_COUNT = 6;
 	private static final int STORAGE_Y = 65;
-
 	private static final int ARROW_X = 61;
 	private static final int ARROW_Y = 19;
-
+	private static final int CLEAR_SRC_X = 48;
+	private static final int CLEAR_SRC_Y = 112;
+	private static final int CLEAR_SIZE = 9;
+	private static final int CLEAR_OFFSET_X = 3;
+	private static final int CLEAR_OFFSET_Y = 0;
+	private static final int CAN_CRAFT_DELAY = 10;
 	private int gridId;
 	private int resultId;
 	private int outputId;
+	private CraftingBase inventoryCrafting = new CraftingWrapper();
+	private boolean canAutoCraft;
+	private boolean lockedRecipeGeneration;
+	private int canCraftTick = 0;
+	private CraftingBase oldGrid;
+
+	public UnitCraft(TileTable table, Page page, int id, int x, int y) {
+		super(table, page, id, x, y);
+	}
 
 	@Override
 	public int createSlots(int id) {
@@ -107,12 +116,6 @@ public class UnitCraft extends Unit {
 			ex.printStackTrace();
 		}
 	}
-
-	private static final int CLEAR_SRC_X = 48;
-	private static final int CLEAR_SRC_Y = 112;
-	private static final int CLEAR_SIZE = 9;
-	private static final int CLEAR_OFFSET_X = 3;
-	private static final int CLEAR_OFFSET_Y = 0;
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -185,14 +188,9 @@ public class UnitCraft extends Unit {
 		}
 	}
 
-	private CraftingBase inventoryCrafting = new CraftingWrapper();
-
 	public int getGridId() {
 		return gridId;
 	}
-
-	private boolean canAutoCraft;
-	private boolean lockedRecipeGeneration;
 
 	public void onGridChanged() {
 		if (!lockedRecipeGeneration) {
@@ -214,10 +212,6 @@ public class UnitCraft extends Unit {
 			}
 		}
 	}
-
-	private int canCraftTick = 0;
-	private static final int CAN_CRAFT_DELAY = 10;
-	private CraftingBase oldGrid;
 
 	@Override
 	public void onUpdate() {
@@ -243,6 +237,101 @@ public class UnitCraft extends Unit {
 			}
 		}
 		onGridChanged();
+	}
+
+	@Override
+	protected int getArrowX() {
+		return START_X + ARROW_X;
+	}
+
+	@Override
+	protected int getArrowY() {
+		int offset = 0;
+		if (table.getUpgradePage().hasUpgrade(id, Upgrade.AUTO_CRAFTER)) {
+			offset = RESULT_AUTO_OFFSET;
+		}
+		return START_Y + ARROW_Y + offset;
+	}
+
+	@Override
+	protected ItemStack getProductionResult() {
+		if (table.getUpgradePage().hasUpgrade(id, Upgrade.AUTO_CRAFTER)) {
+			ItemStack result = table.getStackInSlot(resultId);
+			if (!result.isEmpty() && canAutoCraft) {
+				return result;
+			}
+		}
+		return ItemStack.EMPTY;
+	}
+
+	//	private static final IRecipe REPAIR_RECIPE = new RepairRecipe();
+	//
+	//	private static class RepairRecipe implements IRecipe {
+	//
+	//		@Override
+	//		public boolean matches(InventoryCrafting crafting, World world) {
+	//			return getCraftingResult(crafting) != null;
+	//		}
+	//
+	//		@SuppressWarnings("deprecation")
+	//		@Override
+	//		public ItemStack getCraftingResult(InventoryCrafting crafting) {
+	//			Item repairItem = null;
+	//			int count = 0, units = 0;
+	//
+	//			for (int i = 0; i < crafting.getSizeInventory(); i++) {
+	//				ItemStack item = crafting.getStackInSlot(i);
+	//				if (!item.isEmpty()) {
+	//					if (repairItem == null) {
+	//						repairItem = item.getItem();
+	//						if (!repairItem.isRepairable()) {
+	//							return null;
+	//						}
+	//						units = repairItem.getMaxDamage() * 5 / 100;
+	//					} else if (repairItem != item.getItem() || item.getCount() != 1 || count == 2) {
+	//						return null;
+	//					}
+	//
+	//					units += item.getMaxDamage() - item.getItemDamage();
+	//					count++;
+	//				}
+	//			}
+	//
+	//			if (repairItem != null && count == 2) {
+	//				int damage = repairItem.getMaxDamage() - units;
+	//				if (damage < 0) {
+	//					damage = 0;
+	//				}
+	//				return new ItemStack(repairItem, 1, damage);
+	//			} else {
+	//				return null;
+	//			}
+	//		}
+	//
+	//		@Override
+	//		public int getRecipeSize() {
+	//			return 9;
+	//		}
+	//
+	//		@Override
+	//		public ItemStack getRecipeOutput() {
+	//			return null;
+	//		}
+	//
+	//		@Override
+	//		public ItemStack[] getRemainingItems(InventoryCrafting inv) {
+	//			return null;
+	//		}
+	//	}
+
+	@Override
+	protected int getOutputId() {
+		return outputId;
+	}
+
+	@Override
+	protected void onProduction(ItemStack result) {
+		onCrafting(null, result);
 	}
 
 	private class CraftingWrapper extends CraftingBase {
@@ -376,100 +465,5 @@ public class UnitCraft extends Unit {
 			}
 			return true;
 		}
-	}
-
-	//	private static final IRecipe REPAIR_RECIPE = new RepairRecipe();
-	//
-	//	private static class RepairRecipe implements IRecipe {
-	//
-	//		@Override
-	//		public boolean matches(InventoryCrafting crafting, World world) {
-	//			return getCraftingResult(crafting) != null;
-	//		}
-	//
-	//		@SuppressWarnings("deprecation")
-	//		@Override
-	//		public ItemStack getCraftingResult(InventoryCrafting crafting) {
-	//			Item repairItem = null;
-	//			int count = 0, units = 0;
-	//
-	//			for (int i = 0; i < crafting.getSizeInventory(); i++) {
-	//				ItemStack item = crafting.getStackInSlot(i);
-	//				if (!item.isEmpty()) {
-	//					if (repairItem == null) {
-	//						repairItem = item.getItem();
-	//						if (!repairItem.isRepairable()) {
-	//							return null;
-	//						}
-	//						units = repairItem.getMaxDamage() * 5 / 100;
-	//					} else if (repairItem != item.getItem() || item.getCount() != 1 || count == 2) {
-	//						return null;
-	//					}
-	//
-	//					units += item.getMaxDamage() - item.getItemDamage();
-	//					count++;
-	//				}
-	//			}
-	//
-	//			if (repairItem != null && count == 2) {
-	//				int damage = repairItem.getMaxDamage() - units;
-	//				if (damage < 0) {
-	//					damage = 0;
-	//				}
-	//				return new ItemStack(repairItem, 1, damage);
-	//			} else {
-	//				return null;
-	//			}
-	//		}
-	//
-	//		@Override
-	//		public int getRecipeSize() {
-	//			return 9;
-	//		}
-	//
-	//		@Override
-	//		public ItemStack getRecipeOutput() {
-	//			return null;
-	//		}
-	//
-	//		@Override
-	//		public ItemStack[] getRemainingItems(InventoryCrafting inv) {
-	//			return null;
-	//		}
-	//	}
-
-	@Override
-	protected int getArrowX() {
-		return START_X + ARROW_X;
-	}
-
-	@Override
-	protected int getArrowY() {
-		int offset = 0;
-		if (table.getUpgradePage().hasUpgrade(id, Upgrade.AUTO_CRAFTER)) {
-			offset = RESULT_AUTO_OFFSET;
-		}
-		return START_Y + ARROW_Y + offset;
-	}
-
-	@Override
-	protected ItemStack getProductionResult() {
-		if (table.getUpgradePage().hasUpgrade(id, Upgrade.AUTO_CRAFTER)) {
-			ItemStack result = table.getStackInSlot(resultId);
-			if (!result.isEmpty() && canAutoCraft) {
-				return result;
-			}
-		}
-		return ItemStack.EMPTY;
-	}
-
-	@Override
-	protected int getOutputId() {
-		return outputId;
-	}
-
-	@Override
-	protected void onProduction(ItemStack result) {
-		onCrafting(null, result);
 	}
 }

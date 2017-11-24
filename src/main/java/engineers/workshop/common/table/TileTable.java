@@ -12,11 +12,11 @@ import engineers.workshop.client.page.PageUpgrades;
 import engineers.workshop.client.page.setting.Setting;
 import engineers.workshop.client.page.setting.Side;
 import engineers.workshop.client.page.setting.Transfer;
-import engineers.workshop.common.unit.Unit;
-import engineers.workshop.common.unit.UnitCraft;
 import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.network.*;
 import engineers.workshop.common.network.data.DataType;
+import engineers.workshop.common.unit.Unit;
+import engineers.workshop.common.unit.UnitCraft;
 import engineers.workshop.common.util.Logger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -45,28 +45,36 @@ import java.util.List;
 
 public class TileTable extends TileEntity implements IInventory, ISidedInventory, ITickable {
 
+	private static final int MOVE_DELAY = 20;
+	private static final int SLOT_DELAY = 10;
+	private static final String NBT_ITEMS = "item";
+	private static final String NBT_UNITS = "units";
+	private static final String NBT_SETTINGS = "settings";
+	private static final String NBT_SIDES = "sides";
+	private static final String NBT_INPUT = "input";
+	private static final String NBT_OUTPUT = "output";
+	private static final String NBT_SLOT = "slot";
+	private static final String NBT_POWER = "fuel";
+	private static final String NBT_MAX_POWER = "max_power";
+	private static final int COMPOUND_ID = 10;
+	private static final IBitCount GRID_ID_BITS = new LengthCount(4);
+	public int maxFuel = 8000;
 	private List<Page> pages;
 	private Page selectedPage;
 	private List<SlotBase> slots;
 	private NonNullList<ItemStack> items;
-
 	private GuiMenu menu;
-
 	private int fuel;
-	public int maxFuel = 8000;
 	private SlotFuel fuelSlot;
-
-	public int getFuel() {
-		return fuel;
-	}
-
-	public void setCapacity(int newCap) {
-		this.maxFuel = newCap;
-	}
-
-	public void setFuel(int fuel) {
-		this.fuel = fuel;
-	}
+	private List<EntityPlayer> players = new ArrayList<>();
+	private int fuelTick = 0;
+	private int moveTick = 0;
+	private boolean lit;
+	private boolean lastLit;
+	private int slotTick = 0;
+	private boolean firstUpdate = true;
+	private int tickCount = 0;
+	private int[][] sideSlots = new int[6][];
 
 	public TileTable() {
 		pages = new ArrayList<>();
@@ -84,6 +92,18 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 		items = NonNullList.withSize(slots.size(), ItemStack.EMPTY);
 		setSelectedPage(pages.get(0));
 		onUpgradeChange();
+	}
+
+	public int getFuel() {
+		return fuel;
+	}
+
+	public void setFuel(int fuel) {
+		this.fuel = fuel;
+	}
+
+	public void setCapacity(int newCap) {
+		this.maxFuel = newCap;
 	}
 
 	public List<SlotBase> getSlots() {
@@ -185,8 +205,6 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 	public void addSlot(SlotBase slot) {
 		slots.add(slot);
 	}
-
-	private List<EntityPlayer> players = new ArrayList<>();
 
 	public List<EntityPlayer> getOpenPlayers() {
 		return players;
@@ -315,17 +333,6 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 				break;
 		}
 	}
-
-	private int fuelTick = 0;
-	private int moveTick = 0;
-	private static final int MOVE_DELAY = 20;
-	private boolean lit;
-	private boolean lastLit;
-	private int slotTick = 0;
-	private static final int SLOT_DELAY = 10;
-	private boolean firstUpdate = true;
-
-	private int tickCount = 0;
 
 	@Override
 	public void update() {
@@ -570,8 +577,6 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 		return result;
 	}
 
-	private int[][] sideSlots = new int[6][];
-
 	@Override
 	public boolean isItemValidForSlot(int id, ItemStack item) {
 		return slots.get(id).isItemValid(item);
@@ -603,17 +608,6 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 	public void setLit(boolean lit) {
 		this.lit = lit;
 	}
-
-	private static final String NBT_ITEMS = "item";
-	private static final String NBT_UNITS = "units";
-	private static final String NBT_SETTINGS = "settings";
-	private static final String NBT_SIDES = "sides";
-	private static final String NBT_INPUT = "input";
-	private static final String NBT_OUTPUT = "output";
-	private static final String NBT_SLOT = "slot";
-	private static final String NBT_POWER = "fuel";
-	private static final String NBT_MAX_POWER = "max_power";
-	private static final int COMPOUND_ID = 10;
 
 	@Override
 	public NBTTagCompound getUpdateTag() {
@@ -742,8 +736,6 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 		world.spawnEntity(entityItem);
 	}
 
-	private static final IBitCount GRID_ID_BITS = new LengthCount(4);
-
 	public void clearGridSend(int id) {
 		DataPacket dw = PacketHandler.getPacket(this, PacketId.CLEAR);
 		dw.createCompound().setInteger("clear", id);
@@ -774,11 +766,11 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 			// EnumFacing.UP, Integer.MAX_VALUE);
 		}
 	}
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
 		return false;
 	}
-
 
 	@Override
 	public String getName() {

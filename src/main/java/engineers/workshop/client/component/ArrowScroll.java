@@ -6,16 +6,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class ArrowScroll {
 
-	private int x;
-	private int y;
-	private int width;
-	private boolean clicked;
-
 	private static final int ARROW_SRC_X = 36;
 	private static final int ARROW_SRC_Y = 112;
 	private static final int ARROW_W = 6;
 	private static final int ARROW_H = 10;
 	private static final int TEXT_Y = 3;
+	private int x;
+	private int y;
+	private int width;
+	private boolean clicked;
 
 	public ArrowScroll(int x, int y, int width) {
 		this.x = x;
@@ -90,9 +89,9 @@ public abstract class ArrowScroll {
 
 	public abstract String getText();
 
-	public abstract void setId(int id);
-
 	public abstract int getId();
+
+	public abstract void setId(int id);
 
 	protected abstract int getLength();
 }

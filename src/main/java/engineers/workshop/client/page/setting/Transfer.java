@@ -8,6 +8,13 @@ import net.minecraft.nbt.NBTTagList;
 
 public class Transfer {
 
+	private static final String NBT_ENABLED = "Enabled";
+	private static final String NBT_AUTO = "Auto";
+	private static final String NBT_WHITE_LIST = "WhiteList";
+	private static final String NBT_ITEMS = "Items";
+	private static final String NBT_ID = "Slot";
+	private static final String NBT_MODE = "MatchMode";
+	private static final int COMPOUND_ID = 10;
 	private boolean enabled;
 	private boolean isInput;
 	private boolean auto;
@@ -83,14 +90,6 @@ public class Transfer {
 		}
 		return false;
 	}
-
-	private static final String NBT_ENABLED = "Enabled";
-	private static final String NBT_AUTO = "Auto";
-	private static final String NBT_WHITE_LIST = "WhiteList";
-	private static final String NBT_ITEMS = "Items";
-	private static final String NBT_ID = "Slot";
-	private static final String NBT_MODE = "MatchMode";
-	private static final int COMPOUND_ID = 10;
 
 	public void writeToNBT(NBTTagCompound compound) {
 		compound.setBoolean(NBT_ENABLED, enabled);

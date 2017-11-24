@@ -11,11 +11,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SlotBase extends Slot {
+	protected TileTable table;
+	protected boolean isEnabled = true;
 	private int x;
 	private int y;
 	private Transfer[] input = new Transfer[6];
 	private Transfer[] output = new Transfer[6];
-	protected TileTable table;
 
 	public SlotBase(IInventory inventory, TileTable table, int id, int x, int y) {
 		super(inventory, id, x, y);
@@ -23,6 +24,13 @@ public class SlotBase extends Slot {
 		this.x = x;
 		this.y = y;
 		this.table = table;
+	}
+
+	@SideOnly(Side.CLIENT)
+	protected static boolean shouldHighlight(SlotBase slot, SlotBase other) {
+		return Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty() && slot != null
+			&& !slot.getHasStack() && other != null && other.getHasStack() && slot.isItemValid(other.getStack())
+			&& slot.getSlotStackLimit(other.getStack()) > (slot.getHasStack() ? slot.getStack().getCount() : 0);
 	}
 
 	public void updateClient(boolean visible) {
@@ -54,8 +62,6 @@ public class SlotBase extends Slot {
 	public boolean isVisible() {
 		return table.getMenu() == null;
 	}
-
-	protected boolean isEnabled = true;
 
 	public boolean isEnabled() {
 		return isEnabled;
@@ -138,13 +144,6 @@ public class SlotBase extends Slot {
 
 	public boolean shouldSlotHighlightSelf() {
 		return true;
-	}
-
-	@SideOnly(Side.CLIENT)
-	protected static boolean shouldHighlight(SlotBase slot, SlotBase other) {
-		return Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty() && slot != null
-			&& !slot.getHasStack() && other != null && other.getHasStack() && slot.isItemValid(other.getStack())
-			&& slot.getSlotStackLimit(other.getStack()) > (slot.getHasStack() ? slot.getStack().getCount() : 0);
 	}
 
 	public boolean shouldDropOnClosing() {

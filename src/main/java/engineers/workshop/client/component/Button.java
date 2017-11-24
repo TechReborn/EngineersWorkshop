@@ -6,21 +6,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class Button {
 
-	private String text;
-	private int x;
-	private int y;
-
-	protected Button(String text, int x, int y) {
-		this.text = text;
-		this.x = x;
-		this.y = y;
-	}
-
 	private static final int WIDTH = 42;
 	private static final int HEIGHT = 16;
 	private static final int SRC_X = 42;
 	private static final int SRC_Y = 44;
 	private static final int TEXT_Y = 7;
+	private String text;
+	private int x;
+	private int y;
+	protected Button(String text, int x, int y) {
+		this.text = text;
+		this.x = x;
+		this.y = y;
+	}
 
 	@SideOnly(Side.CLIENT)
 	public void draw(GuiBase gui, int mX, int mY) {

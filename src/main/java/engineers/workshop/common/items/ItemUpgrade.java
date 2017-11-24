@@ -23,18 +23,18 @@ public class ItemUpgrade extends Item {
 		GameData.register_impl(this);
 	}
 
-	@Override
-	public String getUnlocalizedName(ItemStack item) {
-		Upgrade upgrade = getUpgrade(item);
-		return MODID + ":" + "upgrade" + "." + (upgrade != null ? upgrade.getName() : "unknown");
-	}
-
 	public static Upgrade getUpgrade(int dmg) {
 		return dmg >= 0 && dmg < Upgrade.values().length ? Upgrade.values()[dmg] : null;
 	}
 
 	public static Upgrade getUpgrade(ItemStack item) {
 		return !item.isEmpty() && EngineersWorkshop.itemUpgrade.equals(item.getItem()) ? getUpgrade(item.getItemDamage()) : null;
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack item) {
+		Upgrade upgrade = getUpgrade(item);
+		return MODID + ":" + "upgrade" + "." + (upgrade != null ? upgrade.getName() : "unknown");
 	}
 
 	@Override

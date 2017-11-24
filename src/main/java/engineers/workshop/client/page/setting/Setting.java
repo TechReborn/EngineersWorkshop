@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Setting {
-	private int x;
-	private int y;
 	protected int id;
 	protected TileTable table;
+	private int x;
+	private int y;
 	private List<Side> sides;
 
 	public Setting(TileTable table, int id, int x, int y) {

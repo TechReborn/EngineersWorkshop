@@ -2,10 +2,10 @@ package engineers.workshop.client.container.slot.crafting;
 
 import engineers.workshop.client.container.slot.SlotUnit;
 import engineers.workshop.client.page.Page;
-import engineers.workshop.common.unit.Unit;
-import engineers.workshop.common.unit.UnitCraft;
 import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.table.TileTable;
+import engineers.workshop.common.unit.Unit;
+import engineers.workshop.common.unit.UnitCraft;
 
 public class SlotUnitCraftingStorage extends SlotUnit {
 

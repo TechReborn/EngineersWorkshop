@@ -25,29 +25,25 @@ import java.util.stream.Collectors;
 
 public class GuiMenuItem extends GuiMenu {
 
+	private static final int ITEMS_PER_ROW = 12;
+	private static final int ITEM_ROWS = 7;
+	private static final int VISIBLE_ITEMS = ITEMS_PER_ROW * ITEM_ROWS;
+	private static final int ITEMS_X = 10;
+	private static final int ITEMS_Y = 80;
+	private static final int ITEMS_OFFSET = 20;
+	private static final int ITEM_SIZE = 18;
+	private static final int ITEM_X = 10;
+	private static final int ITEM_Y = 10;
 	private ItemSetting setting;
 	private TransferMode mode;
 	@Nonnull
 	private ItemStack item;
-
 	private List<ItemStack> playerItems;
 	private List<ItemStack> searchItems;
 	private boolean showPlayerItems;
 	private List<ArrowScroll> arrows;
 	private int page;
 	private TextBox textBox;
-
-	private static final int ITEMS_PER_ROW = 12;
-	private static final int ITEM_ROWS = 7;
-	private static final int VISIBLE_ITEMS = ITEMS_PER_ROW * ITEM_ROWS;
-
-	private static final int ITEMS_X = 10;
-	private static final int ITEMS_Y = 80;
-	private static final int ITEMS_OFFSET = 20;
-	private static final int ITEM_SIZE = 18;
-
-	private static final int ITEM_X = 10;
-	private static final int ITEM_Y = 10;
 
 	public GuiMenuItem(TileTable table, ItemSetting setting) {
 
@@ -134,13 +130,13 @@ public class GuiMenuItem extends GuiMenu {
 			}
 
 			@Override
-			public void setId(int id) {
-				mode = TransferMode.values()[id];
+			public int getId() {
+				return mode.ordinal();
 			}
 
 			@Override
-			public int getId() {
-				return mode.ordinal();
+			public void setId(int id) {
+				mode = TransferMode.values()[id];
 			}
 
 			@Override

@@ -57,7 +57,7 @@ public class BlockTable extends Block implements ITileEntityProvider {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		if(meta >= EnumFacing.HORIZONTALS.length){
+		if (meta >= EnumFacing.HORIZONTALS.length) {
 			meta = 0;
 		}
 		return getDefaultState().withProperty(FACING, EnumFacing.HORIZONTALS[meta]);
@@ -72,7 +72,6 @@ public class BlockTable extends Block implements ITileEntityProvider {
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, FACING);
 	}
-
 
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {

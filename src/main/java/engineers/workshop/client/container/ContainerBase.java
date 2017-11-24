@@ -2,7 +2,6 @@ package engineers.workshop.client.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -11,7 +10,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import reborncore.common.container.RebornContainer;
 
-import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,13 +24,24 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public abstract class ContainerBase extends RebornContainer {
 
+	private static final int MOUSE_LEFT_CLICK = 0;
+	private static final int MOUSE_RIGHT_CLICK = 1;
+	private static final int FAKE_SLOT_ID = -999;
+	private static final int CLICK_MODE_NORMAL = 0;
+	private static final int CLICK_MODE_SHIFT = 1;
+	private static final int CLICK_MODE_KEY = 2;
+	private static final int CLICK_MODE_PICK_ITEM = 3;
+	private static final int CLICK_MODE_OUTSIDE = 4;
+	private static final int CLICK_DRAG_RELEASE = 5;
+	private static final int CLICK_MODE_DOUBLE_CLICK = 6;
+	private static final int CLICK_DRAG_MODE_PRE = 0;
+	private static final int CLICK_DRAG_MODE_SLOT = 1;
+	private static final int CLICK_DRAG_MODE_POST = 2;
+	private final Set<Slot> draggedSlots = new HashSet<>();
 	@SideOnly(Side.CLIENT)
 	private short transactionID;
-
 	private int dragMouseButton = -1;
 	private int dragMode;
-	private final Set<Slot> draggedSlots = new HashSet<>();
-
 	private Set<EntityPlayer> invalidPlayers = new HashSet<>();
 
 	private List<ItemStack> getItems() {
@@ -69,24 +78,6 @@ public abstract class ContainerBase extends RebornContainer {
 		return getSlots().get(slotId);
 	}
 
-	private static final int MOUSE_LEFT_CLICK = 0;
-	private static final int MOUSE_RIGHT_CLICK = 1;
-
-	private static final int FAKE_SLOT_ID = -999;
-
-	private static final int CLICK_MODE_NORMAL = 0;
-	private static final int CLICK_MODE_SHIFT = 1;
-	private static final int CLICK_MODE_KEY = 2;
-	private static final int CLICK_MODE_PICK_ITEM = 3;
-	private static final int CLICK_MODE_OUTSIDE = 4;
-	private static final int CLICK_DRAG_RELEASE = 5;
-	private static final int CLICK_MODE_DOUBLE_CLICK = 6;
-
-	private static final int CLICK_DRAG_MODE_PRE = 0;
-	private static final int CLICK_DRAG_MODE_SLOT = 1;
-	private static final int CLICK_DRAG_MODE_POST = 2;
-
-
 	@Override
 	public void onCraftMatrixChanged(IInventory inventory) {
 		detectAndSendChanges();
@@ -118,7 +109,6 @@ public abstract class ContainerBase extends RebornContainer {
 			invalidPlayers.add(player);
 		}
 	}
-
 
 	protected void resetDragging() {
 		dragMode = 0;

@@ -21,14 +21,31 @@ import java.util.List;
 
 public class PageTransfer extends Page {
 
+	private static final int SIDE_X = 75;
+	private static final int SIDE_Y = 15;
+	private static final int SIDE_OFFSET = 20;
+	private static final int SIDE_SIZE = 18;
+	private static final int SIDE_SRC_X = 0;
+	private static final int SIDE_SRC_Y = 166;
+	private static final int SETTING_X = 5;
+	private static final int SETTING_Y = 25;
+	private static final int SETTING_OFFSET = 20;
+	private static final int SETTING_SIZE = 18;
+	private static final int SETTING_SRC_X = 0;
+	private static final int SETTING_SRC_Y = 112;
+	private static final int SETTING_ITEM_OFFSET = 1;
+	private static final int ITEM_X = 10;
+	private static final int ITEM_Y = 125;
+	private static final int ITEM_OFFSET = 20;
+	private static final int ITEM_SIZE = 18;
+	private static final int SIDE_ITEM_OFFSET = 1;
+	protected Side selectedSide;
 	private List<Setting> settings;
 	private Setting selectedSetting;
-	protected Side selectedSide;
 	private List<CheckBox> checkBoxes;
 	private List<ArrowScroll> arrows;
 	private boolean selectMode;
 	private Transfer selectedTransfer;
-
 	public PageTransfer(TileTable table, String name) {
 		super(table, name);
 		settings = new ArrayList<>();
@@ -95,14 +112,14 @@ public class PageTransfer extends Page {
 
 		checkBoxes.add(new CheckBox("Auto transfer", 170, 68) {
 			@Override
-			public void setValue(boolean value) {
-				selectedTransfer.setAuto(value);
-				PageTransfer.this.table.updateServer(DataType.SIDE_AUTO, getSyncId());
+			public boolean getValue() {
+				return selectedTransfer.isAuto();
 			}
 
 			@Override
-			public boolean getValue() {
-				return selectedTransfer.isAuto();
+			public void setValue(boolean value) {
+				selectedTransfer.setAuto(value);
+				PageTransfer.this.table.updateServer(DataType.SIDE_AUTO, getSyncId());
 			}
 
 			@Override
@@ -147,13 +164,13 @@ public class PageTransfer extends Page {
 			}
 
 			@Override
-			public void setId(int id) {
-				selectedTransfer.setUseWhiteList(id == 0);
+			public int getId() {
+				return selectedTransfer.hasWhiteList() ? 0 : 1;
 			}
 
 			@Override
-			public int getId() {
-				return selectedTransfer.hasWhiteList() ? 0 : 1;
+			public void setId(int id) {
+				selectedTransfer.setUseWhiteList(id == 0);
 			}
 
 			@Override
@@ -186,26 +203,6 @@ public class PageTransfer extends Page {
 	private boolean shouldSelectModeBeVisible() {
 		return table.getUpgradePage().hasGlobalUpgrade(Upgrade.AUTO_TRANSFER) || table.getUpgradePage().hasGlobalUpgrade(Upgrade.FILTER);
 	}
-
-	private static final int SIDE_X = 75;
-	private static final int SIDE_Y = 15;
-	private static final int SIDE_OFFSET = 20;
-	private static final int SIDE_SIZE = 18;
-	private static final int SIDE_SRC_X = 0;
-	private static final int SIDE_SRC_Y = 166;
-	private static final int SETTING_X = 5;
-	private static final int SETTING_Y = 25;
-	private static final int SETTING_OFFSET = 20;
-	private static final int SETTING_SIZE = 18;
-	private static final int SETTING_SRC_X = 0;
-	private static final int SETTING_SRC_Y = 112;
-	private static final int SETTING_ITEM_OFFSET = 1;
-
-	private static final int ITEM_X = 10;
-	private static final int ITEM_Y = 125;
-	private static final int ITEM_OFFSET = 20;
-	private static final int ITEM_SIZE = 18;
-	private static final int SIDE_ITEM_OFFSET = 1;
 
 	@Override
 	public int createSlots(int id) {

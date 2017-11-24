@@ -1,8 +1,8 @@
 package engineers.workshop.client.container.slot;
 
 import engineers.workshop.client.page.Page;
-import engineers.workshop.common.unit.Unit;
 import engineers.workshop.common.table.TileTable;
+import engineers.workshop.common.unit.Unit;
 import net.minecraft.item.ItemStack;
 
 public class SlotUnit extends SlotTable {

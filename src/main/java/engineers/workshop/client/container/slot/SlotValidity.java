@@ -15,15 +15,15 @@ public enum SlotValidity {
 		this.isOutput = isOutput;
 	}
 
+	public static SlotValidity getValidity(boolean isSlotInput, boolean isSlotOutput) {
+		return isSlotInput && isSlotOutput ? BOTH : isSlotInput ? INPUT : isSlotOutput ? OUTPUT : NONE;
+	}
+
 	public boolean isInput() {
 		return isInput;
 	}
 
 	public boolean isOutput() {
 		return isOutput;
-	}
-
-	public static SlotValidity getValidity(boolean isSlotInput, boolean isSlotOutput) {
-		return isSlotInput && isSlotOutput ? BOTH : isSlotInput ? INPUT : isSlotOutput ? OUTPUT : NONE;
 	}
 }

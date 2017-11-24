@@ -23,12 +23,14 @@ public class PageUpgrades extends Page {
 
 	private static final int GLOBAL_X = 10;
 	private static final int GLOBAL_Y = 130;
+	private static final int GLOBAL_ID = 4;
+	private int startId;
+	@SuppressWarnings("rawtypes")
+	private Map[] upgrades;
 
 	public PageUpgrades(TileTable table, String name) {
 		super(table, name);
 	}
-
-	private int startId;
 
 	@Override
 	public int createSlots(int id) {
@@ -63,9 +65,6 @@ public class PageUpgrades extends Page {
 		return table.getSlots().get(startId + id * SLOT_ROWS * SLOTS_PER_ROW).getStack();
 	}
 
-	@SuppressWarnings("rawtypes")
-	private Map[] upgrades;
-
 	public void onUpgradeChange() {
 		upgrades = new Map[5];
 		for (int i = 0; i < 4; i++) {
@@ -75,8 +74,6 @@ public class PageUpgrades extends Page {
 		}
 		upgrades[GLOBAL_ID] = loadUpgrades(startId + 4 * SLOT_ROWS * SLOTS_PER_ROW, GLOBAL_SLOTS);
 	}
-
-	private static final int GLOBAL_ID = 4;
 
 	public int getUpgradeCountRaw(int id, Upgrade upgrade) {
 		//noinspection unchecked

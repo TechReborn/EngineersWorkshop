@@ -18,12 +18,25 @@ import java.util.List;
 
 public abstract class Unit {
 
+	public static final int PRODUCTION_TIME = 400;
+	public static final int CHARGES_PER_LEVEL = 4;
+	private static final int ARROW_SRC_X = 0;
+	private static final int ARROW_SRC_Y = 34;
+	private static final int ARROW_WIDTH = 22;
+	private static final int ARROW_HEIGHT = 15;
+	private static final int PROGRESS_OFFSET = -1;
+	private static final String NBT_CHARGED = "Charged";
+	private static final String NBT_PROGRESS = "Progress";
+	private static final int WORKING_COOLDOWN = 20;
 	protected TileTable table;
 	protected Page page;
 	protected int id;
 	protected int x;
 	protected int y;
-
+	private int productionProgress;
+	private int chargeCount;
+	private List<SlotBase> slots = new ArrayList<>();
+	private int workingTicks;
 	public Unit(TileTable table, Page page, int id, int x, int y) {
 		this.table = table;
 		this.page = page;
@@ -31,12 +44,6 @@ public abstract class Unit {
 		this.x = x;
 		this.y = y;
 	}
-
-	private static final int ARROW_SRC_X = 0;
-	private static final int ARROW_SRC_Y = 34;
-	private static final int ARROW_WIDTH = 22;
-	private static final int ARROW_HEIGHT = 15;
-	private static final int PROGRESS_OFFSET = -1;
 
 	@SideOnly(Side.CLIENT)
 	public void draw(GuiBase gui, int mX, int mY) {
@@ -90,11 +97,6 @@ public abstract class Unit {
 	}
 
 	public abstract int createSlots(int id);
-
-	public static final int PRODUCTION_TIME = 400;
-	private int productionProgress;
-	private int chargeCount;
-	public static final int CHARGES_PER_LEVEL = 4;
 
 	protected boolean canCharge() {
 		return chargeCount < getMaxCharges();
@@ -260,14 +262,9 @@ public abstract class Unit {
 
 	public abstract boolean isEnabled();
 
-	private List<SlotBase> slots = new ArrayList<>();
-
 	public List<SlotBase> getSlots() {
 		return slots;
 	}
-
-	private static final String NBT_CHARGED = "Charged";
-	private static final String NBT_PROGRESS = "Progress";
 
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setByte(NBT_CHARGED, (byte) chargeCount);
@@ -279,9 +276,6 @@ public abstract class Unit {
 		chargeCount = compound.getByte(NBT_CHARGED);
 		productionProgress = compound.getShort(NBT_PROGRESS);
 	}
-
-	private static final int WORKING_COOLDOWN = 20;
-	private int workingTicks;
 
 	public boolean isWorking() {
 		return workingTicks > 0;

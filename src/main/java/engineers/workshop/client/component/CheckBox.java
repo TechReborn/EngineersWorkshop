@@ -41,9 +41,9 @@ public abstract class CheckBox {
 		}
 	}
 
-	public abstract void setValue(boolean value);
-
 	public abstract boolean getValue();
+
+	public abstract void setValue(boolean value);
 
 	public void onUpdate() {
 	}

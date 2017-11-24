@@ -10,8 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public abstract class Page {
 
-	private String name;
 	protected TileTable table;
+	private String name;
 	private int id;
 
 	public Page(TileTable table, String name) {

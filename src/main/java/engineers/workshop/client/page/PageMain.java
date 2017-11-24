@@ -1,22 +1,31 @@
 package engineers.workshop.client.page;
 
 import engineers.workshop.client.GuiBase;
+import engineers.workshop.common.table.TileTable;
 import engineers.workshop.common.unit.Unit;
 import engineers.workshop.common.unit.UnitCraft;
 import engineers.workshop.common.unit.UnitSmelt;
 import engineers.workshop.common.unit.UnitStorage;
-import engineers.workshop.common.table.TileTable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PageMain extends Page {
 
+	public static final int WIDTH = 256;
+	public static final int HEIGHT = 174;
+	private static final int TEXTURE_SHEET_SIZE = 256;
+	private static final int BAR_THICKNESS = 4;
+	private static final int BAR_WIDTH = 240;
+	private static final int BAR_HEIGHT = 162;
+	private static final int BAR_HORIZONTAL_X = (WIDTH - BAR_WIDTH) / 2;
+	private static final int BAR_HORIZONTAL_Y = (HEIGHT - BAR_THICKNESS) / 2;
+	private static final int BAR_VERTICAL_X = (WIDTH - BAR_THICKNESS) / 2;
+	private static final int BAR_VERTICAL_Y = (HEIGHT - BAR_HEIGHT) / 2;
 	private List<Unit> units;
 	private List<UnitCraft> craftingList;
 	private List<UnitSmelt> smeltingList;
 	private List<UnitStorage> storageList;
-
 	public PageMain(TileTable table, String name) {
 		super(table, name);
 
@@ -75,18 +84,6 @@ public class PageMain extends Page {
 		}
 		return id;
 	}
-
-	public static final int WIDTH = 256;
-	public static final int HEIGHT = 174;
-	private static final int TEXTURE_SHEET_SIZE = 256;
-	private static final int BAR_THICKNESS = 4;
-	private static final int BAR_WIDTH = 240;
-	private static final int BAR_HEIGHT = 162;
-
-	private static final int BAR_HORIZONTAL_X = (WIDTH - BAR_WIDTH) / 2;
-	private static final int BAR_HORIZONTAL_Y = (HEIGHT - BAR_THICKNESS) / 2;
-	private static final int BAR_VERTICAL_X = (WIDTH - BAR_THICKNESS) / 2;
-	private static final int BAR_VERTICAL_Y = (HEIGHT - BAR_HEIGHT) / 2;
 
 	@Override
 	public void draw(GuiBase gui, int mX, int mY) {

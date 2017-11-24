@@ -9,13 +9,16 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nonnull;
-
 public class ContainerTable extends ContainerBase {
 
-	private TileTable table;
+	private static final int SLOT_SIZE = 18;
+	private static final int SLOTS_PER_ROW = 9;
+	private static final int NORMAL_ROWS = 3;
+	private static final int PLAYER_X = 48;
+	private static final int PLAYER_Y = 174;
+	private static final int PLAYER_HOT_BAR_Y = 232;
 	public int power;
-
+	private TileTable table;
 	public ContainerTable(TileTable table, EntityPlayer player) {
 		this.table = table;
 
@@ -32,13 +35,6 @@ public class ContainerTable extends ContainerBase {
 			addSlotToContainer(new SlotPlayer(inventory, table, x, PLAYER_X + x * SLOT_SIZE, PLAYER_HOT_BAR_Y));
 		}
 	}
-
-	private static final int SLOT_SIZE = 18;
-	private static final int SLOTS_PER_ROW = 9;
-	private static final int NORMAL_ROWS = 3;
-	private static final int PLAYER_X = 48;
-	private static final int PLAYER_Y = 174;
-	private static final int PLAYER_HOT_BAR_Y = 232;
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {

@@ -1,12 +1,16 @@
 package engineers.workshop.common.network.data;
 
-import engineers.workshop.common.unit.Unit;
 import engineers.workshop.common.table.TileTable;
+import engineers.workshop.common.unit.Unit;
 import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class DataUnit extends DataBase {
 
 	public static final int LENGTH = 8;
+
+	public static int getId(Unit unit) {
+		return unit.getId() * 2;
+	}
 
 	protected Unit getUnit(TileTable table, int id) {
 		id /= 2;
@@ -21,10 +25,6 @@ public abstract class DataUnit extends DataBase {
 			return storage;
 		else
 			return craft;
-	}
-
-	public static int getId(Unit unit) {
-		return unit.getId() * 2;
 	}
 
 	public static class Progress extends DataUnit {

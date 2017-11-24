@@ -59,6 +59,10 @@ public enum Upgrade {
 		this(maxCount, type == null ? EnumSet.of(ParentType.NULL) : EnumSet.of((type)), dep);
 	}
 
+	public static ItemStack getInvalidItemStack() {
+		return new ItemStack(EngineersWorkshop.itemUpgrade, 1, values().length);
+	}
+
 	public Upgrade getDependency() {
 		return dep;
 	}
@@ -74,10 +78,6 @@ public enum Upgrade {
 	@Nonnull
 	public ItemStack getItemStack() {
 		return new ItemStack(EngineersWorkshop.itemUpgrade, 1, ordinal());
-	}
-
-	public static ItemStack getInvalidItemStack() {
-		return new ItemStack(EngineersWorkshop.itemUpgrade, 1, values().length);
 	}
 
 	public void addInfo(List<String> info) {
@@ -268,6 +268,7 @@ public enum Upgrade {
 			}
 		};
 
+		private static final EnumSet<ParentType> MachineSet = EnumSet.of(ParentType.CRAFTING, ParentType.SMELTING, ParentType.CRUSHING, ParentType.ALLOY);
 		private String description;
 
 		ParentType(String description) {
@@ -277,8 +278,6 @@ public enum Upgrade {
 		public abstract boolean isValidParent(
 			@Nonnull
 				ItemStack item);
-
-		private static final EnumSet<ParentType> MachineSet = EnumSet.of(ParentType.CRAFTING, ParentType.SMELTING, ParentType.CRUSHING, ParentType.ALLOY);
 	}
 
 	public static class MaxCount {
@@ -306,6 +305,8 @@ public enum Upgrade {
 	}
 
 	private static class ConfigurableMax extends MaxCount {
+		private static final int GLOBAL_MAX_COUNT = 8 * 64;
+		private static final int MAX_COUNT = 7 * 64;
 		private boolean isGlobal;
 		private int configurableMax;
 
@@ -313,13 +314,9 @@ public enum Upgrade {
 			super(max);
 			this.configurableMax = configurableMax;
 		}
-
 		private ConfigurableMax(int max) {
 			this(max, -1);
 		}
-
-		private static final int GLOBAL_MAX_COUNT = 8 * 64;
-		private static final int MAX_COUNT = 7 * 64;
 
 		@Override
 		public int getConfigurableMax() {

@@ -13,6 +13,10 @@ public abstract class DataSide extends DataBase {
 	private static final int MODES = 2;
 	public static final int LENGTH = SETTINGS * SIDES * MODES;
 
+	public static int getId(Setting setting, Side side, Transfer transfer) {
+		return setting.getId() + SETTINGS * side.getDirection().ordinal() + (transfer.isInput() ? 0 : SETTINGS * SIDES);
+	}
+
 	protected Transfer getTransfer(TileTable table, int id) {
 		int settingId = id % SETTINGS;
 		id /= SETTINGS;
@@ -25,10 +29,6 @@ public abstract class DataSide extends DataBase {
 		} else {
 			return side.getOutput();
 		}
-	}
-
-	public static int getId(Setting setting, Side side, Transfer transfer) {
-		return setting.getId() + SETTINGS * side.getDirection().ordinal() + (transfer.isInput() ? 0 : SETTINGS * SIDES);
 	}
 
 	public static class Enabled extends DataSide {
@@ -70,12 +70,12 @@ public abstract class DataSide extends DataBase {
 	public static abstract class FilterBase extends DataSide {
 		public static final int LENGTH = DataSide.LENGTH * ItemSetting.ITEM_COUNT;
 
-		protected ItemSetting getSetting(TileTable table, int id) {
-			return getTransfer(table, id / ItemSetting.ITEM_COUNT).getItem(id % ItemSetting.ITEM_COUNT);
-		}
-
 		public static int getId(Setting setting, Side side, Transfer transfer, ItemSetting itemSetting) {
 			return getId(setting, side, transfer) * ItemSetting.ITEM_COUNT + itemSetting.getId();
+		}
+
+		protected ItemSetting getSetting(TileTable table, int id) {
+			return getTransfer(table, id / ItemSetting.ITEM_COUNT).getItem(id % ItemSetting.ITEM_COUNT);
 		}
 	}
 

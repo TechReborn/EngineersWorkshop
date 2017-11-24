@@ -6,6 +6,8 @@ import engineers.workshop.common.table.TileTable;
 
 public class PageSecurity extends Page {
 
+	private static final int HEADER_WIDTH = 38;
+	private static final int HEADER_HEIGHT = 17;
 	private Security security;
 
 	public PageSecurity(TileTable table, String name) {
@@ -21,9 +23,6 @@ public class PageSecurity extends Page {
 	public String getDesc() {
 		return "Manage Security";
 	}
-
-	private static final int HEADER_WIDTH = 38;
-	private static final int HEADER_HEIGHT = 17;
 
 	@Override
 	public void draw(GuiBase gui, int mX, int mY) {

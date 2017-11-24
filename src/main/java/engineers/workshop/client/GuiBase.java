@@ -18,12 +18,46 @@ import java.util.List;
 import static engineers.workshop.common.util.Reference.Info.MODID;
 
 public abstract class GuiBase extends GuiContainer {
+	protected static final ResourceLocation BACKGROUND = new ResourceLocation(MODID, "textures/gui/background.png");
+	protected static final ResourceLocation ELEMENTS = new ResourceLocation(MODID, "textures/gui/elements_gl.png");
+	/**
+	 * TODO: private static final ResourceLocation BLOCK_TEXTURE = new
+	 * ResourceLocation("textures/atlas/block.png"); public void
+	 * drawBlockIcon(IIcon icon, int x, int y) {
+	 * mc.getTextureManager().bindTexture(BLOCK_TEXTURE); drawIcon(icon, x, y);
+	 * }
+	 *
+	 * public void drawIcon(IIcon icon, int x, int y) { drawIcon(icon, x, y, 1F,
+	 * 1F, 0F, 0F); }
+	 *
+	 * public void drawIcon(IIcon icon, int targetX, int targetY, float sizeX,
+	 * float sizeY, float offsetX, float offsetY) { Tessellator tessellator =
+	 * Tessellator.instance; tessellator.startDrawingQuads();
+	 *
+	 * float x = icon.getMinU() + offsetX * (icon.getMaxU() - icon.getMinU());
+	 * float y = icon.getMinV() + offsetY * (icon.getMaxV() - icon.getMinV());
+	 * float width = (icon.getMaxU() - icon.getMinU()) * sizeX; float height =
+	 * (icon.getMaxV() - icon.getMinV()) * sizeY;
+	 *
+	 * tessellator.addVertexWithUV(targetX, targetY + 16 * sizeY, this.zLevel,
+	 * x, y + height); tessellator.addVertexWithUV(targetX + 16 * sizeX, targetY
+	 * + 16 * sizeY, this.zLevel, x + width, y + height);
+	 * tessellator.addVertexWithUV(targetX + 16 * sizeX, targetY, this.zLevel, x
+	 * + width, y); tessellator.addVertexWithUV(targetX, targetY, this.zLevel,
+	 * x, y); tessellator.draw(); }
+	 **/
+
+	private static final int ITEM_SIZE = 18;
+	private static final int ITEM_SRC_X = 68;
+	private static final int ITEM_SRC_Y = 62;
+	private static final int ITEM_ITEM_OFFSET = 1;
+	public boolean shiftMoveRendered;
+	private SlotBase selectedSlot;
+	private List<String> mouseOver;
+
 	public GuiBase(Container container) {
 		super(container);
 	}
-
-	private SlotBase selectedSlot;
-	public boolean shiftMoveRendered;
 
 	@Override
 	public void drawScreen(int x, int y, float f) {
@@ -46,9 +80,6 @@ public abstract class GuiBase extends GuiContainer {
 	public SlotBase getSelectedSlot() {
 		return selectedSlot;
 	}
-
-	protected static final ResourceLocation BACKGROUND = new ResourceLocation(MODID, "textures/gui/background.png");
-	protected static final ResourceLocation ELEMENTS = new ResourceLocation(MODID, "textures/gui/elements_gl.png");
 
 	public void prepare() {
 		mc.getTextureManager().bindTexture(ELEMENTS);
@@ -85,38 +116,6 @@ public abstract class GuiBase extends GuiContainer {
 		if (item != null)
 			itemRender.renderItemAndEffectIntoGUI(item, x, y);
 	}
-
-	/**
-	 * TODO: private static final ResourceLocation BLOCK_TEXTURE = new
-	 * ResourceLocation("textures/atlas/block.png"); public void
-	 * drawBlockIcon(IIcon icon, int x, int y) {
-	 * mc.getTextureManager().bindTexture(BLOCK_TEXTURE); drawIcon(icon, x, y);
-	 * }
-	 *
-	 * public void drawIcon(IIcon icon, int x, int y) { drawIcon(icon, x, y, 1F,
-	 * 1F, 0F, 0F); }
-	 *
-	 * public void drawIcon(IIcon icon, int targetX, int targetY, float sizeX,
-	 * float sizeY, float offsetX, float offsetY) { Tessellator tessellator =
-	 * Tessellator.instance; tessellator.startDrawingQuads();
-	 *
-	 * float x = icon.getMinU() + offsetX * (icon.getMaxU() - icon.getMinU());
-	 * float y = icon.getMinV() + offsetY * (icon.getMaxV() - icon.getMinV());
-	 * float width = (icon.getMaxU() - icon.getMinU()) * sizeX; float height =
-	 * (icon.getMaxV() - icon.getMinV()) * sizeY;
-	 *
-	 * tessellator.addVertexWithUV(targetX, targetY + 16 * sizeY, this.zLevel,
-	 * x, y + height); tessellator.addVertexWithUV(targetX + 16 * sizeX, targetY
-	 * + 16 * sizeY, this.zLevel, x + width, y + height);
-	 * tessellator.addVertexWithUV(targetX + 16 * sizeX, targetY, this.zLevel, x
-	 * + width, y); tessellator.addVertexWithUV(targetX, targetY, this.zLevel,
-	 * x, y); tessellator.draw(); }
-	 **/
-
-	private static final int ITEM_SIZE = 18;
-	private static final int ITEM_SRC_X = 68;
-	private static final int ITEM_SRC_Y = 62;
-	private static final int ITEM_ITEM_OFFSET = 1;
 
 	public void drawItemWithBackground(ItemStack item, int x, int y, int mX, int mY) {
 		boolean hover = inBounds(x, y, ITEM_SIZE, ITEM_SIZE, mX, mY);
@@ -158,8 +157,6 @@ public abstract class GuiBase extends GuiContainer {
 	public void drawMouseOver(List<String> str) {
 		this.mouseOver = str;
 	}
-
-	private List<String> mouseOver;
 
 	public void clearMouseOverCache() {
 		mouseOver = null;

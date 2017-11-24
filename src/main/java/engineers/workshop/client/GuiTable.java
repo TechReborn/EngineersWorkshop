@@ -19,9 +19,36 @@ import java.util.List;
 
 public class GuiTable extends GuiBase {
 
+	private static final int HEADER_SRC_X = 0;
+	private static final int HEADER_SRC_Y = 0;
+	private static final int HEADER_FULL_WIDTH = 42;
+	private static final int HEADER_WIDTH = 38;
+	private static final int HEADER_HEIGHT = 17;
+	private static final int HEADER_X = 3;
+	private static final int HEADER_Y = 173;
+	private static final int HEADER_TEXT_Y = 7;
+	private static final int SLOT_SRC_X = 42;
+	private static final int SLOT_SRC_Y = 0;
+	private static final int SLOT_SIZE = 18;
+	private static final int SLOT_OFFSET = -1;
+	private static final int SLOT_BIG_SIZE = 26;
+	private static final int SLOT_BIG_OFFSET = SLOT_OFFSET - (SLOT_BIG_SIZE - SLOT_SIZE) / 2;
+	private static final int POWER_X = 225;
+	private static final int POWER_Y = 173;
+	private static final int POWER_WIDTH = 18;
+	private static final int POWER_HEIGHT = 50;
+	private static final int POWER_INNER_WIDTH = 16;
+	private static final int POWER_INNER_HEIGHT = 48;
+	private static final int POWER_INNER_SRC_X = 0;
+	private static final int POWER_INNER_SRC_Y = 64;
+	private static final int POWER_SRC_X = 32;
+	private static final int POWER_SRC_Y = 62;
+	private static final int POWER_INNER_OFFSET_X = (POWER_WIDTH - POWER_INNER_WIDTH) / 2;
+	private static final int POWER_INNER_OFFSET_Y = (POWER_HEIGHT - POWER_INNER_HEIGHT) / 2;
 	private TileTable table;
 	private List<SlotBase> slots;
 	private ContainerTable containerTable;
+	private boolean closed = true;
 
 	public GuiTable(TileTable table, EntityPlayer player) {
 		super(new ContainerTable(table, player));
@@ -89,15 +116,6 @@ public class GuiTable extends GuiBase {
 		}
 	}
 
-	private static final int HEADER_SRC_X = 0;
-	private static final int HEADER_SRC_Y = 0;
-	private static final int HEADER_FULL_WIDTH = 42;
-	private static final int HEADER_WIDTH = 38;
-	private static final int HEADER_HEIGHT = 17;
-	private static final int HEADER_X = 3;
-	private static final int HEADER_Y = 173;
-	private static final int HEADER_TEXT_Y = 7;
-
 	private void drawPageHeaders(int mX, int mY) {
 		for (int i = 0; i < table.getPages().size(); i++) {
 			Page page = table.getPages().get(i);
@@ -132,13 +150,6 @@ public class GuiTable extends GuiBase {
 		}
 	}
 
-	private static final int SLOT_SRC_X = 42;
-	private static final int SLOT_SRC_Y = 0;
-	private static final int SLOT_SIZE = 18;
-	private static final int SLOT_OFFSET = -1;
-	private static final int SLOT_BIG_SIZE = 26;
-	private static final int SLOT_BIG_OFFSET = SLOT_OFFSET - (SLOT_BIG_SIZE - SLOT_SIZE) / 2;
-
 	private void drawSlots() {
 		prepare();
 		for (SlotBase slot : slots) {
@@ -154,21 +165,6 @@ public class GuiTable extends GuiBase {
 			}
 		}
 	}
-
-	private static final int POWER_X = 225;
-	private static final int POWER_Y = 173;
-	private static final int POWER_WIDTH = 18;
-	private static final int POWER_HEIGHT = 50;
-	private static final int POWER_INNER_WIDTH = 16;
-	private static final int POWER_INNER_HEIGHT = 48;
-
-	private static final int POWER_INNER_SRC_X = 0;
-	private static final int POWER_INNER_SRC_Y = 64;
-	private static final int POWER_SRC_X = 32;
-	private static final int POWER_SRC_Y = 62;
-
-	private static final int POWER_INNER_OFFSET_X = (POWER_WIDTH - POWER_INNER_WIDTH) / 2;
-	private static final int POWER_INNER_OFFSET_Y = (POWER_HEIGHT - POWER_INNER_HEIGHT) / 2;
 
 	private void drawPower(int mX, int mY) {
 		prepare();
@@ -192,8 +188,6 @@ public class GuiTable extends GuiBase {
 			drawMouseOver(str);
 		}
 	}
-
-	private boolean closed = true;
 
 	@Override
 	public void onGuiClosed() {

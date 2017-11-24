@@ -13,14 +13,6 @@ import javax.annotation.Nonnull;
 
 public class UnitSmelt extends Unit {
 
-	public UnitSmelt(TileTable table, Page page, int id, int x, int y) {
-		super(table, page, id, x, y);
-	}
-
-	private int inputId;
-	private int outputId;
-	private int queueId;
-
 	private static final int QUEUE_MAX_COUNT = 3;
 	private static final int QUEUE_X = 5;
 	private static final int QUEUE_Y = 5;
@@ -28,6 +20,17 @@ public class UnitSmelt extends Unit {
 	private static final int START_Y = 23;
 	private static final int RESULT_X = 56;
 	private static final int SLOT_SIZE = 18;
+	private static final int[] QUEUE_ORDER = { 2, 0, 1 };
+	private static final int[] QUEUE_ORDER_START = { 1, 1, 0 };
+	private static final int ARROW_X = 25;
+	private static final int ARROW_Y = 1;
+	private int inputId;
+	private int outputId;
+	private int queueId;
+
+	public UnitSmelt(TileTable table, Page page, int id, int x, int y) {
+		super(table, page, id, x, y);
+	}
 
 	@Override
 	public int createSlots(int id) {
@@ -43,9 +46,6 @@ public class UnitSmelt extends Unit {
 
 		return id;
 	}
-
-	private static final int[] QUEUE_ORDER = { 2, 0, 1 };
-	private static final int[] QUEUE_ORDER_START = { 1, 1, 0 };
 
 	@Override
 	public void onUpdate() {
@@ -103,9 +103,6 @@ public class UnitSmelt extends Unit {
 		ItemStack item = table.getUpgradePage().getUpgradeMainItem(id);
 		return item != null && Upgrade.ParentType.SMELTING.isValidParent(item);
 	}
-
-	private static final int ARROW_X = 25;
-	private static final int ARROW_Y = 1;
 
 	@Override
 	public int getArrowX() {

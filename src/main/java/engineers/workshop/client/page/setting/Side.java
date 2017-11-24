@@ -38,12 +38,12 @@ public class Side {
 		return output.isEnabled();
 	}
 
-	public boolean isInputEnabled() {
-		return input.isEnabled();
-	}
-
 	public void setOutputEnabled(boolean value) {
 		output.setEnabled(value);
+	}
+
+	public boolean isInputEnabled() {
+		return input.isEnabled();
 	}
 
 	public void setInputEnabled(boolean value) {
