@@ -100,7 +100,7 @@ public class DataPacket implements INetworkPacket<DataPacket> {
 				table = ((ContainerTable) player.openContainer).getTable();
 			}
 		}
-		if (table == null) {
+		if (table == null && message.tablePos != null) {
 			BlockPos tablePos = message.tablePos;
 			World world = player.world;
 			if (!world.isBlockLoaded(tablePos))
