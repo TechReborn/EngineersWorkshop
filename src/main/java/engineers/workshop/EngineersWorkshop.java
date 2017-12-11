@@ -34,7 +34,7 @@ import static engineers.workshop.common.util.Reference.Paths.COMMON_PROXY;
 import static net.minecraft.init.Blocks.*;
 import static net.minecraft.init.Items.*;
 
-@Mod(modid = MODID, name = NAME, dependencies = "required-after:reborncore", certificateFingerprint = "8727a3141c8ec7f173b87aa78b9b9807867c4e6b")
+@Mod(modid = MODID, name = NAME, dependencies = "required-after:reborncore", certificateFingerprint = "8727a3141c8ec7f173b87aa78b9b9807867c4e6b", acceptedMinecraftVersions = "[1.12,1.12.2]")
 public class EngineersWorkshop {
 
 	@SidedProxy(clientSide = CLIENT_PROXY, serverSide = COMMON_PROXY)
