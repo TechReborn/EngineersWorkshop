@@ -1,0 +1,50 @@
+#Blocks
+tile.engineersworkshop:blockTable.name=Atölye Masası
+
+#Upgrade Names
+engineersworkshop:upgrade.blank.name=Boş Yükseltme
+engineersworkshop:upgrade.auto_crafter.name=Otomatik üretim Yükseltmesi
+engineersworkshop:upgrade.storage.name=Depolama Yükseltmesi
+engineersworkshop:upgrade.charged.name=�arj Yükseltmesi
+engineersworkshop:upgrade.speed.name=Hız Yükseltmesi
+engineersworkshop:upgrade.queue.name=Sıralama Yükseltmesi
+engineersworkshop:upgrade.efficiency.name=Verimlilik Yükseltmesi
+engineersworkshop:upgrade.lava.name=Lav Enerjisi Yükseltmesi
+engineersworkshop:upgrade.eu.name=EU Alıcı Yükseltmesi
+engineersworkshop:upgrade.rf.name=RF Alıcı Yükseltmesi
+engineersworkshop:upgrade.solar.name=Güneş Enerjisi Yükseltmesi
+engineersworkshop:upgrade.auto_transfer.name=Otomatik Transfer Yükseltmesi
+engineersworkshop:upgrade.filter.name=Filtre Yükseltmesi
+engineersworkshop:upgrade.transfer.name=Aktarma Kapasitesi Yükseltmesi
+engineersworkshop:upgrade.max_power.name=Enerji Kapasitesi Yükseltmesi
+engineersworkshop:upgrade.fuel_delay.name=Yakıt Harcama Kapasitesi
+engineersworkshop:upgrade.axe.name=Balta Yükseltmesi
+
+#Upgrade Descriptions
+engineersworkshop:upgrade.blank.description=Üretim Bileşeni
+engineersworkshop:upgrade.auto_crafter.description=Üretim masasını otomatik üretim masasına çevirir.
+engineersworkshop:upgrade.storage.description=Ekstra depolama ekler.
+engineersworkshop:upgrade.charged.description=Boşta olan bileşenlerin daha sonra şarj edilmesine izin verir. 
+engineersworkshop:upgrade.speed.description=Üretim hızını artırır.
+engineersworkshop:upgrade.queue.description=Giriş sırası ekler.
+engineersworkshop:upgrade.efficiency.description=Katı yakıt türlerinin yakıt verimliliğini artırır.
+engineersworkshop:upgrade.lava.description=Lavın yakıt olarak kullanılmasına izin verir.
+engineersworkshop:upgrade.rf.description=RF'nin yakıt olarak kullanılmasına izin verir.
+engineersworkshop:upgrade.solar.description=Güneş enerjisinin yakıt olarak kullanılmasına izin verir.
+#engineersworkshop:upgrade.eu.description=EU'nun yakıt olarak kullanılmasına izin verir.
+engineersworkshop:upgrade.auto_transfer.description=Masadan otomatik aktarımlara izin verir.
+engineersworkshop:upgrade.filter.description=Transfer filtrelerine izin verir.
+engineersworkshop:upgrade.transfer.description=Otomatik transfer kapasitesini artırır.
+engineersworkshop:upgrade.max_power.description=Maksimum yakıt kapasitelerini artırır.
+engineersworkshop:upgrade.fuel_delay.description=Yakıt harcamaları arasındaki süreyi azaltır.
+engineersworkshop:upgrade.axe.description=Ezicinin odunları tahtaya çevirmesine izin verir.
+
+#Upgrade Info
+engineersworkshop:upgrade.unstackable=Fazla iç içe koyulmaz.
+engineersworkshop:upgrade.stackable=%s kadar depolanabilir.
+
+#Creative Tabs
+itemGroup.engineersworkshop=Engineer's Workshop
+
+#Shhhh....
+engineersworkshop:hbdark=§CH§Ea§Ap§Bp§9y§D §CB§Ei§Ar§Bt§9h§Dd§Ca§Ey§A §BD§9a§Dr§Ck§Eo§As§Bt§9o§D!
