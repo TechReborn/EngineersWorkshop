@@ -114,4 +114,8 @@ public class UnitSmelt extends Unit {
 		return START_Y + ARROW_Y;
 	}
 
+	@Override
+	public int getPowerConsumption(boolean charging) {
+		return super.getPowerConsumption(charging) * 2;
+	}
 }

@@ -120,15 +120,14 @@ public abstract class Unit {
 		}
 	}
 
-	private int getProductionSpeed(boolean charging) {
+	public int getProductionSpeed(boolean charging) {
 		int base = 1 + table.getUpgradePage().getUpgradeCount(id, Upgrade.SPEED);
 
 		return charging ? base : base * 4;
 	}
 
-	private int getPowerConsumption(boolean charging) {
+	public int getPowerConsumption(boolean charging) {
 		int base = 1 + table.getUpgradePage().getUpgradeCount(id, Upgrade.SPEED) * 2;
-
 		return charging ? base * 2 : base;
 	}
 
@@ -163,7 +162,6 @@ public abstract class Unit {
 							result = getProductionResult();
 						} else {
 							int powerConsumption = getPowerConsumption(false);
-
 							if (table.getFuel() >= powerConsumption) {
 								table.setFuel(table.getFuel() - powerConsumption);
 								productionProgress += getProductionSpeed(false);
