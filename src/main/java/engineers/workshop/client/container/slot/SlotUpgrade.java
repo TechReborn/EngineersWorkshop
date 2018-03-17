@@ -38,7 +38,6 @@ public class SlotUpgrade extends SlotTable {
 
 	@Override
 	public boolean isItemValid(ItemStack itemstack) {
-		System.out.println(isMainItem(itemstack) + ":" + isUpgradeItem(itemstack) + ";" + isMain);
 		return super.isItemValid(itemstack) && (itemstack.isEmpty() || (isMain ? isMainItem(itemstack) : isUpgradeItem(itemstack)));
 	}
 

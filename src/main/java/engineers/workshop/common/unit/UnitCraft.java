@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -347,31 +348,31 @@ public class UnitCraft extends Unit {
 	}
 
 	private class CraftingDummy extends CraftingBase {
-		private ItemStack[] items;
+		private NonNullList<ItemStack> items;
 
 		private CraftingDummy(CraftingBase base) {
-			items = new ItemStack[base.getFullSize()];
-			for (int i = 0; i < items.length; i++) {
+			items = NonNullList.withSize(base.getFullSize(), ItemStack.EMPTY);
+			for (int i = 0; i < items.size(); i++) {
 				ItemStack itemStack = base.getStackInSlot(i);
 				if (!itemStack.isEmpty()) {
-					items[i] = itemStack.copy();
+					items.set(i, itemStack.copy());
 				}
 			}
 		}
 
 		@Override
 		public int getFullSize() {
-			return items.length;
+			return items.size();
 		}
 
 		@Override
 		public ItemStack getStackInSlot(int id) {
-			return items[id];
+			return items.get(id);
 		}
 
 		@Override
 		public void setInventorySlotContents(int id, ItemStack item) {
-			items[id] = item;
+			items.set(id, item);
 		}
 	}
 
@@ -456,9 +457,6 @@ public class UnitCraft extends Unit {
 				return false;
 
 			for (int i = 0; i < getFullSize(); i++) {
-				if (getStackInSlot(i) == null) { //Not sure whats cuasing it, but this is a dirty work around
-					return false;
-				}
 				if (!ItemStack.areItemStacksEqual(getStackInSlot(i), crafting.getStackInSlot(i))) {
 					return false;
 				}
