@@ -23,7 +23,7 @@ public abstract class Setting {
 	}
 
 	public boolean isValid() {
-		return getItem() != null;
+		return !getItem().isEmpty();
 	}
 
 	public abstract ItemStack getItem();

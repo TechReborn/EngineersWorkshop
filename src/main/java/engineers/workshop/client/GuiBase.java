@@ -113,14 +113,14 @@ public abstract class GuiBase extends GuiContainer {
 
 	public void drawItem(ItemStack item, int x, int y) {
 		RenderHelper.enableGUIStandardItemLighting();
-		if (item != null)
+		if (!item.isEmpty())
 			itemRender.renderItemAndEffectIntoGUI(item, x, y);
 	}
 
 	public void drawItemWithBackground(ItemStack item, int x, int y, int mX, int mY) {
 		boolean hover = inBounds(x, y, ITEM_SIZE, ITEM_SIZE, mX, mY);
 		int textureIndexX = hover ? 1 : 0;
-		int textureIndexY = item != null ? 1 : 0;
+		int textureIndexY = !item.isEmpty() ? 1 : 0;
 
 		prepare();
 		drawRect(x, y, ITEM_SRC_X + textureIndexX * ITEM_SIZE, ITEM_SRC_Y + textureIndexY * ITEM_SIZE, ITEM_SIZE, ITEM_SIZE);
@@ -233,7 +233,7 @@ public abstract class GuiBase extends GuiContainer {
 	}
 
 	public String getItemName(ItemStack item) {
-		if (item == null) {
+		if (item.isEmpty()) {
 			return null;
 		}
 
@@ -246,7 +246,7 @@ public abstract class GuiBase extends GuiContainer {
 	}
 
 	public List<String> getItemDescription(ItemStack item) {
-		if (item == null) {
+		if (item.isEmpty()) {
 			return null;
 		}
 

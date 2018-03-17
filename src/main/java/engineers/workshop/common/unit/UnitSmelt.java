@@ -101,7 +101,7 @@ public class UnitSmelt extends Unit {
 	@Override
 	public boolean isEnabled() {
 		ItemStack item = table.getUpgradePage().getUpgradeMainItem(id);
-		return item != null && Upgrade.ParentType.SMELTING.isValidParent(item);
+		return !item.isEmpty() && Upgrade.ParentType.SMELTING.isValidParent(item);
 	}
 
 	@Override
