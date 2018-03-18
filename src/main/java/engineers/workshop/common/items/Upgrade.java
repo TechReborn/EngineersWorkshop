@@ -5,6 +5,7 @@ import engineers.workshop.common.Config;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
@@ -230,22 +231,27 @@ public enum Upgrade {
 			public boolean isValidParent(
 				@Nonnull
 					ItemStack item) {
-				if (!item.isEmpty()) {
-					for (String parent : Config.MACHINES.STORAGE_BLOCKS) {
-						String[] _s = parent.replace(",", "").split("/");
-						String regName = parent;
-						int meta = -1;
-						if (_s.length > 1) {
-							regName = _s[0];
-							meta = Integer.parseInt(_s[1]);
-						}
-						if (item.getItem().getRegistryName().toString().equals(regName)) {
-							if (meta == -1 || item.getMetadata() == meta)
-								return true;
-						}
+				if(item.isEmpty()){
+					return false;
+				}
+				for (String parent : Config.MACHINES.STORAGE_BLOCKS) {
+					String[] _s = parent.replace(",", "").split("/");
+					String regName = parent;
+					int meta = -1;
+					if (_s.length > 1) {
+						regName = _s[0];
+						meta = Integer.parseInt(_s[1]);
+					}
+					if (item.getItem().getRegistryName().toString().equals(regName)) {
+						if (meta == -1 || item.getMetadata() == meta)
+							return true;
 					}
 				}
-
+				for(Integer id : OreDictionary.getOreIDs(item)){
+					if(OreDictionary.getOreName(id).equals("chest")){
+						return true;
+					}
+				}
 				return false;
 			}
 
