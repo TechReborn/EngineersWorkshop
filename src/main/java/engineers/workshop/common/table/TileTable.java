@@ -260,7 +260,8 @@ public class TileTable extends TileEntity implements IInventory, ISidedInventory
 	}
 
 	private void sendToAllPlayersExcept(DataPacket dw, EntityPlayer ignored, List<EntityPlayer> players) {
-		players.stream().filter(player -> !player.equals(ignored))
+		//list is copied to prevent very rare CME's
+		new ArrayList<EntityPlayer>().stream().filter(player -> !player.equals(ignored))
 			.forEach(player -> PacketHandler.sendToPlayer(dw, player));
 	}
 
