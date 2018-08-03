@@ -271,7 +271,7 @@ public class PageTransfer extends Page {
 				for (int i = 0; i < ItemSetting.ITEM_COUNT; i++) {
 					gui.prepare();
 					ItemSetting setting = selectedTransfer.getItem(i);
-					ItemStack item = setting != null ? setting.getItem() : null;
+					ItemStack item = setting != null ? setting.getItem() : ItemStack.EMPTY;
 					int x = ITEM_X + i * ITEM_OFFSET;
 
 					gui.drawItemWithBackground(item, x, ITEM_Y, mX, mY);

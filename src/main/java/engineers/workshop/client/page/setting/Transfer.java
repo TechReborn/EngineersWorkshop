@@ -63,13 +63,13 @@ public class Transfer {
 	}
 
 	public boolean isValid(TileTable table, ItemStack item) {
-		if (item == null || !table.getUpgradePage().hasGlobalUpgrade(Upgrade.FILTER)) {
+		if (item.isEmpty() || !table.getUpgradePage().hasGlobalUpgrade(Upgrade.FILTER)) {
 			return true;
 		}
 
 		for (ItemSetting itemSetting : items) {
 			ItemStack filterItem = itemSetting.getItem();
-			if (filterItem != null) {
+			if (!filterItem.isEmpty()) {
 				boolean match = itemSetting.getMode().isMatch(item, filterItem);
 
 				if (match) {
@@ -83,7 +83,7 @@ public class Transfer {
 	public boolean hasFilter(TileTable table) {
 		if (table.getUpgradePage().hasGlobalUpgrade(Upgrade.FILTER)) {
 			for (ItemSetting item : items) {
-				if (item.getItem() != null) {
+				if (!item.getItem().isEmpty()) {
 					return true;
 				}
 			}
@@ -101,7 +101,7 @@ public class Transfer {
 			NBTTagList itemList = new NBTTagList();
 			for (int i = 0; i < items.length; i++) {
 				ItemSetting item = items[i];
-				if (item.getItem() != null) {
+				if (!item.getItem().isEmpty()) {
 					NBTTagCompound itemCompound = new NBTTagCompound();
 					itemCompound.setByte(NBT_ID, (byte) i);
 					itemCompound.setByte(NBT_MODE, (byte) item.getMode().ordinal());

@@ -37,6 +37,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import reborncore.common.network.packet.CustomDescriptionPacket;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
