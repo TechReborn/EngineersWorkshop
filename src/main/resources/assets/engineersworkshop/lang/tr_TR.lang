@@ -1,3 +1,4 @@
+### Translated by RoCoKo
 #Blocks
 tile.engineersworkshop:blockTable.name=Atölye Masası
 
@@ -5,7 +6,7 @@ tile.engineersworkshop:blockTable.name=Atölye Masası
 engineersworkshop:upgrade.blank.name=Boş Yükseltme
 engineersworkshop:upgrade.auto_crafter.name=Otomatik üretim Yükseltmesi
 engineersworkshop:upgrade.storage.name=Depolama Yükseltmesi
-engineersworkshop:upgrade.charged.name=�arj Yükseltmesi
+engineersworkshop:upgrade.charged.name=Şarj Yükseltmesi
 engineersworkshop:upgrade.speed.name=Hız Yükseltmesi
 engineersworkshop:upgrade.queue.name=Sıralama Yükseltmesi
 engineersworkshop:upgrade.efficiency.name=Verimlilik Yükseltmesi
