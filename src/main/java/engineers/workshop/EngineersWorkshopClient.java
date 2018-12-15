@@ -13,6 +13,5 @@ public class EngineersWorkshopClient implements ClientModInitializer {
 //			Upgrade[] upgrades = Upgrade.values().clone();
 //			ModelLoader.setCustomModelResourceLocation(EngineersWorkshop.itemUpgrade, i, new ModelResourceLocation(MODID + ":upgrades/" + upgrades[i].getName()));
 //		}
-		EngineersWorkshop.blockTable.registerModel();
 	}
 }

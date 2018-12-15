@@ -19,6 +19,7 @@ import engineers.workshop.common.unit.Unit;
 import engineers.workshop.common.unit.UnitCraft;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.FurnaceBlockEntity;
+import net.minecraft.client.network.packet.BlockEntityUpdateClientPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -73,7 +74,7 @@ public class TileTable extends BlockEntity implements Inventory, SidedInventory,
 	private int[][] sideSlots = new int[6][];
 
 	public TileTable() {
-		super();
+		super(EngineersWorkshop.blockEntityTable);
 		pages = new ArrayList<>();
 		pages.add(new PageMain(this, "main"));
 		pages.add(new PageTransfer(this, "transfer"));
@@ -501,11 +502,7 @@ public class TileTable extends BlockEntity implements Inventory, SidedInventory,
 			int fuelLevel = FurnaceBlockEntity.getBurnTimeMap().get(fuel.getItem());
 			if (fuelLevel > 0 && fuelLevel + this.fuel <= maxFuel) {
 				this.fuel += fuelLevel;
-				if (fuel.getItem().hasContainerItem(fuel)) {
-					fuelSlot.setStack(fuel.getItem().getContainerItem(fuel).copy());
-				} else {
-					takeInvStack(fuelSlot.id, 1);
-				}
+				takeInvStack(fuelSlot.id, 1);
 			}
 		}
 
@@ -516,7 +513,7 @@ public class TileTable extends BlockEntity implements Inventory, SidedInventory,
 	public void onUpgradeChangeDistribute() {
 		if (!world.isRemote) {
 			onUpgradeChange();
-			world.notifyNeighborsOfStateChange(pos, EngineersWorkshop.blockTable, true);
+			//world.notifyNeighborsOfStateChange(pos, EngineersWorkshop.blockTable, true);
 			sendToAllPlayers(PacketHandler.getPacket(this, PacketId.UPGRADE_CHANGE), players);
 		} else {
 			getUpgradePage().onUpgradeChange();
@@ -603,20 +600,10 @@ public class TileTable extends BlockEntity implements Inventory, SidedInventory,
 	}
 
 	@Override
-	public CompoundTag getUpdateTag() {
-		return writeToNBT(new CompoundTag());
-	}
-
-	@Override
-	public SPacketUpdateBlockEntity getUpdatePacket() {
+	public BlockEntityUpdateClientPacket toUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		this.writeToNBT(nbt);
-		return new SPacketUpdateBlockEntity(getPos(), 1, nbt);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateBlockEntity packet) {
-		this.readFromNBT(packet.getNbtCompound());
+		this.toTag(nbt);
+		return new BlockEntityUpdateClientPacket(getPos(), 1, nbt);
 	}
 
 	@Override
