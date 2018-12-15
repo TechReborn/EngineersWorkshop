@@ -4,8 +4,6 @@ import engineers.workshop.client.GuiBase;
 import engineers.workshop.client.GuiTable;
 import engineers.workshop.client.container.slot.SlotBase;
 import engineers.workshop.common.table.TileTable;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 
 public abstract class Page {
@@ -36,13 +34,11 @@ public abstract class Page {
 		table.addSlot(slot);
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void draw(GuiBase gui, int mX, int mY) {
 		gui.drawString(StringUtils.capitalize(name), 8, 6, 0x1E1E1E);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void onClick(GuiBase gui, int mX, int mY, int button) {
+	public void onClick(GuiBase gui, double mX, double mY, int button) {
 	}
 
 	public int getId() {
@@ -52,7 +48,6 @@ public abstract class Page {
 	public void onUpdate() {
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void onRelease(GuiTable gui, int mX, int mY, int button) {
 	}
 }

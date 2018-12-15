@@ -1,15 +1,15 @@
 package engineers.workshop.common.util.helpers;
 
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.text.TextFormat;
 
-import static net.minecraft.util.text.TextFormatting.*;
+import static net.minecraft.text.TextFormat.*;
 
 /**
  * Created by EwyBoy
  **/
 public class ColorHelper {
 
-	public static TextFormatting getPowerColor(float power, float maxPower) {
+	public static TextFormat getPowerColor(float power, float maxPower) {
 		float percentage = ((power) / maxPower) * 100;
 		int color = (int) (percentage / (100f / 8));
 

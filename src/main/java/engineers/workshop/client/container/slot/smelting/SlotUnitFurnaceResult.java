@@ -4,13 +4,10 @@ import engineers.workshop.client.container.slot.SlotUnit;
 import engineers.workshop.client.page.Page;
 import engineers.workshop.common.table.TileTable;
 import engineers.workshop.common.unit.Unit;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-
 public class SlotUnitFurnaceResult extends SlotUnit {
 
 	public SlotUnitFurnaceResult(TileTable table, Page page, int id, int x, int y, Unit unit) {
@@ -23,7 +20,7 @@ public class SlotUnitFurnaceResult extends SlotUnit {
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack itemstack) {
+	public boolean canAcceptItem(ItemStack itemstack) {
 		return false;
 	}
 
@@ -38,19 +35,18 @@ public class SlotUnitFurnaceResult extends SlotUnit {
 	}
 
 	@Override
-	public ItemStack onTake(EntityPlayer player, ItemStack item) {
-		item = super.onTake(player, item);
-		FMLCommonHandler.instance().firePlayerSmeltedEvent(player, item);
-		item.onCrafting(player.getEntityWorld(), player, item.getCount());
+	public ItemStack onTakeItem(PlayerEntity player, ItemStack item) {
+		item = super.onTakeItem(player, item);
+		item.onCrafted(player.getEntityWorld(), player, item.getAmount());
 		givePlayerXP(item, player);
 		return item;
 	}
 
 	//Taken from vanilla
-	public void givePlayerXP(ItemStack stack, EntityPlayer player) {
+	public void givePlayerXP(ItemStack stack, PlayerEntity player) {
 		if (!player.world.isRemote) {
-			int stackSize = stack.getCount();
-			float experience = FurnaceRecipes.instance().getSmeltingExperience(stack);
+			int stackSize = stack.getAmount();
+			float experience = 1F ;//TODO FurnaceRecipes.instance().getSmeltingExperience(stack);
 			if (experience == 0.0F) {
 				stackSize = 0;
 			} else if (experience < 1.0F) {
@@ -61,9 +57,9 @@ public class SlotUnitFurnaceResult extends SlotUnit {
 				stackSize = xpCount;
 			}
 			while (stackSize > 0) {
-				int xpSplit = EntityXPOrb.getXPSplit(stackSize);
+				int xpSplit = ExperienceOrbEntity.roundToOrbSize(stackSize);
 				stackSize -= xpSplit;
-				player.world.spawnEntity(new EntityXPOrb(player.world, player.posX, player.posY + 0.5D, player.posZ + 0.5D, xpSplit));
+				player.world.spawnEntity(new ExperienceOrbEntity(player.world, player.x, player.y + 0.5D, player.z + 0.5D, xpSplit));
 			}
 		}
 	}

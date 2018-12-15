@@ -1,15 +1,13 @@
 package engineers.workshop.client.container;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.container.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import reborncore.common.container.RebornContainer;
+import net.minecraft.util.DefaultedList;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,39 +36,32 @@ public abstract class ContainerBase extends RebornContainer {
 	private static final int CLICK_DRAG_MODE_SLOT = 1;
 	private static final int CLICK_DRAG_MODE_POST = 2;
 	private final Set<Slot> draggedSlots = new HashSet<>();
-	@SideOnly(Side.CLIENT)
 	private short transactionID;
 	private int dragMouseButton = -1;
 	private int dragMode;
-	private Set<EntityPlayer> invalidPlayers = new HashSet<>();
+	private Set<PlayerEntity> invalidPlayers = new HashSet<>();
 
 	private List<ItemStack> getItems() {
-		return inventoryItemStacks;
+		return stackList;
 	}
 
 	private List<Slot> getSlots() {
-		return inventorySlots;
+		return new ArrayList<>(slotMap.values());
 	}
 
 	@Override
-	protected Slot addSlotToContainer(Slot slot) {
-		slot.slotNumber = this.inventorySlots.size();
+	protected Slot addSlot(Slot slot) {
+		slot.id = this.slotMap.size();
 		getSlots().add(slot);
 		getItems().add(ItemStack.EMPTY);
 		return slot;
 	}
 
 	@Override
-	public NonNullList<ItemStack> getInventory() {
-
-		NonNullList<ItemStack> result = NonNullList.create();
+	public DefaultedList<ItemStack> getStacks() {
+		DefaultedList<ItemStack> result = DefaultedList.create();
 		getSlots().forEach(slot -> result.add(slot.getStack()));
 		return result;
-	}
-
-	@Override
-	public boolean enchantItem(EntityPlayer player, int slotId) {
-		return false;
 	}
 
 	@Override
@@ -79,30 +70,25 @@ public abstract class ContainerBase extends RebornContainer {
 	}
 
 	@Override
-	public void onCraftMatrixChanged(IInventory inventory) {
-		detectAndSendChanges();
+	public void onContentChanged(Inventory inventory) {
+		sendContentUpdates();
 	}
 
 	@Override
-	public void putStackInSlot(int slotId, ItemStack item) {
-		getSlot(slotId).putStack(item);
+	public void setStackInSlot(int slotId, ItemStack item) {
+		getSlot(slotId).setStack(item);
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int data) {}
-
-	@SideOnly(Side.CLIENT)
-	public short getNextTransactionID(InventoryPlayer inventory) {
+	public short getNextTransactionID(PlayerInventory inventory) {
 		transactionID++;
 		return transactionID;
 	}
 
-	protected boolean isPlayerValid(EntityPlayer player) {
+	protected boolean isPlayerValid(PlayerEntity player) {
 		return !invalidPlayers.contains(player);
 	}
 
-	protected void setValidState(EntityPlayer player, boolean valid) {
+	protected void setValidState(PlayerEntity player, boolean valid) {
 		if (valid) {
 			invalidPlayers.remove(player);
 		} else {
@@ -116,12 +102,12 @@ public abstract class ContainerBase extends RebornContainer {
 	}
 
 	@Override
-	public boolean canDragIntoSlot(Slot slot) {
+	public boolean method_7615(Slot slot) {
 		return true;
 	}
 
 	protected int getSlotStackLimit(Slot slot, ItemStack itemStack) {
-		return slot.getSlotStackLimit();
+		return slot.getMaxStackAmount();
 	}
 
 }

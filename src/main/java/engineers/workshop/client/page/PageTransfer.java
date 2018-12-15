@@ -10,11 +10,10 @@ import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.network.data.DataSide;
 import engineers.workshop.common.network.data.DataType;
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.math.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class PageTransfer extends Page {
 		settings.add(new SettingCoal(table, 4, SETTING_X + 2 * SETTING_OFFSET, SETTING_Y + SETTING_OFFSET / 2));
 
 		for (Setting setting : settings) {
-			for (EnumFacing direction : EnumFacing.values()) {
+			for (Direction direction : Direction.values()) {
 				setting.getSides().add(new Side(setting, direction, SIDE_X + getInterfaceX(direction) * SIDE_OFFSET, SIDE_Y + getInterfaceY(direction) * SIDE_OFFSET));
 			}
 		}
@@ -259,7 +258,7 @@ public class PageTransfer extends Page {
 				int textureIndexY = output && input ? 3 : output ? 2 : input ? 1 : 0;
 
 				gui.drawRect(side.getX(), side.getY(), SIDE_SRC_X + textureIndexX * SIDE_SIZE, SIDE_SRC_Y + textureIndexY * SIDE_SIZE, SIDE_SIZE, SIDE_SIZE);
-				gui.drawTexturedModalRect(side.getX() + SIDE_ITEM_OFFSET, side.getY() + SIDE_ITEM_OFFSET, 132 + (getTextureOffsetFromSide(side) * 16), 0, 16, 16);
+				gui.drawRect(side.getX() + SIDE_ITEM_OFFSET, side.getY() + SIDE_ITEM_OFFSET, 132 + (getTextureOffsetFromSide(side) * 16), 0, 16, 16);
 				if (hover) {
 					gui.drawMouseOver(side.getDescription(side == selectedSide));
 				}
@@ -289,7 +288,7 @@ public class PageTransfer extends Page {
 	}
 
 	@Override
-	public void onClick(GuiBase gui, int mX, int mY, int button) {
+	public void onClick(GuiBase gui, double mX, double mY, int button) {
 		for (Setting setting : settings) {
 			if (gui.inBounds(setting.getX(), setting.getY(), SETTING_SIZE, SETTING_SIZE, mX, mY)) {
 				if (setting.isValid()) {
@@ -360,13 +359,13 @@ public class PageTransfer extends Page {
 			if (selectedTransfer != null && table.getUpgradePage().hasGlobalUpgrade(Upgrade.FILTER)) {
 				for (int i = 0; i < ItemSetting.ITEM_COUNT; i++) {
 					if (gui.inBounds(ITEM_X + i * ITEM_OFFSET, ITEM_Y, ITEM_SIZE, ITEM_SIZE, mX, mY)) {
-						EntityPlayer player = getPlayer();
-						ItemStack itemStack = player.inventory.getItemStack();
+						PlayerEntity player = getPlayer();
+						ItemStack itemStack = player.inventory.getMainHandStack();
 						if (itemStack.isEmpty()) {
 							table.setMenu(new GuiMenuItem(table, selectedTransfer.getItem(i)));
 						} else {
 							itemStack = itemStack.copy();
-							itemStack.setCount(1);
+							itemStack.setAmount(1);
 							selectedTransfer.getItem(i).setItem(itemStack);
 							table.updateServer(DataType.SIDE_FILTER, getSyncId(selectedTransfer.getItem(i)));
 						}
@@ -385,9 +384,8 @@ public class PageTransfer extends Page {
 		}
 	}
 
-	@SideOnly(net.minecraftforge.fml.relauncher.Side.CLIENT)
-	private EntityPlayer getPlayer() {
-		return Minecraft.getMinecraft().player;
+	private PlayerEntity getPlayer() {
+		return MinecraftClient.getInstance().player;
 	}
 
 	@Override
@@ -405,7 +403,7 @@ public class PageTransfer extends Page {
 	}
 
 	// EnumFacing
-	private int getInterfaceX(EnumFacing enumFacing) {
+	private int getInterfaceX(Direction enumFacing) {
 		switch (enumFacing) {
 			case DOWN: // BOTTOM
 				return 1;
@@ -423,7 +421,7 @@ public class PageTransfer extends Page {
 		return -1;
 	}
 
-	private int getInterfaceY(EnumFacing enumFacing) {
+	private int getInterfaceY(Direction enumFacing) {
 		switch (enumFacing) {
 			case DOWN: // BOTTOM
 				return 2;

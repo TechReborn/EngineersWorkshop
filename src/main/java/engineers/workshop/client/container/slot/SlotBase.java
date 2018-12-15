@@ -3,12 +3,10 @@ package engineers.workshop.client.container.slot;
 import engineers.workshop.client.GuiBase;
 import engineers.workshop.client.page.setting.Transfer;
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.container.Slot;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SlotBase extends Slot {
 	protected TileTable table;
@@ -18,7 +16,7 @@ public class SlotBase extends Slot {
 	private Transfer[] input = new Transfer[6];
 	private Transfer[] output = new Transfer[6];
 
-	public SlotBase(IInventory inventory, TileTable table, int id, int x, int y) {
+	public SlotBase(Inventory inventory, TileTable table, int id, int x, int y) {
 		super(inventory, id, x, y);
 
 		this.x = x;
@@ -26,36 +24,35 @@ public class SlotBase extends Slot {
 		this.table = table;
 	}
 
-	@SideOnly(Side.CLIENT)
 	protected static boolean shouldHighlight(SlotBase slot, SlotBase other) {
-		return Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty() && slot != null
-			&& !slot.getHasStack() && other != null && other.getHasStack() && slot.isItemValid(other.getStack())
-			&& slot.getSlotStackLimit(other.getStack()) > (slot.getHasStack() ? slot.getStack().getCount() : 0);
+		return MinecraftClient.getInstance().player.inventory.getMainHandStack().isEmpty() && slot != null
+			&& !slot.hasStack() && other != null && other.hasStack() && slot.canAcceptItem(other.getStack())
+			&& slot.getSlotStackLimit(other.getStack()) > (slot.hasStack() ? slot.getStack().getAmount() : 0);
 	}
 
 	public void updateClient(boolean visible) {
 		if (visible && isEnabled()) {
-			xPos = getX();
-			yPos = getY();
+			x = getX();
+			y = getY();
 		} else {
-			xPos = -9000;
-			yPos = -9000;
+			x = -9000;
+			y = -9000;
 		}
 	}
 
 	public void updateServer() {
-		if (!isEnabled() && getHasStack()) {
+		if (!isEnabled() && hasStack()) {
 			table.spitOutItem(getStack());
-			putStack(ItemStack.EMPTY);
+			setStack(ItemStack.EMPTY);
 		}
 
-		if (getHasStack() && getStack().getCount() == 0) {
-			putStack(ItemStack.EMPTY);
+		if (hasStack() && getStack().getAmount() == 0) {
+			setStack(ItemStack.EMPTY);
 		}
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack itemstack) {
+	public boolean canInsert(ItemStack itemstack) {
 		return isEnabled();
 	}
 
@@ -118,12 +115,12 @@ public class SlotBase extends Slot {
 	}
 
 	@Override
-	public int getSlotStackLimit() {
+	public int getMaxStackAmount() {
 		return getSlotStackLimit(ItemStack.EMPTY);
 	}
 
 	public int getSlotStackLimit(ItemStack item) {
-		return super.getSlotStackLimit();
+		return super.getMaxStackAmount();
 	}
 
 	public boolean canPickUpOnDoubleClick() {

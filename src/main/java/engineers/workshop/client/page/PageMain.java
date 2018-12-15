@@ -111,7 +111,7 @@ public class PageMain extends Page {
 	}
 
 	@Override
-	public void onClick(GuiBase gui, int mX, int mY, int button) {
+	public void onClick(GuiBase gui, double mX, double mY, int button) {
 		units.stream().filter(Unit::isEnabled).forEachOrdered(unit -> unit.onClick(gui, mX, mY));
 	}
 

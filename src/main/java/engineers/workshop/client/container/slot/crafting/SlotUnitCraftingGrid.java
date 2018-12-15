@@ -14,7 +14,7 @@ public class SlotUnitCraftingGrid extends SlotUnit {
 
 	@Override
 	public boolean canAcceptItem(ItemStack item) {
-		if (getHasStack() && !item.isEmpty()) {
+		if (hasStack() && !item.isEmpty()) {
 			UnitCraft crafting = (UnitCraft) unit;
 
 			int own = getCount(item, getStack());
@@ -22,8 +22,8 @@ public class SlotUnitCraftingGrid extends SlotUnit {
 			if (own != -1) {
 				int start = crafting.getGridId();
 				for (int i = start; i < start + 9; i++) {
-					if (i != getSlotIndex()) {
-						int other = getCount(item, table.getStackInSlot(i));
+					if (i != id) {
+						int other = getCount(item, table.getInvStack(i));
 						if (other != -1 && other < own) {
 							return false;
 						}
@@ -36,16 +36,16 @@ public class SlotUnitCraftingGrid extends SlotUnit {
 	}
 
 	private int getCount(ItemStack item, ItemStack slotItem) {
-		if (!slotItem.isEmpty() && slotItem.isItemEqual(item) && ItemStack.areItemStackTagsEqual(item, slotItem)) {
-			return slotItem.getCount();
+		if (!slotItem.isEmpty() && slotItem.isEqualIgnoreTags(item) && ItemStack.areTagsEqual(item, slotItem)) {
+			return slotItem.getAmount();
 		} else {
 			return -1;
 		}
 	}
 
 	@Override
-	public void onSlotChanged() {
-		super.onSlotChanged();
+	public void onStackChanged(ItemStack stack, ItemStack stack2)  {
+		super.onStackChanged(stack, stack2);
 		((UnitCraft) unit).onGridChanged();
 	}
 

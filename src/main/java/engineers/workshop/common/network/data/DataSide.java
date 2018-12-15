@@ -4,7 +4,8 @@ import engineers.workshop.client.page.setting.*;
 import engineers.workshop.common.table.TileTable;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.registry.Registry;
 
 public abstract class DataSide extends DataBase {
 
@@ -33,36 +34,36 @@ public abstract class DataSide extends DataBase {
 
 	public static class Enabled extends DataSide {
 		@Override
-		public void save(TileTable table, NBTTagCompound dw, int id) {
-			dw.setBoolean("enabled", getTransfer(table, id).isEnabled());
+		public void save(TileTable table, CompoundTag dw, int id) {
+			dw.putBoolean("enabled", getTransfer(table, id).isEnabled());
 		}
 
 		@Override
-		public void load(TileTable table, NBTTagCompound dr, int id) {
+		public void load(TileTable table, CompoundTag dr, int id) {
 			getTransfer(table, id).setEnabled(dr.getBoolean("enabled"));
 		}
 	}
 
 	public static class Auto extends DataSide {
 		@Override
-		public void save(TileTable table, NBTTagCompound dw, int id) {
-			dw.setBoolean("auto", getTransfer(table, id).isAuto());
+		public void save(TileTable table, CompoundTag dw, int id) {
+			dw.putBoolean("auto", getTransfer(table, id).isAuto());
 		}
 
 		@Override
-		public void load(TileTable table, NBTTagCompound dr, int id) {
+		public void load(TileTable table, CompoundTag dr, int id) {
 			getTransfer(table, id).setAuto(dr.getBoolean("auto"));
 		}
 	}
 
 	public static class WhiteList extends DataSide {
 		@Override
-		public void save(TileTable table, NBTTagCompound dw, int id) {
-			dw.setBoolean("whitelist", getTransfer(table, id).hasWhiteList());
+		public void save(TileTable table, CompoundTag dw, int id) {
+			dw.putBoolean("whitelist", getTransfer(table, id).hasWhiteList());
 		}
 
 		@Override
-		public void load(TileTable table, NBTTagCompound dr, int id) {
+		public void load(TileTable table, CompoundTag dr, int id) {
 			getTransfer(table, id).setUseWhiteList(dr.getBoolean("whitelist"));
 		}
 	}
@@ -81,32 +82,30 @@ public abstract class DataSide extends DataBase {
 
 	public static class Filter extends FilterBase {
 		@Override
-		public void save(TileTable table, NBTTagCompound dw, int id) {
+		public void save(TileTable table, CompoundTag dw, int id) {
 			ItemSetting setting = getSetting(table, id);
 			ItemStack itemStack = setting.getItem();
 
-			dw.setBoolean("hasItem", !itemStack.isEmpty());
+			dw.putBoolean("hasItem", !itemStack.isEmpty());
 			if (!itemStack.isEmpty()) {
-				dw.setInteger("id", Item.getIdFromItem(itemStack.getItem()));
-				dw.setInteger("damage", itemStack.getItemDamage());
-				if (itemStack.hasTagCompound()) {
-					dw.setTag("nbt", itemStack.getTagCompound());
+				dw.putInt("id", Registry.ITEM.getRawId(itemStack.getItem()));
+				if (itemStack.hasTag()) {
+					dw.put("nbt", itemStack.getTag());
 				}
 
 			}
 		}
 
 		@Override
-		public void load(TileTable table, NBTTagCompound dr, int id) {
+		public void load(TileTable table, CompoundTag dr, int id) {
 			ItemSetting setting = getSetting(table, id);
 
 			if (dr.getBoolean("hasItem")) {
-				int itemId = dr.getInteger("id");
-				int itemDmg = dr.getInteger("damage");
+				int itemId = dr.getInt("id");
 
-				ItemStack item = new ItemStack(Item.getItemById(itemId), 1, itemDmg);
-				if (dr.hasKey("nbt")) {
-					item.setTagCompound(dr.getCompoundTag("nbt"));
+				ItemStack item = new ItemStack(Registry.ITEM.getInt(itemId), 1);
+				if (dr.containsKey("nbt")) {
+					item.setTag(dr.getCompound("nbt"));
 				}
 
 				setting.setItem(item);
@@ -118,13 +117,13 @@ public abstract class DataSide extends DataBase {
 
 	public static class FilterMode extends FilterBase {
 		@Override
-		public void save(TileTable table, NBTTagCompound dw, int id) {
-			dw.setInteger("mode", getSetting(table, id).getMode().ordinal());
+		public void save(TileTable table, CompoundTag dw, int id) {
+			dw.putInt("mode", getSetting(table, id).getMode().ordinal());
 		}
 
 		@Override
-		public void load(TileTable table, NBTTagCompound dr, int id) {
-			getSetting(table, id).setMode(TransferMode.values()[dr.getInteger("mode")]);
+		public void load(TileTable table, CompoundTag dr, int id) {
+			getSetting(table, id).setMode(TransferMode.values()[dr.getInt("mode")]);
 		}
 	}
 }

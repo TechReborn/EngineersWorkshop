@@ -2,39 +2,21 @@ package engineers.workshop.common.table;
 
 import engineers.workshop.EngineersWorkshop;
 import engineers.workshop.client.container.slot.SlotBase;
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.registries.GameData;
 
 import java.util.Random;
 
 import static engineers.workshop.common.util.Reference.Info.MODID;
 
-public class BlockTable extends Block implements ITileEntityProvider {
+public class BlockTable extends BlockWithEntity implements IBlockEntityProvider {
 
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
@@ -48,7 +30,7 @@ public class BlockTable extends Block implements ITileEntityProvider {
 		ItemBlock itemBlock = new ItemBlock(this);
 		itemBlock.setRegistryName(getRegistryName());
 		GameData.register_impl(itemBlock);
-		GameRegistry.registerTileEntity(TileTable.class, MODID + ":" + "blockTable");
+		GameRegistry.registerBlockEntity(TileTable.class, MODID + ":" + "blockTable");
 		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 	}
 
@@ -80,23 +62,22 @@ public class BlockTable extends Block implements ITileEntityProvider {
 		return EnumBlockRenderType.MODEL;
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void registerModel() {
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public BlockEntity createNewBlockEntity(World worldIn, int meta) {
 		return new TileTable();
 	}
 
 	@Override
-	public boolean hasTileEntity(IBlockState state) {
+	public boolean hasBlockEntity(IBlockState state) {
 		return true;
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, PlayerEntity playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			FMLNetworkHandler.openGui(playerIn, EngineersWorkshop.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
@@ -104,7 +85,7 @@ public class BlockTable extends Block implements ITileEntityProvider {
 	}
 
 	@Override
-	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest) {
 		if (!world.isRemote) {
 			if (!player.isCreative()) {
 				dropInventory(world, pos);
@@ -120,10 +101,10 @@ public class BlockTable extends Block implements ITileEntityProvider {
 			int y = pos.getY();
 			int z = pos.getZ();
 
-			TileEntity tileEntity = world.getTileEntity(pos);
+			BlockEntity blockEntity = world.getBlockEntity(pos);
 
-			if (tileEntity instanceof TileTable) {
-				TileTable table = (TileTable) tileEntity;
+			if (blockEntity instanceof TileTable) {
+				TileTable table = (TileTable) blockEntity;
 				for (SlotBase slot : table.getSlots()) {
 					if (slot.shouldDropOnClosing()) {
 						ItemStack itemStack = slot.getStack();
@@ -134,19 +115,19 @@ public class BlockTable extends Block implements ITileEntityProvider {
 							float dY = random.nextFloat() * 0.8F + 0.1F;
 							float dZ = random.nextFloat() * 0.8F + 0.1F;
 
-							EntityItem entityItem = new EntityItem(world, (double) ((float) x + dX),
+							ItemEntity entityItem = new ItemEntity(world, (double) ((float) x + dX),
 								(double) ((float) y + dY), (double) ((float) z + dZ), itemStack.copy());
-							if (itemStack.hasTagCompound()) {
-								entityItem.getItem().setTagCompound(itemStack.getTagCompound().copy());
+							if (itemStack.hasTag()) {
+								entityItem.getStack().setTag(itemStack.getTag().copy());
 							}
 							float factor = 0.05F;
 
-							entityItem.motionX = random.nextGaussian() * (double) factor;
-							entityItem.motionX = random.nextGaussian() * (double) factor + 0.2D;
-							entityItem.motionX = random.nextGaussian() * (double) factor;
+							entityItem.velocityX = random.nextGaussian() * (double) factor;
+							entityItem.velocityY = random.nextGaussian() * (double) factor + 0.2D;
+							entityItem.velocityZ = random.nextGaussian() * (double) factor;
 
 							world.spawnEntity(entityItem);
-							itemStack.setCount(0);
+							itemStack.setAmount(0);
 						}
 					}
 				}
@@ -154,10 +135,8 @@ public class BlockTable extends Block implements ITileEntityProvider {
 		}
 	}
 
-	//Removes the tile from the world
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		super.breakBlock(worldIn, pos, state);
-		worldIn.removeTileEntity(pos);
+	public BlockEntity createBlockEntity(BlockView blockView) {
+		return new TileTable();
 	}
 }

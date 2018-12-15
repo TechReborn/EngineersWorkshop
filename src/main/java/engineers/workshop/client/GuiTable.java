@@ -1,5 +1,6 @@
 package engineers.workshop.client;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import engineers.workshop.client.container.ContainerTable;
 import engineers.workshop.client.container.slot.SlotBase;
 import engineers.workshop.client.page.Page;
@@ -9,9 +10,8 @@ import engineers.workshop.common.network.data.DataType;
 import engineers.workshop.common.table.TileTable;
 import engineers.workshop.common.util.helpers.ColorHelper;
 import engineers.workshop.common.util.helpers.FormattingHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,33 +50,33 @@ public class GuiTable extends GuiBase {
 	private ContainerTable containerTable;
 	private boolean closed = true;
 
-	public GuiTable(TileTable table, EntityPlayer player) {
+	public GuiTable(TileTable table, PlayerEntity player) {
 		super(new ContainerTable(table, player));
 
-		xSize = 256;
-		ySize = 256;
+		containerWidth = 256;
+		containerHeight = 256;
 		slots = new ArrayList<>();
 
-		for (Object obj : inventorySlots.inventorySlots) {
+		for (Object obj : container.slotList) {
 			SlotBase slot = (SlotBase) obj;
 			slots.add(slot);
 			slot.updateClient(slot.isVisible());
 		}
 
 		this.table = table;
-		this.containerTable = (ContainerTable) this.inventorySlots;
+		this.containerTable = (ContainerTable) this.container;
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mX, int mY) {
+	protected void drawForeground(int mX, int mY) {
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(guiLeft, guiTop, 0);
-		mX -= guiLeft;
-		mY -= guiTop;
+		GlStateManager.translatef(left, top, 0);
+		mX -= left;
+		mY -= top;
 
-		mc.getTextureManager().bindTexture(BACKGROUND);
-		GlStateManager.color(1F, 1F, 1F);
-		drawTexturedModalRect(0, 0, 0, 0, xSize, ySize);
+		client.getTextureManager().bindTexture(BACKGROUND);
+		GlStateManager.color3f(1F, 1F, 1F);
+		drawRect(0, 0, 0, 0, containerWidth, height);
 
 		drawSlots();
 		if (table.getMenu() == null) {
@@ -90,10 +90,15 @@ public class GuiTable extends GuiBase {
 	}
 
 	@Override
-	protected void mouseClicked(int mX, int mY, int button) throws IOException {
+	protected void drawBackground(float v, int i, int i1) {
+
+	}
+
+	@Override
+	public boolean mouseClicked(double mX, double mY, int button) {
 		super.mouseClicked(mX, mY, button);
-		mX -= guiLeft;
-		mY -= guiTop;
+		mX -= left;
+		mY -= top;
 
 		if (table.getMenu() == null) {
 			clickPageHeader(mX, mY);
@@ -101,19 +106,21 @@ public class GuiTable extends GuiBase {
 		} else {
 			table.getMenu().onClick(this, mX, mY);
 		}
+		return true;
 	}
 
 	@Override
-	protected void keyTyped(char c, int k) throws IOException {
+	public boolean keyPressed(int c, int k, int var3) {
 		if (table.getMenu() == null) {
-			super.keyTyped(c, k);
+			return super.keyPressed(c, k, var3);
 		} else {
 			if (k == 1) {
-				this.mc.player.closeScreen();
+				this.client.player.closeGui();
 			} else {
 				table.getMenu().onKeyStroke(this, c, k);
 			}
 		}
+		return true;
 	}
 
 	private void drawPageHeaders(int mX, int mY) {
@@ -138,7 +145,7 @@ public class GuiTable extends GuiBase {
 		}
 	}
 
-	private void clickPageHeader(int mX, int mY) {
+	private void clickPageHeader(double mX, double mY) {
 		for (int i = 0; i < table.getPages().size(); i++) {
 			Page page = table.getPages().get(i);
 			int y = HEADER_Y + HEADER_HEIGHT * i;
@@ -173,7 +180,7 @@ public class GuiTable extends GuiBase {
 
 		int height = POWER_INNER_HEIGHT * containerTable.power / table.maxFuel;
 		int offset = POWER_INNER_HEIGHT - height;
-		GlStateManager.color(ColorHelper.getRed(containerTable.power, getTable().maxFuel), ColorHelper.getGreen(containerTable.power, getTable().maxFuel), ColorHelper.getBlue(containerTable.power, getTable().maxFuel));
+		GlStateManager.color3f(ColorHelper.getRed(containerTable.power, getTable().maxFuel), ColorHelper.getGreen(containerTable.power, getTable().maxFuel), ColorHelper.getBlue(containerTable.power, getTable().maxFuel));
 		drawRect(POWER_X + POWER_INNER_OFFSET_X, POWER_Y + POWER_INNER_OFFSET_Y + offset, POWER_INNER_SRC_X, POWER_INNER_SRC_Y + offset, POWER_INNER_WIDTH, height);
 		drawRect(POWER_X, POWER_Y + POWER_INNER_OFFSET_Y + offset - 1, POWER_SRC_X, POWER_SRC_Y - 1, POWER_WIDTH, 1);
 		int srcX = POWER_SRC_X;
@@ -181,7 +188,7 @@ public class GuiTable extends GuiBase {
 		if (hover)
 			srcX += POWER_WIDTH;
 		drawRect(POWER_X, POWER_Y, srcX, POWER_SRC_Y, POWER_WIDTH, POWER_HEIGHT);
-		GlStateManager.color(1.0f, 1.0f, 1.0f);
+		GlStateManager.color3f(1.0f, 1.0f, 1.0f);
 
 		if (hover) {
 			String str = ColorHelper.getPowerColor(containerTable.power, getTable().maxFuel) + "Fuel: " + FormattingHelper.formatNumber(containerTable.power) + " / " + FormattingHelper.formatNumber((int) table.maxFuel);
@@ -190,8 +197,8 @@ public class GuiTable extends GuiBase {
 	}
 
 	@Override
-	public void onGuiClosed() {
-		super.onGuiClosed();
+	public void close() {
+		super.close();
 		if (!closed) {
 			PacketHandler.sendToServer(PacketHandler.getPacket(table, PacketId.CLOSE));
 			closed = true;
@@ -199,8 +206,8 @@ public class GuiTable extends GuiBase {
 	}
 
 	@Override
-	public void setWorldAndResolution(Minecraft minecraft, int width, int height) {
-		super.setWorldAndResolution(minecraft, width, height);
+	public void onScaleChanged(MinecraftClient minecraft, int width, int height) {
+		super.onScaleChanged(minecraft, width, height);
 		if (closed) {
 			closed = false;
 			PacketHandler.sendToServer(PacketHandler.getPacket(table, PacketId.RE_OPEN));

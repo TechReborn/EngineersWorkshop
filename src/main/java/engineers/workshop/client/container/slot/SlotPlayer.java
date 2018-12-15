@@ -2,10 +2,10 @@ package engineers.workshop.client.container.slot;
 
 import engineers.workshop.client.GuiBase;
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 
 public class SlotPlayer extends SlotBase {
-	public SlotPlayer(IInventory inventory, TileTable table, int id, int x, int y) {
+	public SlotPlayer(Inventory inventory, TileTable table, int id, int x, int y) {
 		super(inventory, table, id, x, y);
 	}
 

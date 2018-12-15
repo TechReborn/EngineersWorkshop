@@ -3,8 +3,8 @@ package engineers.workshop.client.container.slot;
 import engineers.workshop.client.page.Page;
 import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.table.TileTable;
+import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityFurnace;
 
 public class SlotFuel extends SlotTable {
 
@@ -13,8 +13,8 @@ public class SlotFuel extends SlotTable {
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack stack) {
+	public boolean canAcceptItem(ItemStack stack) {
 		String[] upgrades = {};
-		return super.isItemValid(stack) && TileEntityFurnace.isItemFuel(stack) && !(Upgrade.ParentType.CRAFTING.isValidParent(stack) || Upgrade.ParentType.SMELTING.isValidParent(stack) || Upgrade.ParentType.CRUSHING.isValidParent(stack) || Upgrade.ParentType.ALLOY.isValidParent(stack) || Upgrade.ParentType.STORAGE.isValidParent(stack));
+		return super.canAcceptItem(stack) && FurnaceBlockEntity.canUseAsFuel(stack) && !(Upgrade.ParentType.CRAFTING.isValidParent(stack) || Upgrade.ParentType.SMELTING.isValidParent(stack) || Upgrade.ParentType.CRUSHING.isValidParent(stack) || Upgrade.ParentType.ALLOY.isValidParent(stack) || Upgrade.ParentType.STORAGE.isValidParent(stack));
 	}
 }

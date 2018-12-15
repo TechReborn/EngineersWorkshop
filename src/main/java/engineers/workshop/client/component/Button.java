@@ -1,8 +1,6 @@
 package engineers.workshop.client.component;
 
 import engineers.workshop.client.GuiBase;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class Button {
 
@@ -20,7 +18,6 @@ public abstract class Button {
 		this.y = y;
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void draw(GuiBase gui, int mX, int mY) {
 		if (isVisible()) {
 			gui.prepare();
@@ -30,8 +27,7 @@ public abstract class Button {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void onClick(GuiBase gui, int mX, int mY) {
+	public void onClick(GuiBase gui, double mX, double mY) {
 		if (isVisible() && gui.inBounds(x, y, WIDTH, HEIGHT, mX, mY)) {
 			clicked();
 		}

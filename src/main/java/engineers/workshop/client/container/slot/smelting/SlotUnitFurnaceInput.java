@@ -14,8 +14,8 @@ public class SlotUnitFurnaceInput extends SlotUnit {
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack itemstack) {
-		return super.isItemValid(itemstack) && !FurnaceRecipes.instance().getSmeltingResult(itemstack).isEmpty();
+	public boolean canAcceptItem(ItemStack itemstack) {
+		return super.canAcceptItem(itemstack) && !FurnaceRecipes.instance().getSmeltingResult(itemstack).isEmpty();
 	}
 
 	@Override

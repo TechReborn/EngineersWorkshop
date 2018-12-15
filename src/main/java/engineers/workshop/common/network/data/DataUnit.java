@@ -2,7 +2,7 @@ package engineers.workshop.common.network.data;
 
 import engineers.workshop.common.table.TileTable;
 import engineers.workshop.common.unit.Unit;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public abstract class DataUnit extends DataBase {
 
@@ -30,27 +30,27 @@ public abstract class DataUnit extends DataBase {
 	public static class Progress extends DataUnit {
 
 		@Override
-		public void save(TileTable table, NBTTagCompound dw, int id) {
-			dw.setInteger("progress", getUnit(table, id).getProductionProgress());
+		public void save(TileTable table, CompoundTag dw, int id) {
+			dw.putInt("progress", getUnit(table, id).getProductionProgress());
 		}
 
 		@Override
-		public void load(TileTable table, NBTTagCompound dr, int id) {
-			getUnit(table, id).setProductionProgress(dr.getInteger("progress"));
+		public void load(TileTable table, CompoundTag dr, int id) {
+			getUnit(table, id).setProductionProgress(dr.getInt("progress"));
 		}
 	}
 
 	public static class Charged extends DataUnit {
 
 		@Override
-		public void save(TileTable table, NBTTagCompound dw, int id) {
-			dw.setInteger("id", id);
-			dw.setInteger("charge", getUnit(table, id).getChargeCount());
+		public void save(TileTable table, CompoundTag dw, int id) {
+			dw.putInt("id", id);
+			dw.putInt("charge", getUnit(table, id).getChargeCount());
 		}
 
 		@Override
-		public void load(TileTable table, NBTTagCompound dr, int id) {
-			getUnit(table, id).setChargeCount(dr.getInteger("charge"));
+		public void load(TileTable table, CompoundTag dr, int id) {
+			getUnit(table, id).setChargeCount(dr.getInt("charge"));
 		}
 	}
 

@@ -35,9 +35,4 @@ public class SlotUnitStorage extends SlotUnit {
 	public boolean shouldSlotHighlightSelf() {
 		return false;
 	}
-
-	@Override
-	public void onSlotChanged() {
-		super.onSlotChanged();
-	}
 }

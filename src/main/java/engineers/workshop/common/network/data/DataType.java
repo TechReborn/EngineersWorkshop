@@ -3,7 +3,7 @@ package engineers.workshop.common.network.data;
 import engineers.workshop.common.network.IBitCount;
 import engineers.workshop.common.network.LengthCount;
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public enum DataType {
 	PAGE(DataPage.class),
@@ -35,7 +35,7 @@ public enum DataType {
 		this.length = 1;
 	}
 
-	public void save(TileTable table, NBTTagCompound dw, int id) {
+	public void save(TileTable table, CompoundTag dw, int id) {
 		if (data != null) {
 			if (id == -1) {
 				for (int i = 0; i < length; i++) {
@@ -43,14 +43,14 @@ public enum DataType {
 				}
 			} else {
 				if (lengthBits != null) {
-					dw.setInteger("id", id);
+					dw.putInt("id", id);
 				}
 				data.save(table, dw, id);
 			}
 		}
 	}
 
-	public int load(TileTable table, NBTTagCompound dr, boolean all) {
+	public int load(TileTable table, CompoundTag dr, boolean all) {
 		if (data != null) {
 			if (all) {
 				for (int i = 0; i < length; i++) {
@@ -59,7 +59,7 @@ public enum DataType {
 			} else {
 				int id = 0;
 				if (lengthBits != null) {
-					id = dr.getInteger("id");
+					id = dr.getInt("id");
 				}
 				data.load(table, dr, id);
 				return id;

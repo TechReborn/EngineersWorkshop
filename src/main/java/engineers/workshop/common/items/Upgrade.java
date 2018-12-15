@@ -2,12 +2,8 @@ package engineers.workshop.common.items;
 
 import engineers.workshop.EngineersWorkshop;
 import engineers.workshop.common.Config;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
-import javax.annotation.Nonnull;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,7 +72,6 @@ public enum Upgrade {
 		return maxCount.getConfigurableMax() == 0 || maxCount.getMax() > 0;
 	}
 
-	@Nonnull
 	public ItemStack getItemStack() {
 		return new ItemStack(EngineersWorkshop.itemUpgrade, 1, ordinal());
 	}

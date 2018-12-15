@@ -5,7 +5,7 @@ import engineers.workshop.client.page.Page;
 import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.table.TileTable;
 import engineers.workshop.common.unit.UnitCraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 public class SlotUnitCraftingResult extends SlotUnit {
@@ -20,13 +20,13 @@ public class SlotUnitCraftingResult extends SlotUnit {
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack itemstack) {
+	public boolean canInsert(ItemStack itemstack) {
 		return false;
 	}
 
 	@Override
-	public ItemStack onTake(EntityPlayer player, ItemStack item) {
-		item = super.onTake(player, item);
+	public ItemStack onTakeItem(PlayerEntity player, ItemStack item) {
+		item = super.onTakeItem(player, item);
 		((UnitCraft) unit).onCrafting(player, item);
 		return item;
 	}
@@ -54,7 +54,7 @@ public class SlotUnitCraftingResult extends SlotUnit {
 	public ItemStack decrStackSize(int count) {
 		ItemStack itemstack = getStack();
 		if (!itemstack.isEmpty()) {
-			putStack(ItemStack.EMPTY);
+			setStack(ItemStack.EMPTY);
 		}
 		return itemstack;
 	}

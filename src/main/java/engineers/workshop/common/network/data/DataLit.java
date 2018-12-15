@@ -1,16 +1,16 @@
 package engineers.workshop.common.network.data;
 
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class DataLit extends DataBase {
 	@Override
-	public void save(TileTable table, NBTTagCompound dw, int id) {
-		dw.setBoolean("lit", table.isLit());
+	public void save(TileTable table, CompoundTag dw, int id) {
+		dw.putBoolean("lit", table.isLit());
 	}
 
 	@Override
-	public void load(TileTable table, NBTTagCompound dr, int id) {
+	public void load(TileTable table, CompoundTag dr, int id) {
 		table.setLit(dr.getBoolean("lit"));
 	}
 }

@@ -6,6 +6,7 @@ import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.table.TileTable;
 import engineers.workshop.common.unit.Unit;
 import engineers.workshop.common.unit.UnitCraft;
+import net.minecraft.item.ItemStack;
 
 public class SlotUnitCraftingStorage extends SlotUnit {
 
@@ -43,8 +44,8 @@ public class SlotUnitCraftingStorage extends SlotUnit {
 	}
 
 	@Override
-	public void onSlotChanged() {
-		super.onSlotChanged();
+	public void onStackChanged(ItemStack var1, ItemStack var2) {
+		super.onStackChanged(var1, var2);
 		((UnitCraft) unit).onGridChanged();
 	}
 }

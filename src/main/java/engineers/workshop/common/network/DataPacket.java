@@ -1,36 +1,32 @@
 package engineers.workshop.common.network;
 
-import engineers.workshop.EngineersWorkshop;
 import engineers.workshop.client.container.ContainerTable;
 import engineers.workshop.common.network.data.DataType;
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import net.fabricmc.fabric.networking.PacketContext;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import reborncore.common.network.ExtendedPacketBuffer;
-import reborncore.common.network.INetworkPacket;
 
 import java.io.IOException;
 
-public class DataPacket implements INetworkPacket<DataPacket> {
+public class DataPacket {
 
 	public BlockPos tablePos;
 	public PacketId packetId;
-	public NBTTagCompound compound;
+	public CompoundTag compound;
 	public DataType dataType;
 
-	public NBTTagCompound createCompound() {
-		NBTTagCompound tagCompound = new NBTTagCompound();
+	public CompoundTag createCompound() {
+		CompoundTag tagCompound = new CompoundTag();
 		this.compound = tagCompound;
 		return tagCompound;
 	}
 
-	@Override
-	public void writeData(ExtendedPacketBuffer buffer) throws IOException {
+	public void writeData(PacketByteBuf buffer) throws IOException {
 		if (tablePos != null) {
 			buffer.writeBoolean(true);
 			buffer.writeBlockPos(tablePos);
@@ -44,7 +40,7 @@ public class DataPacket implements INetworkPacket<DataPacket> {
 			buffer.writeCompoundTag(compound);
 		} else {
 			buffer.writeBoolean(false);
-			buffer.writeCompoundTag(new NBTTagCompound());
+			buffer.writeCompoundTag(new CompoundTag());
 		}
 
 		if (dataType != null) {
@@ -58,8 +54,7 @@ public class DataPacket implements INetworkPacket<DataPacket> {
 		buffer.writeInt(packetId.ordinal());
 	}
 
-	@Override
-	public void readData(ExtendedPacketBuffer buffer) throws IOException {
+	public void readData(PacketByteBuf buffer) throws IOException {
 		if (buffer.readBoolean()) {
 			tablePos = buffer.readBlockPos();
 		} else {
@@ -81,23 +76,20 @@ public class DataPacket implements INetworkPacket<DataPacket> {
 		packetId = PacketId.values()[buffer.readInt()];
 	}
 
-	@Override
-	public void processData(DataPacket message, MessageContext context) {
-		if (context.side == Side.CLIENT) {
-			onPacket(message, EngineersWorkshop.proxy.getPlayer(), false);
-		} else {
-			onPacket(message, context.getServerHandler().player, true);
-		}
+
+
+	public void processData(DataPacket message, PacketContext context) {
+		onPacket(message, context.getPlayer(), !context.getPlayer().getEntityWorld().isRemote);
 	}
 
-	private void onPacket(DataPacket message, EntityPlayer player,
+	private void onPacket(DataPacket message, PlayerEntity player,
 	                      boolean onServer) {
 		PacketId id = message.packetId;
 		TileTable table = null;
 
 		if (id.isInInterface()) {
-			if (player.openContainer instanceof ContainerTable) {
-				table = ((ContainerTable) player.openContainer).getTable();
+			if (player.container instanceof ContainerTable) {
+				table = ((ContainerTable) player.container).getTable();
 			}
 		}
 		if (table == null && message.tablePos != null) {
@@ -105,7 +97,7 @@ public class DataPacket implements INetworkPacket<DataPacket> {
 			World world = player.world;
 			if (!world.isBlockLoaded(tablePos))
 				return;
-			TileEntity te = world.getTileEntity(tablePos);
+			BlockEntity te = world.getBlockEntity(tablePos);
 			if (te instanceof TileTable) {
 				table = (TileTable) te;
 			}

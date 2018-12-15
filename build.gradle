@@ -1,98 +1,19 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
+plugins {
+	id 'fabric-loom' version '0.1.0-SNAPSHOT'
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-
-version = "1.0.9"
-
-def ENV = System.getenv()
-if (ENV.BUILD_NUMBER) {
-	version = version + "." + "${System.getenv().BUILD_NUMBER}"
-}
-
-group= "EngineersWorkshopReborn"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+archivesBaseName = "EngineersWorkshopReborn"
+version = "1.0.0"
+
 minecraft {
-    version = "1.12.2-14.23.0.2509"
-    runDir = "run"
-
-    mappings = "snapshot_20171003"
-}
-
-repositories {
-	maven {
-		name = "Modmuss50"
-		url = "http://maven.modmuss50.me/"
-	}
-}
-
-configurations {
-	curseToolsRuntime
 }
 
 dependencies {
-	deobfCompile('RebornCore:RebornCore-1.12.2:+:universal') {
-		transitive = false
-	}
-	curseToolsRuntime "CurseTools:CurseTools:+"
-}
-
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
-
-task deobfJar(type: Jar) {
-	from sourceSets.main.output
-	exclude "**/*.psd"
-	classifier = 'dev'
-}
-
-artifacts {
-	archives deobfJar
-}
-
-
-task signJar(type: SignJar, dependsOn: reobfJar) {
-	onlyIf {
-		project.hasProperty('keyStore')
-	}
-
-	if (project.hasProperty('keyStore')) {
-		keyStore = project.keyStore
-		alias = project.keyStoreAlias
-		storePass = project.keyStorePass
-		keyPass = project.keyStoreKeyPass
-		inputFile = jar.archivePath
-		outputFile = jar.archivePath
-	}
-}
-
-build.dependsOn signJar
-
-apply from: 'https://github.com/FabricMC/fabric-docs/raw/master/gradle/ideconfig.gradle'
-
-
-task curseTools(type: JavaExec) {
-	main = "me.modmuss50.cursetools.Main"
-	classpath = configurations.curseToolsRuntime
-	args(jar.archivePath.getAbsolutePath(), deobfJar.archivePath.getAbsolutePath())
+	minecraft "com.mojang:minecraft:18w50a"
+	mappings "net.fabricmc:yarn:18w50a.19"
+	modCompile "net.fabricmc:fabric-loader:0.2.0.70"
+	modCompile "net.fabricmc:fabric:0.1.1.51"
 }

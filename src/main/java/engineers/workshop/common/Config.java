@@ -1,42 +1,13 @@
 package engineers.workshop.common;
 
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import java.io.File;
-
-import static engineers.workshop.common.util.Reference.Info.MODID;
-
-@GameRegistry.ObjectHolder(MODID)
 public final class Config {
 
-	public static void loadConfig(File file) {
-		Configuration config = new Configuration(file);
-		config.load();
-		new TWEAKS(config, "Tweaks").load();
-		new POWER(config, "Power").load();
-		new MACHINES(config, "Machines").load();
-		config.save();
-	}
 
-	private abstract static class ConfigHandler {
-		protected String category;
-		protected Configuration config;
 
-		public ConfigHandler(Configuration config, String category) {
-			this.category = category;
-			this.config = config;
-		}
-
-		public abstract void load();
-	}
-
-	public static class TWEAKS extends ConfigHandler {
+	public static class TWEAKS {
 		public static int FUEL_DELAY;
 
-		public TWEAKS(Configuration config, String category) {
-			super(config, category);
-		}
 
 		@Override
 		public void load() {
@@ -45,12 +16,8 @@ public final class Config {
 		}
 	}
 
-	public static class POWER extends ConfigHandler {
+	public static class POWER  {
 		public static boolean RF_SUPPORT;
-
-		public POWER(Configuration config, String category) {
-			super(config, category);
-		}
 
 		@Override
 		public void load() {
@@ -59,13 +26,10 @@ public final class Config {
 		}
 	}
 
-	public static class MACHINES extends ConfigHandler {
+	public static class MACHINES {
 
 		public static String[] CRAFTER_BLOCKS, FURNACE_BLOCKS, CRUSHER_BLOCKS, ALLOY_BLOCKS, STORAGE_BLOCKS;
 
-		public MACHINES(Configuration config, String category) {
-			super(config, category);
-		}
 
 		@Override
 		public void load() {

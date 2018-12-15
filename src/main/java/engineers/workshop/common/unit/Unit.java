@@ -1,5 +1,6 @@
 package engineers.workshop.common.unit;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import engineers.workshop.client.GuiBase;
 import engineers.workshop.client.container.slot.SlotBase;
 import engineers.workshop.client.page.Page;
@@ -7,11 +8,8 @@ import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.network.data.DataType;
 import engineers.workshop.common.network.data.DataUnit;
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +43,6 @@ public abstract class Unit {
 		this.y = y;
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void draw(GuiBase gui, int mX, int mY) {
 		gui.prepare();
 		int x = getArrowX();
@@ -55,7 +52,7 @@ public abstract class Unit {
 		boolean charging = false;
 		if (max > 0 && chargeCount > 0) {
 			charging = true;
-			GlStateManager.color(0.11F, 0.35F, 0.17F, 1);
+			GlStateManager.color4f(0.11F, 0.35F, 0.17F, 1);
 			int count = Math.min(chargeCount, max);
 			gui.drawRect(this.x + x, this.y + y, ARROW_SRC_X, ARROW_SRC_Y + ARROW_HEIGHT, count * ARROW_WIDTH / max,
 				ARROW_HEIGHT);
@@ -63,10 +60,10 @@ public abstract class Unit {
 
 		if (isCharging()) {
 			charging = true;
-			GlStateManager.color(0.25F, 0.8F, 0.38F, 0.5F);
+			GlStateManager.color4f(0.25F, 0.8F, 0.38F, 0.5F);
 			GlStateManager.enableBlend();
 		} else {
-			GlStateManager.color(1, 1, 1, 1);
+			GlStateManager.color4f(1, 1, 1, 1);
 		}
 		int progress = Math.min(productionProgress, PRODUCTION_TIME);
 		gui.drawRect(this.x + x, this.y + y + PROGRESS_OFFSET, ARROW_SRC_X, ARROW_SRC_Y + ARROW_HEIGHT,
@@ -74,8 +71,7 @@ public abstract class Unit {
 		GlStateManager.disableBlend();
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void onClick(GuiBase gui, int mX, int mY) {
+	public void onClick(GuiBase gui, double mX, double mY) {
 
 	}
 
@@ -112,7 +108,7 @@ public abstract class Unit {
 			if (result.isEmpty()) {
 				return true;
 			} else {
-				ItemStack output = table.getStackInSlot(getOutputId());
+				ItemStack output = table.getInvStack(getOutputId());
 				return !canMove(result, output);
 			}
 		} else {
@@ -133,9 +129,9 @@ public abstract class Unit {
 
 	private void produce(ItemStack result, ItemStack output) {
 		if (output.isEmpty()) {
-			table.setInventorySlotContents(getOutputId(), result.copy());
+			table.setInvStack(getOutputId(), result.copy());
 		} else {
-			table.getStackInSlot(getOutputId()).grow(result.getCount());
+			table.getInvStack(getOutputId()).addAmount(result.getAmount());
 		}
 
 		onProduction(result);
@@ -152,7 +148,7 @@ public abstract class Unit {
 				boolean done;
 				do {
 					done = true;
-					ItemStack output = table.getStackInSlot(getOutputId());
+					ItemStack output = table.getInvStack(getOutputId());
 					if (canMove(result, output)) {
 						if (chargeCount > 0 && getMaxCharges() > 0) {
 							chargeCount--;
@@ -169,7 +165,7 @@ public abstract class Unit {
 									productionProgress -= PRODUCTION_TIME;
 									produce(result, output);
 									result = getProductionResult();
-									output = table.getStackInSlot(getOutputId());
+									output = table.getInvStack(getOutputId());
 									if (!canMove(result, output)) {
 										break;
 									}
@@ -239,9 +235,9 @@ public abstract class Unit {
 		if (!source.isEmpty()) {
 			if (target.isEmpty()) {
 				return true;
-			} else if (target.isItemEqual(source) && ItemStack.areItemStackTagsEqual(target, source)) {
-				int resultSize = target.getCount() + source.getCount();
-				if (resultSize <= table.getInventoryStackLimit() && resultSize <= target.getMaxStackSize()) {
+			} else if (target.isEqualIgnoreTags(source) && ItemStack.areTagsEqual(target, source)) {
+				int resultSize = target.getAmount() + source.getAmount();
+				if (resultSize <= table.getInvMaxStackAmount() && resultSize <= target.getMaxAmount()) {
 					return true;
 				}
 			}
@@ -264,13 +260,13 @@ public abstract class Unit {
 		return slots;
 	}
 
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		compound.setByte(NBT_CHARGED, (byte) chargeCount);
-		compound.setShort(NBT_PROGRESS, (short) productionProgress);
+	public CompoundTag writeToNBT(CompoundTag compound) {
+		compound.putByte(NBT_CHARGED, (byte) chargeCount);
+		compound.putShort(NBT_PROGRESS, (short) productionProgress);
 		return compound;
 	}
 
-	public void readFromNBT(NBTTagCompound compound) {
+	public void readFromNBT(CompoundTag compound) {
 		chargeCount = compound.getByte(NBT_CHARGED);
 		productionProgress = compound.getShort(NBT_PROGRESS);
 	}

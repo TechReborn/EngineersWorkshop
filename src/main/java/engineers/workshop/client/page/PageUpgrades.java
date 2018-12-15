@@ -111,14 +111,14 @@ public class PageUpgrades extends Page {
 		Map<Upgrade, Integer> map = new HashMap<>();
 
 		for (int i = startId; i < startId + length; i++) {
-			ItemStack itemStack = table.getStackInSlot(i);
+			ItemStack itemStack = table.getInvStack(i);
 			Upgrade upgrade = ItemUpgrade.getUpgrade(itemStack);
 			if (upgrade != null) {
 				Integer count = map.get(upgrade);
 				if (count == null) {
 					count = 0;
 				}
-				count += itemStack.getCount();
+				count += itemStack.getAmount();
 				map.put(upgrade, count);
 			}
 		}

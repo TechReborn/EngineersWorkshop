@@ -3,8 +3,6 @@ package engineers.workshop.client.menu;
 import engineers.workshop.client.GuiBase;
 import engineers.workshop.client.component.Button;
 import engineers.workshop.common.table.TileTable;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,25 +31,21 @@ public abstract class GuiMenu {
 		});
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void draw(GuiBase gui, int mX, int mY) {
 		for (Button button : buttons) {
 			button.draw(gui, mX, mY);
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void onClick(GuiBase gui, int mX, int mY) {
+	public void onClick(GuiBase gui, double mX, double mY) {
 		for (Button button : buttons) {
 			button.onClick(gui, mX, mY);
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void onRelease(GuiBase gui, int mX, int mY) {}
 
-	@SideOnly(Side.CLIENT)
-	public void onKeyStroke(GuiBase gui, char c, int k) {}
+	public void onKeyStroke(GuiBase gui, int c, int k) {}
 
 	protected abstract void save();
 

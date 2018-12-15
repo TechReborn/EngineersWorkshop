@@ -63,18 +63,18 @@ public class UnitSmelt extends Unit {
 				}
 				int sourceId = queueId + i;
 
-				ItemStack target = table.getStackInSlot(targetId);
-				ItemStack source = table.getStackInSlot(sourceId);
+				ItemStack target = table.getInvStack(targetId);
+				ItemStack source = table.getInvStack(sourceId);
 				if (!source.isEmpty()) {
 					ItemStack move = source.copy();
-					move.setCount(1);
+					move.setAmount(1);
 					if (canMove(move, target)) {
 						if (target.isEmpty()) {
-							table.setInventorySlotContents(targetId, move);
+							table.setInvStack(targetId, move);
 						} else {
-							target.grow(1);
+							target.addAmount(1);
 						}
-						source.shrink(1);
+						source.subtractAmount(1);
 					}
 				}
 			}
@@ -82,9 +82,8 @@ public class UnitSmelt extends Unit {
 	}
 
 	@Override
-	@Nonnull
 	protected ItemStack getProductionResult() {
-		ItemStack input = table.getStackInSlot(inputId);
+		ItemStack input = table.getInvStack(inputId);
 		return input.isEmpty() ? ItemStack.EMPTY : FurnaceRecipes.instance().getSmeltingResult(input);
 	}
 

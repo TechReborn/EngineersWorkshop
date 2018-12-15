@@ -28,7 +28,7 @@ public class SlotUpgrade extends SlotTable {
 			Upgrade upgrade = ItemUpgrade.getUpgrade(item);
 			if (upgrade != null) {
 				int count = table.getUpgradePage().getUpgradeCount(upgradeSection, upgrade);
-				return Math.min(64, upgrade.getMaxCount() - count + (!getStack().isEmpty() ? getStack().getCount() : 0));
+				return Math.min(64, upgrade.getMaxCount() - count + (!getStack().isEmpty() ? getStack().getAmount() : 0));
 			} else {
 				return super.getSlotStackLimit(item);
 			}
@@ -37,8 +37,8 @@ public class SlotUpgrade extends SlotTable {
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack itemstack) {
-		return super.isItemValid(itemstack) && (itemstack.isEmpty() || (isMain ? isMainItem(itemstack) : isUpgradeItem(itemstack)));
+	public boolean canAcceptItem(ItemStack itemstack) {
+		return super.canAcceptItem(itemstack) && (itemstack.isEmpty() || (isMain ? isMainItem(itemstack) : isUpgradeItem(itemstack)));
 	}
 
 	private boolean isUpgradeItem(ItemStack itemstack) {
@@ -53,13 +53,13 @@ public class SlotUpgrade extends SlotTable {
 
 	@Override
 	public boolean isEnabled() {
-		return main == null || main.getHasStack();
+		return main == null || main.hasStack();
 	}
 
 	@Override
 	public int getTextureIndex(GuiBase gui) {
 		if (isMain) {
-			if (getHasStack()) {
+			if (hasStack()) {
 				return 2;
 			}
 		} else {
@@ -74,8 +74,8 @@ public class SlotUpgrade extends SlotTable {
 	}
 
 	@Override
-	public void onSlotChanged() {
-		super.onSlotChanged();
+	public void markDirty() {
+		super.markDirty();
 		table.onUpgradeChangeDistribute();
 	}
 

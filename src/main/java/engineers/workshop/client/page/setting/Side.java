@@ -1,8 +1,8 @@
 package engineers.workshop.client.page.setting;
 
 import engineers.workshop.common.items.Upgrade;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.text.TextFormat;
+import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -11,12 +11,12 @@ import java.util.List;
 public class Side {
 	private int x;
 	private int y;
-	private EnumFacing direction;
+	private Direction direction;
 	private Setting setting;
 	private Transfer input;
 	private Transfer output;
 
-	public Side(Setting setting, EnumFacing direction, int x, int y) {
+	public Side(Setting setting, Direction direction, int x, int y) {
 		this.x = x;
 		this.y = y;
 		this.direction = direction;
@@ -50,7 +50,7 @@ public class Side {
 		input.setEnabled(value);
 	}
 
-	public EnumFacing getDirection() {
+	public Direction getDirection() {
 		return direction;
 	}
 
@@ -71,32 +71,32 @@ public class Side {
 		str.add(StringUtils.capitalize(direction.getName()));
 
 		if (selected) {
-			str.add(TextFormatting.YELLOW + "Selected");
+			str.add(TextFormat.YELLOW + "Selected");
 		}
 
 		str.add("");
-		addTransferInfo(str, input, TextFormatting.BLUE);
-		addTransferInfo(str, output, TextFormatting.RED);
+		addTransferInfo(str, input, TextFormat.BLUE);
+		addTransferInfo(str, output, TextFormat.RED);
 
 		return str;
 	}
 
-	private void addTransferInfo(List<String> lst, Transfer transfer, TextFormatting color) {
+	private void addTransferInfo(List<String> lst, Transfer transfer, TextFormat color) {
 		String name = transfer.isInput() ? "Input" : "Output";
 		if (transfer.isEnabled()) {
 			lst.add(color + name + ": Enabled");
 			if (transfer.isAuto() && setting.table.getUpgradePage().hasGlobalUpgrade(Upgrade.AUTO_TRANSFER)) {
-				lst.add(TextFormatting.GRAY + name + " Transfer: " + TextFormatting.GREEN + "Auto");
+				lst.add(TextFormat.GRAY + name + " Transfer: " + TextFormat.GREEN + "Auto");
 			}
 			if (transfer.hasFilter(setting.table)) {
 				if (transfer.hasWhiteList()) {
-					lst.add(TextFormatting.GRAY + name + " Filter: " + TextFormatting.WHITE + "White list");
+					lst.add(TextFormat.GRAY + name + " Filter: " + TextFormat.WHITE + "White list");
 				} else {
-					lst.add(TextFormatting.GRAY + name + " Filter: " + TextFormatting.DARK_GRAY + "Black list");
+					lst.add(TextFormat.GRAY + name + " Filter: " + TextFormat.DARK_GRAY + "Black list");
 				}
 			}
 		} else {
-			lst.add(TextFormatting.GRAY + name + ": Disabled");
+			lst.add(TextFormat.GRAY + name + ": Disabled");
 		}
 	}
 }

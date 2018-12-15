@@ -1,6 +1,6 @@
 package engineers.workshop.common.util.helpers;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -11,6 +11,6 @@ import java.util.Locale;
 public class FormattingHelper {
 
 	public static String formatNumber(int number) {
-		return NumberFormat.getIntegerInstance(Locale.forLanguageTag(String.valueOf(Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage()))).format(number);
+		return NumberFormat.getIntegerInstance(Locale.forLanguageTag(String.valueOf(MinecraftClient.getInstance().getLanguageManager().getLanguage()))).format(number);
 	}
 }

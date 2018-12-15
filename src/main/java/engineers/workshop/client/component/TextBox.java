@@ -1,9 +1,7 @@
 package engineers.workshop.client.component;
 
 import engineers.workshop.client.GuiBase;
-import net.minecraft.util.ChatAllowedCharacters;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.ChatUtil;
 
 public class TextBox {
 
@@ -28,7 +26,6 @@ public class TextBox {
 		text = "";
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void draw(GuiBase gui, int mX, int mY) {
 		if (isVisible()) {
 			gui.prepare();
@@ -38,7 +35,6 @@ public class TextBox {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
 	private void addText(GuiBase gui, String str) {
 		String newText = text.substring(0, cursor) + str + text.substring(cursor);
 
@@ -49,7 +45,6 @@ public class TextBox {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
 	private void deleteText(GuiBase gui, int direction) {
 		if (cursor + direction >= 0 && cursor + direction <= text.length()) {
 			if (direction > 0) {
@@ -66,14 +61,12 @@ public class TextBox {
 
 	}
 
-	@SideOnly(Side.CLIENT)
 	private void moveCursor(GuiBase gui, int steps) {
 		cursor += steps;
 		updateCursor();
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void onKeyStroke(GuiBase gui, char c, int k) {
+	public void onKeyStroke(GuiBase gui, int c, int k) {
 		if (isVisible()) {
 			if (k == 203) {
 				moveCursor(gui, -1);
@@ -83,8 +76,8 @@ public class TextBox {
 				deleteText(gui, -1);
 			} else if (k == 211) {
 				deleteText(gui, 1);
-			} else if (ChatAllowedCharacters.isAllowedCharacter(c)) {
-				addText(gui, Character.toString(c));
+			} else {
+				addText(gui, ChatUtil.stripTextFormat(Character.toString(c)));
 			}
 		}
 	}

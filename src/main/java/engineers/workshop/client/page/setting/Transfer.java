@@ -3,8 +3,8 @@ package engineers.workshop.client.page.setting;
 import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.table.TileTable;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 
 public class Transfer {
 
@@ -91,32 +91,32 @@ public class Transfer {
 		return false;
 	}
 
-	public void writeToNBT(NBTTagCompound compound) {
-		compound.setBoolean(NBT_ENABLED, enabled);
+	public void writeToNBT(CompoundTag compound) {
+		compound.putBoolean(NBT_ENABLED, enabled);
 		if (enabled) {
-			compound.setBoolean(NBT_AUTO, auto);
-			compound.setBoolean(NBT_WHITE_LIST, useWhiteList);
+			compound.putBoolean(NBT_AUTO, auto);
+			compound.putBoolean(NBT_WHITE_LIST, useWhiteList);
 
 			boolean hasItem = false;
-			NBTTagList itemList = new NBTTagList();
+			ListTag itemList = new ListTag();
 			for (int i = 0; i < items.length; i++) {
 				ItemSetting item = items[i];
 				if (!item.getItem().isEmpty()) {
-					NBTTagCompound itemCompound = new NBTTagCompound();
-					itemCompound.setByte(NBT_ID, (byte) i);
-					itemCompound.setByte(NBT_MODE, (byte) item.getMode().ordinal());
-					item.getItem().writeToNBT(itemCompound);
-					itemList.appendTag(itemCompound);
+					CompoundTag itemCompound = new CompoundTag();
+					itemCompound.putByte(NBT_ID, (byte) i);
+					itemCompound.putByte(NBT_MODE, (byte) item.getMode().ordinal());
+					item.getItem().toTag(itemCompound);
+					itemList.add(itemCompound);
 					hasItem = true;
 				}
 			}
 			if (hasItem) {
-				compound.setTag(NBT_ITEMS, itemList);
+				compound.put(NBT_ITEMS, itemList);
 			}
 		}
 	}
 
-	public void readFromNBT(NBTTagCompound compound) {
+	public void readFromNBT(CompoundTag compound) {
 		for (ItemSetting item : items) {
 			item.setItem(ItemStack.EMPTY);
 			item.setMode(TransferMode.PRECISE);
@@ -127,14 +127,14 @@ public class Transfer {
 			auto = compound.getBoolean(NBT_AUTO);
 			useWhiteList = compound.getBoolean(NBT_WHITE_LIST);
 
-			if (compound.hasKey(NBT_ITEMS)) {
-				NBTTagList itemList = compound.getTagList(NBT_ITEMS, COMPOUND_ID);
-				for (int i = 0; i < itemList.tagCount(); i++) {
-					NBTTagCompound itemCompound = itemList.getCompoundTagAt(i);
+			if (compound.containsKey(NBT_ITEMS)) {
+				ListTag itemList = compound.getList(NBT_ITEMS, COMPOUND_ID);
+				for (int i = 0; i < itemList.size(); i++) {
+					CompoundTag itemCompound = itemList.getCompoundTag(i);
 					int id = itemCompound.getByte(NBT_ID);
 					ItemSetting itemSetting = items[id];
 					itemSetting.setMode(TransferMode.values()[itemCompound.getByte(NBT_MODE)]);
-					itemSetting.setItem(new ItemStack(itemCompound));
+					itemSetting.setItem(ItemStack.fromTag(itemCompound));
 				}
 			}
 		}

@@ -1,9 +1,8 @@
 package engineers.workshop.common.network;
 
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import reborncore.common.network.NetworkManager;
+import net.minecraft.entity.player.PlayerEntity;
+
 
 public class PacketHandler {
 
@@ -16,8 +15,8 @@ public class PacketHandler {
 		return dw;
 	}
 
-	public static void sendToPlayer(DataPacket dw, EntityPlayer player) {
-		NetworkManager.sendToPlayer(dw, (EntityPlayerMP) player);
+	public static void sendToPlayer(DataPacket dw, PlayerEntity player) {
+		NetworkManager.sendToPlayer(dw, (PlayerEntityMP) player);
 	}
 
 	public static void sendToServer(DataPacket dw) {

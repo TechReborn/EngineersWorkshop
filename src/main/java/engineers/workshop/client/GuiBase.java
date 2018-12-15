@@ -1,25 +1,27 @@
 package engineers.workshop.client;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import engineers.workshop.client.container.slot.SlotBase;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.ContainerGui;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.inventory.Container;
+import net.minecraft.client.item.TooltipOptions;
+import net.minecraft.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.text.TextComponent;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static engineers.workshop.common.util.Reference.Info.MODID;
 
-public abstract class GuiBase extends GuiContainer {
-	protected static final ResourceLocation BACKGROUND = new ResourceLocation(MODID, "textures/gui/background.png");
-	protected static final ResourceLocation ELEMENTS = new ResourceLocation(MODID, "textures/gui/elements_gl.png");
+public abstract class GuiBase extends ContainerGui {
+	protected static final Identifier BACKGROUND = new Identifier(MODID, "textures/gui/background.png");
+	protected static final Identifier ELEMENTS = new Identifier(MODID, "textures/gui/elements_gl.png");
 	/**
 	 * TODO: private static final ResourceLocation BLOCK_TEXTURE = new
 	 * ResourceLocation("textures/atlas/block.png"); public void
@@ -60,21 +62,21 @@ public abstract class GuiBase extends GuiContainer {
 	}
 
 	@Override
-	public void drawScreen(int x, int y, float f) {
-		this.drawDefaultBackground();
+	public void draw(int x, int y, float f) {
+		this.drawBackground();
 		selectedSlot = null;
 		shiftMoveRendered = false;
-		for (Object obj : inventorySlots.inventorySlots) {
+		for (Object obj : container.slotList) {
 			SlotBase slot = (SlotBase) obj;
-			if (isPointInRegion(slot.xPos, slot.yPos, 16, 16, x, y)) {
+			if (inBounds(slot.getX(), slot.getY(), 16, 16, x, y)) {
 				selectedSlot = slot;
 				break;
 			}
 		}
 		clearMouseOverCache();
 
-		super.drawScreen(x, y, f);
-		this.renderHoveredToolTip(x, y);
+		super.draw(x, y, f);
+		this.drawMousoverTooltip(x, y);
 	}
 
 	public SlotBase getSelectedSlot() {
@@ -82,17 +84,17 @@ public abstract class GuiBase extends GuiContainer {
 	}
 
 	public void prepare() {
-		mc.getTextureManager().bindTexture(ELEMENTS);
-		GlStateManager.color(1, 1, 1, 1);
+		client.getTextureManager().bindTexture(ELEMENTS);
+		GlStateManager.color4f(1, 1, 1, 1);
 		GlStateManager.disableLighting();
 	}
 
-	public boolean inBounds(int x, int y, int w, int h, int mX, int mY) {
+	public boolean inBounds(double x, double y, double w, double h, double mX, double mY) {
 		return x <= mX && mX < x + w && y <= mY && mY < y + h;
 	}
 
 	public void drawRect(int x, int y, int u, int v, int w, int h) {
-		drawTexturedModalRect(x, y, u, v, w, h);
+		drawRect(x, y, u, v, w, h);
 	}
 
 	public void drawString(String str, int x, int y, int color) {
@@ -101,8 +103,8 @@ public abstract class GuiBase extends GuiContainer {
 
 	public void drawString(String str, int x, int y, float multiplier, int color) {
 		GlStateManager.pushMatrix();
-		GlStateManager.scale(multiplier, multiplier, 1F);
-		fontRenderer.drawString(str, (int) (x / multiplier), (int) (y / multiplier), color);
+		GlStateManager.scalef(multiplier, multiplier, 1F);
+		fontRenderer.draw(str, (int) (x / multiplier), (int) (y / multiplier), color);
 
 		GlStateManager.popMatrix();
 	}
@@ -112,9 +114,9 @@ public abstract class GuiBase extends GuiContainer {
 	}
 
 	public void drawItem(ItemStack item, int x, int y) {
-		RenderHelper.enableGUIStandardItemLighting();
+		//RenderHelper.enableGUIStandardItemLighting();
 		if (!item.isEmpty())
-			itemRender.renderItemAndEffectIntoGUI(item, x, y);
+			itemRenderer.renderItemAndGlowInGui(item, x, y);
 	}
 
 	public void drawItemWithBackground(ItemStack item, int x, int y, int mX, int mY) {
@@ -137,9 +139,9 @@ public abstract class GuiBase extends GuiContainer {
 
 	public void drawCursor(int x, int y, int z, float size, int color) {
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
-		GlStateManager.scale(size, size, 0);
-		GlStateManager.translate(-x, -y, 0);
+		GlStateManager.translatef(x, y, z);
+		GlStateManager.scalef(size, size, 0);
+		GlStateManager.translatef(-x, -y, 0);
 		Gui.drawRect(x, y + 1, x + 1, y + 10, color);
 		GlStateManager.popMatrix();
 	}
@@ -163,8 +165,8 @@ public abstract class GuiBase extends GuiContainer {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mX, int mY) {
-		drawCachedMouseOver(mX - guiLeft, mY - guiTop);
+	protected void drawForeground(int mX, int mY) {
+		drawCachedMouseOver(mX - left, mY - top );
 	}
 
 	public void drawCachedMouseOver(int x, int y) {
@@ -190,17 +192,17 @@ public abstract class GuiBase extends GuiContainer {
 			h += 2 + (mouseOver.size() - 1) * 10;
 		}
 
-		if (guiLeft + x + w > this.width) {
+		if (left + x + w > this.width) {
 			x -= 28 + w;
 		}
 
-		if (guiTop + y + h + 6 > this.height) {
-			y = this.height - h - 6 - guiTop;
+		if (top + y + h + 6 > this.height) {
+			y = this.height - h - 6 - top;
 		}
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, 0, 300);
-		this.zLevel = 300.0F;
+		GlStateManager.translatef(0, 0, 300);
+		this.zOffset = 300.0F;
 		int bg = -267386864;
 		this.drawGradientRect(x - 3, y - 4, x + w + 3, y - 3, bg, bg);
 		this.drawGradientRect(x - 3, y + h + 3, x + w + 3, y + h + 4, bg, bg);
@@ -213,11 +215,11 @@ public abstract class GuiBase extends GuiContainer {
 		this.drawGradientRect(x + w + 2, y - 3 + 1, x + w + 3, y + h + 3 - 1, border1, border2);
 		this.drawGradientRect(x - 3, y - 3, x + w + 3, y - 3 + 1, border1, border1);
 		this.drawGradientRect(x - 3, y + h + 2, x + w + 3, y + h + 3, border2, border2);
-		GlStateManager.disableDepth();
+		GlStateManager.disableDepthTest();
 
 		for (int i = 0; i < mouseOver.size(); i++) {
 			String line = mouseOver.get(i);
-			fontRenderer.drawStringWithShadow(line, x, y, -1);
+			fontRenderer.drawWithShadow(line, x, y, -1);
 
 			if (i == 0) {
 				y += 2;
@@ -226,10 +228,10 @@ public abstract class GuiBase extends GuiContainer {
 			y += 10;
 		}
 
-		this.zLevel = 0.0F;
+		this.zOffset = 0.0F;
 		GlStateManager.popMatrix();
-		GlStateManager.enableDepth();
-		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.enableDepthTest();
+		GlStateManager.color4f(1F, 1F, 1F, 1F);
 	}
 
 	public String getItemName(ItemStack item) {
@@ -239,7 +241,7 @@ public abstract class GuiBase extends GuiContainer {
 
 		try {
 			// noinspection unchecked
-			return item.getDisplayName();
+			return item.getDisplayName().toString();
 		} catch (Throwable ignored) {
 			return null;
 		}
@@ -251,8 +253,7 @@ public abstract class GuiBase extends GuiContainer {
 		}
 
 		try {
-			// noinspection unchecked
-			return item.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+			return item.getTooltipText(MinecraftClient.getInstance().player, MinecraftClient.getInstance().options.advancedItemTooltips ? TooltipOptions.Instance.ADVANCED : TooltipOptions.Instance.NORMAL).stream().map(Object::toString).collect(Collectors.toList());
 		} catch (Throwable ignored) {
 			return null;
 		}

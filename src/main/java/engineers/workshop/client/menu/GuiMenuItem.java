@@ -8,15 +8,16 @@ import engineers.workshop.client.page.setting.ItemSetting;
 import engineers.workshop.client.page.setting.TransferMode;
 import engineers.workshop.common.network.data.DataType;
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipOptions;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.text.TextComponent;
+import net.minecraft.util.DefaultedList;
+import net.minecraft.util.registry.Registry;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,7 +37,6 @@ public class GuiMenuItem extends GuiMenu {
 	private static final int ITEM_Y = 10;
 	private ItemSetting setting;
 	private TransferMode mode;
-	@Nonnull
 	private ItemStack item;
 	private List<ItemStack> playerItems;
 	private List<ItemStack> searchItems;
@@ -165,12 +165,12 @@ public class GuiMenuItem extends GuiMenu {
 		if (search != null && !search.isEmpty()) {
 			search = search.toLowerCase();
 
-			NonNullList<ItemStack> itemStacks = NonNullList.create();
-			for (Object obj : Item.REGISTRY) {
+			DefaultedList<ItemStack> itemStacks = DefaultedList.create();
+			for (Object obj : Registry.ITEM) {
 				Item item = (Item) obj;
 
 				if (item != null) {
-					item.getSubItems(CreativeTabs.SEARCH, itemStacks);
+					item.addStacksForDisplay(ItemGroup.SEARCH, itemStacks);
 				}
 			}
 
@@ -180,23 +180,23 @@ public class GuiMenuItem extends GuiMenu {
 
 			while (itemIterator.hasNext()) {
 				ItemStack element = itemIterator.next();
-				List<String> description;
+				List<TextComponent> description;
 
 				try {
 					//noinspection unchecked
-					description = element.getTooltip(Minecraft.getMinecraft().player,
-						Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+					description = element.getTooltipText(MinecraftClient.getInstance().player,
+						MinecraftClient.getInstance().options.advancedItemTooltips ? TooltipOptions.Instance.ADVANCED : TooltipOptions.Instance.NORMAL);
 				} catch (Throwable ex) {
 					itemIterator.remove();
 					continue;
 				}
 
-				Iterator<String> descriptionIterator = description.iterator();
+				Iterator<TextComponent> descriptionIterator = description.iterator();
 
 				boolean foundSequence = false;
 
 				while (descriptionIterator.hasNext()) {
-					String line = descriptionIterator.next().toLowerCase();
+					String line = descriptionIterator.next().getFormattedText().toLowerCase();
 					if (line.contains(search)) {
 						foundSequence = true;
 						break;
@@ -213,16 +213,16 @@ public class GuiMenuItem extends GuiMenu {
 
 	private void loadPlayerItems() {
 		playerItems = new ArrayList<>();
-		IInventory inventory = Minecraft.getMinecraft().player.inventory;
-		int itemLength = inventory.getSizeInventory();
+		Inventory inventory = MinecraftClient.getInstance().player.inventory;
+		int itemLength = inventory.getInvSize();
 		for (int i = 0; i < itemLength; i++) {
-			ItemStack item = inventory.getStackInSlot(i);
+			ItemStack item = inventory.getInvStack(i);
 			if (!item.isEmpty()) {
 				item = item.copy();
-				item.setCount(1);
+				item.setAmount(1);
 				boolean exists = false;
 				for (ItemStack other : playerItems) {
-					if (ItemStack.areItemStacksEqual(item, other)) {
+					if (ItemStack.areEqual(item, other)) {
 						exists = true;
 						break;
 					}
@@ -274,7 +274,7 @@ public class GuiMenuItem extends GuiMenu {
 	}
 
 	@Override
-	public void onClick(GuiBase gui, int mX, int mY) {
+	public void onClick(GuiBase gui, double mX, double mY) {
 		super.onClick(gui, mX, mY);
 
 		for (ArrowScroll arrow : arrows) {
@@ -290,7 +290,7 @@ public class GuiMenuItem extends GuiMenu {
 
 			if (gui.inBounds(ITEMS_X + ITEMS_OFFSET * x, ITEMS_Y + ITEMS_OFFSET * y, ITEM_SIZE, ITEM_SIZE, mX, mY)) {
 				item = getItemList().get(i).copy();
-				item.setCount(1);
+				item.setAmount(1);
 				break;
 			}
 		}
@@ -303,14 +303,14 @@ public class GuiMenuItem extends GuiMenu {
 	}
 
 	@Override
-	public void onKeyStroke(GuiBase gui, char c, int k) {
+	public void onKeyStroke(GuiBase gui, int c, int k) {
 		super.onKeyStroke(gui, c, k);
 		textBox.onKeyStroke(gui, c, k);
 	}
 
 	@Override
 	protected void save() {
-		if (!ItemStack.areItemStacksEqual(item, setting.getItem())) {
+		if (!ItemStack.areEqual(item, setting.getItem())) {
 			setting.setItem(item);
 			table.updateServer(DataType.SIDE_FILTER, table.getTransferPage().getSyncId(setting));
 		}

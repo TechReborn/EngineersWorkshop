@@ -8,17 +8,10 @@ import engineers.workshop.client.container.slot.crafting.SlotUnitCraftingStorage
 import engineers.workshop.client.page.Page;
 import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nonnull;
 
 public class UnitCraft extends Unit {
 
@@ -92,7 +85,7 @@ public class UnitCraft extends Unit {
 		return super.canCharge() && table.getUpgradePage().hasUpgrade(id, Upgrade.AUTO_CRAFTER);
 	}
 
-	public void onCrafting(EntityPlayer player, ItemStack item) {
+	public void onCrafting(PlayerEntity player, ItemStack item) {
 		onCrafted(player, item);
 		lockedRecipeGeneration = true;
 		try {
@@ -103,7 +96,7 @@ public class UnitCraft extends Unit {
 		onGridChanged();
 	}
 
-	private void onCrafted(EntityPlayer player, ItemStack itemStack) {
+	private void onCrafted(PlayerEntity player, ItemStack itemStack) {
 
 		if (itemStack.isEmpty()) {
 			return;
@@ -112,20 +105,19 @@ public class UnitCraft extends Unit {
 		Item item = itemStack.getItem();
 
 		try {
-			item.onCreated(itemStack, table.getWorld(), player);
+			item.onCrafted(itemStack, table.getWorld(), player);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
 	public void draw(GuiBase gui, int mX, int mY) {
 		super.draw(gui, mX, mY);
 
 		boolean isEmpty = true;
 		for (int i = gridId; i < gridId + GRID_SIZE; i++) {
-			if (!table.getStackInSlot(i).isEmpty()) {
+			if (!table.getInvStack(i).isEmpty()) {
 				isEmpty = false;
 				break;
 			}
@@ -148,7 +140,6 @@ public class UnitCraft extends Unit {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
 	public void onClick(GuiBase gui, int mX, int mY) {
 		super.onClick(gui, mX, mY);
 		if (gui.inBounds(this.x + START_X + GRID_WIDTH * SLOT_SIZE + CLEAR_OFFSET_X, this.y + START_Y + CLEAR_OFFSET_Y,
@@ -376,7 +367,7 @@ public class UnitCraft extends Unit {
 		}
 	}
 
-	private class CraftingBase extends InventoryCrafting {
+	private class CraftingBase extends CraftingInventory {
 
 		private static final int INVENTORY_WIDTH = 3;
 		private static final int INVENTORY_HEIGHT = 3;

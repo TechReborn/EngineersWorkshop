@@ -3,10 +3,10 @@ package engineers.workshop.client.container;
 import engineers.workshop.client.container.slot.SlotBase;
 import engineers.workshop.client.container.slot.SlotPlayer;
 import engineers.workshop.common.table.TileTable;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
+import net.minecraft.container.ContainerListener;
+import net.minecraft.container.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 
 public class ContainerTable extends ContainerBase {
@@ -19,26 +19,26 @@ public class ContainerTable extends ContainerBase {
 	private static final int PLAYER_HOT_BAR_Y = 232;
 	public int power;
 	private TileTable table;
-	public ContainerTable(TileTable table, EntityPlayer player) {
+	public ContainerTable(TileTable table, PlayerEntity player) {
 		this.table = table;
 
-		table.getSlots().forEach(this::addSlotToContainer);
-		InventoryPlayer inventory = player.inventory;
+		table.getSlots().forEach(this::addSlot);
+		PlayerInventory inventory = player.inventory;
 
 		for (int y = 0; y < NORMAL_ROWS; y++) {
 			for (int x = 0; x < SLOTS_PER_ROW; x++) {
-				addSlotToContainer(new SlotPlayer(inventory, table, x + y * SLOTS_PER_ROW + SLOTS_PER_ROW, PLAYER_X + x * SLOT_SIZE, y * SLOT_SIZE + PLAYER_Y));
+				addSlot(new SlotPlayer(inventory, table, x + y * SLOTS_PER_ROW + SLOTS_PER_ROW, PLAYER_X + x * SLOT_SIZE, y * SLOT_SIZE + PLAYER_Y));
 			}
 		}
 
 		for (int x = 0; x < SLOTS_PER_ROW; x++) {
-			addSlotToContainer(new SlotPlayer(inventory, table, x, PLAYER_X + x * SLOT_SIZE, PLAYER_HOT_BAR_Y));
+			addSlot(new SlotPlayer(inventory, table, x, PLAYER_X + x * SLOT_SIZE, PLAYER_HOT_BAR_Y));
 		}
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return table.isUsableByPlayer(player);
+	public boolean canUse(PlayerEntity player) {
+		return table.canPlayerUseInv(player);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class ContainerTable extends ContainerBase {
 	}
 
 	@Override
-	public boolean canDragIntoSlot(Slot slot) {
+	public boolean method_7615(Slot slot) {
 		return ((SlotBase) slot).canDragIntoSlot();
 	}
 
@@ -56,26 +56,26 @@ public class ContainerTable extends ContainerBase {
 	}
 
 	@Override
-	public void addListener(IContainerListener listener) {
+	public void addListener(ContainerListener listener) {
 		super.addListener(listener);
-		listener.sendAllWindowProperties(this, table);
+		listener.onContainerInvRegistered(this, table);
 	}
 
 	@Override
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
+	public void sendContentUpdates() {
+		super.sendContentUpdates();
 
 		for (int i = 0; i < this.listeners.size(); ++i) {
-			IContainerListener icontainerlistener = this.listeners.get(i);
+			ContainerListener icontainerlistener = this.listeners.get(i);
 			if (this.power != table.getFuel()) {
-				icontainerlistener.sendWindowProperty(this, 0, table.getFuel());
+				icontainerlistener.onContainerPropertyUpdate(this, 0, table.getFuel());
 			}
 		}
 	}
 
 	@Override
-	public void updateProgressBar(int id, int data) {
-		super.updateProgressBar(id, data);
+	public void setProperty(int id, int data) {
+		super.setProperty(id, data);
 		if (id == 0) {
 			this.power = data;
 		}

@@ -1,8 +1,6 @@
 package engineers.workshop.client.component;
 
 import engineers.workshop.client.GuiBase;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class ArrowScroll {
 
@@ -22,7 +20,6 @@ public abstract class ArrowScroll {
 		this.width = width;
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void draw(GuiBase gui, int mX, int mY) {
 		if (isVisible()) {
 			gui.prepare();
@@ -36,7 +33,6 @@ public abstract class ArrowScroll {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
 	private boolean drawArrow(GuiBase gui, int mX, int mY, boolean left) {
 		int srcX = ARROW_SRC_X + (left ? 0 : ARROW_W);
 		boolean hover = inArrowBounds(gui, mX, mY, left);
@@ -47,8 +43,7 @@ public abstract class ArrowScroll {
 		return hover;
 	}
 
-	@SideOnly(Side.CLIENT)
-	private boolean inArrowBounds(GuiBase gui, int mX, int mY, boolean left) {
+	private boolean inArrowBounds(GuiBase gui, double mX, double mY, boolean left) {
 		return gui.inBounds(left ? x : x + width, y, ARROW_W, ARROW_H, mX, mY);
 	}
 
@@ -58,8 +53,7 @@ public abstract class ArrowScroll {
 
 	public void onUpdate() {}
 
-	@SideOnly(Side.CLIENT)
-	public void onClick(GuiBase gui, int mX, int mY) {
+	public void onClick(GuiBase gui, double mX, double mY) {
 		if (inArrowBounds(gui, mX, mY, true)) {
 			int id = getId();
 			id--;
@@ -82,7 +76,6 @@ public abstract class ArrowScroll {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void onRelease() {
 		clicked = false;
 	}
