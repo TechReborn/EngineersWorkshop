@@ -38,7 +38,7 @@ public class SlotUnitCraftingOutput extends SlotUnit {
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack itemstack) {
+	public boolean canInsert(ItemStack itemstack) {
 		return false;
 	}
 

@@ -8,12 +8,11 @@ import engineers.workshop.common.network.PacketHandler;
 import engineers.workshop.common.network.PacketId;
 import engineers.workshop.common.network.data.DataType;
 import engineers.workshop.common.table.TileTable;
-import engineers.workshop.common.util.helpers.ColorHelper;
-import engineers.workshop.common.util.helpers.FormattingHelper;
+import engineers.workshop.common.util.ColorHelper;
+import engineers.workshop.common.util.FormattingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

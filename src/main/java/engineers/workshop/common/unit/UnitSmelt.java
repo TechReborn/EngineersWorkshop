@@ -6,10 +6,8 @@ import engineers.workshop.client.container.slot.smelting.SlotUnitFurnaceResult;
 import engineers.workshop.client.page.Page;
 import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.table.TileTable;
+import engineers.workshop.common.util.RecipeHelpers;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-
-import javax.annotation.Nonnull;
 
 public class UnitSmelt extends Unit {
 
@@ -84,12 +82,12 @@ public class UnitSmelt extends Unit {
 	@Override
 	protected ItemStack getProductionResult() {
 		ItemStack input = table.getInvStack(inputId);
-		return input.isEmpty() ? ItemStack.EMPTY : FurnaceRecipes.instance().getSmeltingResult(input);
+		return input.isEmpty() ? ItemStack.EMPTY : RecipeHelpers.getFurnaceRecipe(input);
 	}
 
 	@Override
 	protected void onProduction(ItemStack result) {
-		table.decrStackSize(inputId, 1);
+		table.takeInvStack(inputId, 1);
 	}
 
 	@Override

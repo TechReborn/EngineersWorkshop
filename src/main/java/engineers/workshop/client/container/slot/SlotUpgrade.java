@@ -48,7 +48,7 @@ public class SlotUpgrade extends SlotTable {
 	}
 
 	private boolean isMainItem(ItemStack stack) {
-		return Upgrade.ParentType.CRAFTING.isValidParent(stack) || Upgrade.ParentType.SMELTING.isValidParent(stack) || Upgrade.ParentType.CRUSHING.isValidParent(stack) || Upgrade.ParentType.ALLOY.isValidParent(stack) || Upgrade.ParentType.STORAGE.isValidParent(stack);
+		return Upgrade.ParentType.CRAFTING.isValidParent(stack) || Upgrade.ParentType.SMELTING.isValidParent(stack) || Upgrade.ParentType.STORAGE.isValidParent(stack);
 	}
 
 	@Override

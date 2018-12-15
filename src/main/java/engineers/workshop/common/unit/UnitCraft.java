@@ -12,6 +12,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeManager;
+import net.minecraft.util.registry.Registry;
 
 public class UnitCraft extends Unit {
 
@@ -150,18 +153,18 @@ public class UnitCraft extends Unit {
 
 	private void onCrafting(CraftingBase crafting, boolean auto, boolean fake) {
 		for (int i = 0; i < GRID_SIZE; i++) {
-			ItemStack itemStack = crafting.getStackInSlot(i);
+			ItemStack itemStack = crafting.getInvStack(i);
 			if (!itemStack.isEmpty()) {
 				int id = i;
 				for (int j = auto ? 0 : GRID_SIZE; j < crafting.getFullSize(); j++) {
 					if (i == j)
 						continue;
 
-					ItemStack other = crafting.getStackInSlot(j);
+					ItemStack other = crafting.getInvStack(j);
 					// TODO support ore dictionary and fuzzy etc?. Problem is
 					// that it needs to figure out if the recipe supports it
-					if (!other.isEmpty() && (j >= GRID_SIZE || other.getCount() > itemStack.getCount())
-						&& itemStack.isItemEqual(other) && ItemStack.areItemStackTagsEqual(itemStack, other)) {
+					if (!other.isEmpty() && (j >= GRID_SIZE || other.getAmount() > itemStack.getAmount())
+						&& itemStack.isEqualIgnoreTags(other) && ItemStack.areTagsEqual(itemStack, other)) {
 						id = j;
 						itemStack = other;
 						break;
@@ -186,7 +189,7 @@ public class UnitCraft extends Unit {
 
 	public void onGridChanged() {
 		if (!lockedRecipeGeneration) {
-			IRecipe recipe = inventoryCrafting.getRecipe();
+			Recipe recipe = inventoryCrafting.getRecipe();
 			ItemStack result = inventoryCrafting.getResult(recipe);
 			if (!result.isEmpty()) {
 				result = result.copy();
@@ -388,15 +391,15 @@ public class UnitCraft extends Unit {
 
 		@Override
 		public ItemStack decrStackSize(int id, int count) {
-			ItemStack item = getStackInSlot(id);
+			ItemStack item = getInvStack(id);
 			if (!item.isEmpty()) {
-				if (item.getCount() <= count) {
-					setInventorySlotContents(id, ItemStack.EMPTY);
+				if (item.getAmount() <= count) {
+					setInvStack(id, ItemStack.EMPTY);
 					return item;
 				}
-				ItemStack result = item.splitStack(count);
-				if (item.getCount() == 0) {
-					setInventorySlotContents(id, ItemStack.EMPTY);
+				ItemStack result = item.split(count);
+				if (item.getAmount() == 0) {
+					setInvStack(id, ItemStack.EMPTY);
 				}
 				return result;
 			} else {
@@ -408,27 +411,26 @@ public class UnitCraft extends Unit {
 		public ItemStack getStackInRowAndColumn(int x, int y) {
 			if (x >= 0 && x < INVENTORY_WIDTH) {
 				int id = x + y * INVENTORY_WIDTH;
-				return this.getStackInSlot(id);
+				return this.getInvStack(id);
 			} else {
 				return ItemStack.EMPTY;
 			}
 		}
 
-		@Nonnull
-		public ItemStack getResult(IRecipe recipe) {
+		public ItemStack getResult(Recipe recipe) {
 			return recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(this);
 		}
 
-		public boolean isMatch(IRecipe recipe) {
+		public boolean isMatch(Recipe recipe) {
 			return recipe.matches(this, table.getWorld());
 		}
 
-		public IRecipe getRecipe() {
+		public Recipe getRecipe() {
 			//			if (isMatch(REPAIR_RECIPE)) {
 			//				return REPAIR_RECIPE;
 			//			}
 
-			for (IRecipe recipe : CraftingManager.REGISTRY) {
+			for (Recipe recipe : RecipeManager.REGISTRY) {
 				if (isMatch(recipe)) {
 					return recipe;
 				}
@@ -448,7 +450,7 @@ public class UnitCraft extends Unit {
 				return false;
 
 			for (int i = 0; i < getFullSize(); i++) {
-				if (!ItemStack.areItemStacksEqual(getStackInSlot(i), crafting.getStackInSlot(i))) {
+				if (!ItemStack.areEqual(getInvStack(i), crafting.getInvStack(i))) {
 					return false;
 				}
 			}

@@ -2,98 +2,60 @@ package engineers.workshop.common.table;
 
 import engineers.workshop.EngineersWorkshop;
 import engineers.workshop.client.container.slot.SlotBase;
-import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.Random;
 
-import static engineers.workshop.common.util.Reference.Info.MODID;
+public class BlockTable extends BlockWithEntity {
 
-public class BlockTable extends BlockWithEntity implements IBlockEntityProvider {
+	public static final DirectionProperty FACING = HorizontalFacingBlock.field_11177;
 
-	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-
-	public BlockTable() {
-		super(Material.ROCK);
-		setHardness(3.5f);
-		setCreativeTab(EngineersWorkshop.tabWorkshop);
-		setRegistryName(MODID + ":" + "blockTable");
-		setUnlocalizedName(MODID + ":" + "blockTable");
-		GameData.register_impl(this);
-		ItemBlock itemBlock = new ItemBlock(this);
-		itemBlock.setRegistryName(getRegistryName());
-		GameData.register_impl(itemBlock);
-		GameRegistry.registerBlockEntity(TileTable.class, MODID + ":" + "blockTable");
-		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+	public BlockTable(Block.Settings settings) {
+		super(settings);
+		setDefaultState(this.stateFactory.getDefaultState().with(FACING, Direction.NORTH));
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		world.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+	public BlockState getPlacementState(ItemPlacementContext itemPlacementContext) {
+		return this.getDefaultState().with(FACING, itemPlacementContext.getPlayerFacing());
 	}
+
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		if (meta >= EnumFacing.HORIZONTALS.length) {
-			meta = 0;
-		}
-		return getDefaultState().withProperty(FACING, EnumFacing.HORIZONTALS[meta]);
+	public RenderTypeBlock getRenderType(BlockState state) {
+		return RenderTypeBlock.MODEL;
 	}
 
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(FACING).ordinal();
-	}
 
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, FACING);
-	}
+//	@Override
+//	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, PlayerEntity playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+//		if (!worldIn.isRemote) {
+//			FMLNetworkHandler.openGui(playerIn, EngineersWorkshop.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
+//		}
+//		return true;
+//	}
 
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
-	}
-
-	public void registerModel() {
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-	}
-
-	@Override
-	public BlockEntity createNewBlockEntity(World worldIn, int meta) {
-		return new TileTable();
-	}
-
-	@Override
-	public boolean hasBlockEntity(IBlockState state) {
-		return true;
-	}
-
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, PlayerEntity playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (!worldIn.isRemote) {
-			FMLNetworkHandler.openGui(playerIn, EngineersWorkshop.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
-		}
-		return true;
-	}
-
-	@Override
-	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest) {
-		if (!world.isRemote) {
-			if (!player.isCreative()) {
-				dropInventory(world, pos);
-			}
-			world.destroyBlock(pos, !player.isCreative());
-		}
-		return false;
-	}
+//	@Override
+//	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest) {
+//		if (!world.isRemote) {
+//			if (!player.isCreative()) {
+//				dropInventory(world, pos);
+//			}
+//			world.destroyBlock(pos, !player.isCreative());
+//		}
+//		return false;
+//	}
 
 	protected void dropInventory(World world, BlockPos pos) {
 		if (!world.isRemote) {

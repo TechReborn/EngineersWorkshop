@@ -4,8 +4,8 @@ import engineers.workshop.client.container.slot.SlotUnit;
 import engineers.workshop.client.page.Page;
 import engineers.workshop.common.table.TileTable;
 import engineers.workshop.common.unit.Unit;
+import engineers.workshop.common.util.RecipeHelpers;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 
 public class SlotUnitFurnaceInput extends SlotUnit {
 
@@ -15,7 +15,7 @@ public class SlotUnitFurnaceInput extends SlotUnit {
 
 	@Override
 	public boolean canAcceptItem(ItemStack itemstack) {
-		return super.canAcceptItem(itemstack) && !FurnaceRecipes.instance().getSmeltingResult(itemstack).isEmpty();
+		return super.canAcceptItem(itemstack) && !RecipeHelpers.getFurnaceRecipe(itemstack).isEmpty();
 	}
 
 	@Override

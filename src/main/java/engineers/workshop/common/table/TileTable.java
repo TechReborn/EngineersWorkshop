@@ -204,19 +204,19 @@ public class TileTable extends BlockEntity implements Inventory, SidedInventory,
 	}
 
 	public void addPlayer(PlayerEntity player) {
-		Logger.debug("Trying to add player %s", player.getName());
+		EngineersWorkshop.LOGGER.debug("Trying to add player %s", player.getName());
 		if (!players.contains(player)) {
 			players.add(player);
 			sendAllDataToPlayer(player);
 		} else {
-			Logger.error("Trying to add a listening player: " + player.getName());
+			EngineersWorkshop.LOGGER.error("Trying to add a listening player: " + player.getName());
 		}
 	}
 
 	public void removePlayer(PlayerEntity player) {
-		Logger.debug("Trying to remove player %s", player.getName());
+		EngineersWorkshop.LOGGER.debug("Trying to remove player %s", player.getName());
 		if (!players.remove(player)) {
-			Logger.error("Trying to remove non-listening player: " + player.getName());
+			EngineersWorkshop.LOGGER.error("Trying to remove non-listening player: " + player.getName());
 		}
 	}
 

@@ -1,39 +1,39 @@
 package engineers.workshop.common.items;
 
 import engineers.workshop.EngineersWorkshop;
-import engineers.workshop.common.Config;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.StringTextComponent;
+import net.minecraft.text.TextComponent;
+import net.minecraft.text.TranslatableTextComponent;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static engineers.workshop.common.util.Reference.Info.MODID;
 
 public enum Upgrade {
-	BLANK(new MaxCount(0), ParentType.NULL),                        // Max count = 0  (Not usable as an upgrade)
-	AUTO_CRAFTER(new MaxCount(1), ParentType.CRAFTING),                    // Max count = 1
-	STORAGE(new MaxCount(1), ParentType.CRAFTING),                    // Max count = 1
-	CHARGED(new ConfigurableMax(8), ParentType.MachineSet),                    // Max count = 8  (Configable)
-	SPEED(new ConfigurableMax(8), ParentType.MachineSet),                    // Max count = 8  (Configable)
-	QUEUE(new MaxCount(3), EnumSet.of(ParentType.CRUSHING, ParentType.SMELTING)),    // Max count = 3
-	AUTO_TRANSFER(new MaxCount(1), ParentType.GLOBAL),                        // Max count = 1
-	FILTER(new MaxCount(1), ParentType.GLOBAL),                        // Max count = 1
-	TRANSFER(new ConfigurableMax(6, 20), ParentType.GLOBAL),                        // Max count = 6  (Configable upto 20)
-
-	AXE(new MaxCount(1), ParentType.CRUSHING);                                    // Max count = 1
-	//COMPACTOR		(new MaxCount(1), 			    ParentType.CRAFTING, AUTO_CRAFTER); 	// Max count = 1
-
-	/**
-	 * PATTERN("Pattern Crafting", "Remembers old recipes", 4, ParentType.CRAFTING),
-	 * RESTOCK("Restock Control", "Only produce more items* when there isn't enough of them", 1),
-	 */
+	BLANK(new MaxCount(0), ParentType.NULL),
+	AUTO_CRAFTER(new MaxCount(1), ParentType.CRAFTING),
+	STORAGE(new MaxCount(1), ParentType.CRAFTING),
+	CHARGED(new ConfigurableMax(8), ParentType.MachineSet),
+	SPEED(new ConfigurableMax(8), ParentType.MachineSet),
+	QUEUE(new MaxCount(3), EnumSet.of(ParentType.SMELTING)),
+	AUTO_TRANSFER(new MaxCount(1), ParentType.GLOBAL),
+	FILTER(new MaxCount(1), ParentType.GLOBAL),
+	TRANSFER(new ConfigurableMax(6, 20), ParentType.GLOBAL);
 
 	private String name;
 	private String description;
 	private MaxCount maxCount;
 	private EnumSet<ParentType> validParents;
 	private Upgrade dep;
+	private ItemUpgrade upgrade;
 
 	Upgrade(MaxCount maxCount, EnumSet<ParentType> validParents, Upgrade dep) {
 		this.validParents = validParents;
@@ -42,6 +42,7 @@ public enum Upgrade {
 		this.maxCount = maxCount;
 		maxCount.init(this);
 		this.dep = dep;
+		upgrade = new ItemUpgrade(this);
 	}
 
 	Upgrade(MaxCount maxCount, EnumSet<ParentType> validParents) {
@@ -56,9 +57,6 @@ public enum Upgrade {
 		this(maxCount, type == null ? EnumSet.of(ParentType.NULL) : EnumSet.of((type)), dep);
 	}
 
-	public static ItemStack getInvalidItemStack() {
-		return new ItemStack(EngineersWorkshop.itemUpgrade, 1, values().length);
-	}
 
 	public Upgrade getDependency() {
 		return dep;
@@ -73,36 +71,39 @@ public enum Upgrade {
 	}
 
 	public ItemStack getItemStack() {
-		return new ItemStack(EngineersWorkshop.itemUpgrade, 1, ordinal());
+		return new ItemStack(upgrade, 1);
 	}
 
-	public void addInfo(List<String> info) {
-		info.add(I18n.format(description));
+	public Item.Settings createSettings(){
+		return new Item.Settings();
+	}
 
-		if (!GuiScreen.isShiftKeyDown() && !GuiScreen.isCtrlKeyDown()) {
-			info.add(I18n.format("<hold shift for stack info>"));
-			info.add(I18n.format("<hold control for parent info>"));
+	public void addInfo(List<TextComponent> info) {
+		info.add(new TranslatableTextComponent(description));
+
+		if (!Gui.isShiftPressed() && !Gui.isControlPressed()) {
+			info.add(new StringTextComponent("<hold shift for stack info>"));
+			info.add(new StringTextComponent("<hold control for parent info>"));
 		}
 
-		if (GuiScreen.isShiftKeyDown()) {
+		if (Gui.isShiftPressed()) {
 			if (getMaxCount() == 1)
-				info.add(I18n.format("engineersworkshop:upgrade.unstackable"));
+				info.add(new TranslatableTextComponent("engineersworkshop:upgrade.unstackable"));
 			else if (getMaxCount() > 1)
-				info.add(I18n.format("engineersworkshop:upgrade.stackable", getMaxCount()));
-			info.addAll(validParents.stream().map(validParent -> I18n.format(validParent.description)).collect(Collectors.toList()));
+				info.add(new TranslatableTextComponent("engineersworkshop:upgrade.stackable", getMaxCount()));
+			info.addAll(validParents.stream().map(validParent -> new TranslatableTextComponent(validParent.description)).collect(Collectors.toList()));
 		}
 
-		if (GuiScreen.isCtrlKeyDown()) {
+		if (Gui.isControlPressed()) {
 			if (validParents.size() > 0) {
-				info.add("Parents: ");
-				info.addAll(validParents.stream().map(ParentType::name).collect(Collectors.toList()));
+				info.add(new StringTextComponent("Parents: "));
+				info.addAll(validParents.stream().map(ParentType::name).map((Function<String, TextComponent>) s -> new TranslatableTextComponent(s)).collect(Collectors.toList()));
 			}
 		}
 	}
 
 	public boolean isValid(
-		@Nonnull
-			ItemStack parent) {
+		ItemStack parent) {
 		for (ParentType validParent : validParents) {
 			if (validParent.isValidParent(parent)) {
 				return true;
@@ -123,129 +124,32 @@ public enum Upgrade {
 		CRAFTING("Works with Crafting Tables") {
 			@Override
 			public boolean isValidParent(
-				@Nonnull
-					ItemStack item) {
+				ItemStack item) {
 				if (!item.isEmpty()) {
-					for (String parent : Config.MACHINES.CRAFTER_BLOCKS) {
-						String[] _s = parent.replace(",", "").split("/");
-						String regName = parent;
-						int meta = -1;
-						if (_s.length > 1) {
-							regName = _s[0];
-							meta = Integer.parseInt(_s[1]);
-						}
-						if (item.getItem().getRegistryName().toString().equals(regName)) {
-							if (meta == -1 || item.getMetadata() == meta)
-								return true;
-						}
-					}
+					return item.getItem() == Item.getItemFromBlock(Blocks.CRAFTING_TABLE);
 				}
-
 				return false;
 			}
 		},
 		SMELTING("Works with Furnaces") {
 			@Override
 			public boolean isValidParent(
-				@Nonnull
-					ItemStack item) {
+				ItemStack item) {
 				if (!item.isEmpty()) {
-					for (String parent : Config.MACHINES.FURNACE_BLOCKS) {
-						String[] _s = parent.replace(",", "").split("/");
-						String regName = parent;
-						int meta = -1;
-						if (_s.length > 1) {
-							regName = _s[0];
-							meta = Integer.parseInt(_s[1]);
-						}
-						if (item.getItem().getRegistryName().toString().equals(regName)) {
-							if (meta == -1 || item.getMetadata() == meta)
-								return true;
-						}
+					if (!item.isEmpty()) {
+						return item.getItem() == Item.getItemFromBlock(Blocks.FURNACE);
 					}
 				}
 
 				return false;
 			}
 		},
-		CRUSHING("Works with Crushers") {
-			@Override
-			public boolean isValidParent(
-				@Nonnull
-					ItemStack item) {
-				if (!item.isEmpty()) {
-					for (String parent : Config.MACHINES.CRUSHER_BLOCKS) {
-						String[] _s = parent.replace(",", "").split("/");
-						String regName = parent;
-						int meta = -1;
-						if (_s.length > 1) {
-							regName = _s[0];
-							meta = Integer.parseInt(_s[1]);
-						}
-						if (item.getItem().getRegistryName().toString().equals(regName)) {
-
-							if (meta == -1 || item.getMetadata() == meta)
-								return true;
-						}
-					}
-				}
-
-				return false;
-			}
-
-		},
-
-		ALLOY("Works with Alloy Smelters") {
-			@Override
-			public boolean isValidParent(
-				@Nonnull
-					ItemStack item) {
-				if (!item.isEmpty()) {
-					for (String parent : Config.MACHINES.ALLOY_BLOCKS) {
-						String[] _s = parent.replace(",", "").split("/");
-						String regName = parent;
-						int meta = -1;
-						if (_s.length > 1) {
-							regName = _s[0];
-							meta = Integer.parseInt(_s[1]);
-						}
-						if (item.getItem().getRegistryName().toString().equals(regName)) {
-							if (meta == -1 || item.getMetadata() == meta)
-								return true;
-						}
-					}
-				}
-
-				return false;
-			}
-
-		},
-
 		STORAGE("Works with Chests") {
 			@Override
 			public boolean isValidParent(
-				@Nonnull
 					ItemStack item) {
-				if(item.isEmpty()){
-					return false;
-				}
-				for (String parent : Config.MACHINES.STORAGE_BLOCKS) {
-					String[] _s = parent.replace(",", "").split("/");
-					String regName = parent;
-					int meta = -1;
-					if (_s.length > 1) {
-						regName = _s[0];
-						meta = Integer.parseInt(_s[1]);
-					}
-					if (item.getItem().getRegistryName().toString().equals(regName)) {
-						if (meta == -1 || item.getMetadata() == meta)
-							return true;
-					}
-				}
-				for(Integer id : OreDictionary.getOreIDs(item)){
-					if(OreDictionary.getOreName(id).equals("chest")){
-						return true;
-					}
+				if (!item.isEmpty()) {
+					return item.getItem() == Item.getItemFromBlock(Blocks.CHEST);
 				}
 				return false;
 			}
@@ -255,21 +159,19 @@ public enum Upgrade {
 		GLOBAL("Upgrades the entire Table") {
 			@Override
 			public boolean isValidParent(
-				@Nonnull
-					ItemStack item) {
-				return item.isEmpty();
+				ItemStack item) {
+				return !item.isEmpty();
 			}
 		},
 		NULL("you shouldn't be seeing this.") {
 			@Override
 			public boolean isValidParent(
-				@Nonnull
-					ItemStack item) {
+				ItemStack item) {
 				return false;
 			}
 		};
 
-		private static final EnumSet<ParentType> MachineSet = EnumSet.of(ParentType.CRAFTING, ParentType.SMELTING, ParentType.CRUSHING, ParentType.ALLOY);
+		private static final EnumSet<ParentType> MachineSet = EnumSet.of(ParentType.CRAFTING, ParentType.SMELTING);
 		private String description;
 
 		ParentType(String description) {
@@ -277,8 +179,7 @@ public enum Upgrade {
 		}
 
 		public abstract boolean isValidParent(
-			@Nonnull
-				ItemStack item);
+			ItemStack item);
 	}
 
 	public static class MaxCount {
@@ -315,6 +216,7 @@ public enum Upgrade {
 			super(max);
 			this.configurableMax = configurableMax;
 		}
+
 		private ConfigurableMax(int max) {
 			this(max, -1);
 		}

@@ -77,7 +77,8 @@ public class TextBox {
 			} else if (k == 211) {
 				deleteText(gui, 1);
 			} else {
-				addText(gui, ChatUtil.stripTextFormat(Character.toString(c)));
+				//TODO fix me
+				//addText(gui, ChatUtil.stripTextFormat(Character.toString(c)));
 			}
 		}
 	}

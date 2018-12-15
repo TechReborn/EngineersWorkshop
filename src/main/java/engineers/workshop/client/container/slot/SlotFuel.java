@@ -15,6 +15,6 @@ public class SlotFuel extends SlotTable {
 	@Override
 	public boolean canAcceptItem(ItemStack stack) {
 		String[] upgrades = {};
-		return super.canAcceptItem(stack) && FurnaceBlockEntity.canUseAsFuel(stack) && !(Upgrade.ParentType.CRAFTING.isValidParent(stack) || Upgrade.ParentType.SMELTING.isValidParent(stack) || Upgrade.ParentType.CRUSHING.isValidParent(stack) || Upgrade.ParentType.ALLOY.isValidParent(stack) || Upgrade.ParentType.STORAGE.isValidParent(stack));
+		return super.canAcceptItem(stack) && FurnaceBlockEntity.canUseAsFuel(stack) && !(Upgrade.ParentType.CRAFTING.isValidParent(stack) || Upgrade.ParentType.SMELTING.isValidParent(stack) || Upgrade.ParentType.STORAGE.isValidParent(stack));
 	}
 }

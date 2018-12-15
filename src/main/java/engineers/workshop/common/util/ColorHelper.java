@@ -1,4 +1,4 @@
-package engineers.workshop.common.util.helpers;
+package engineers.workshop.common.util;
 
 import net.minecraft.text.TextFormat;
 
