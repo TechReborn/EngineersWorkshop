@@ -69,13 +69,13 @@ public class GuiTable extends GuiBase {
 	@Override
 	protected void drawForeground(int mX, int mY) {
 		GlStateManager.pushMatrix();
-		GlStateManager.translatef(left, top, 0);
+		//GlStateManager.translatef(left, top, 0);
 		mX -= left;
 		mY -= top;
 
 		client.getTextureManager().bindTexture(BACKGROUND);
 		GlStateManager.color3f(1F, 1F, 1F);
-		drawRect(0, 0, 0, 0, containerWidth, height);
+		drawRect(0, 0, 0, 0, containerWidth, containerHeight);
 
 		drawSlots();
 		if (table.getMenu() == null) {
@@ -176,6 +176,10 @@ public class GuiTable extends GuiBase {
 		prepare();
 
 		drawRect(POWER_X + POWER_INNER_OFFSET_X, POWER_Y + POWER_INNER_OFFSET_Y, POWER_INNER_SRC_X + POWER_INNER_WIDTH, POWER_INNER_SRC_Y, POWER_INNER_WIDTH, POWER_INNER_HEIGHT);
+
+		if(table.maxFuel == 0){
+			return;
+		}
 
 		int height = POWER_INNER_HEIGHT * containerTable.power / table.maxFuel;
 		int offset = POWER_INNER_HEIGHT - height;

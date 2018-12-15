@@ -78,13 +78,13 @@ public class DataPacket {
 
 
 
-	public void processData(DataPacket message, PacketContext context) {
-		onPacket(message, context.getPlayer(), !context.getPlayer().getEntityWorld().isRemote);
+	public void processData(PacketContext context) {
+		onPacket(context.getPlayer(), !context.getPlayer().getEntityWorld().isRemote);
 	}
 
-	private void onPacket(DataPacket message, PlayerEntity player,
+	private void onPacket(PlayerEntity player,
 	                      boolean onServer) {
-		PacketId id = message.packetId;
+		PacketId id = packetId;
 		TileTable table = null;
 
 		if (id.isInInterface()) {
@@ -92,8 +92,7 @@ public class DataPacket {
 				table = ((ContainerTable) player.container).getTable();
 			}
 		}
-		if (table == null && message.tablePos != null) {
-			BlockPos tablePos = message.tablePos;
+		if (table == null && tablePos != null) {
 			World world = player.world;
 			if (!world.isBlockLoaded(tablePos))
 				return;
@@ -105,9 +104,9 @@ public class DataPacket {
 
 		if (table != null) {
 			if (onServer) {
-				table.receiveServerPacket(message, id, player);
+				table.receiveServerPacket(this, id, player);
 			} else {
-				table.receiveClientPacket(message, id);
+				table.receiveClientPacket(this, id);
 			}
 		}
 	}

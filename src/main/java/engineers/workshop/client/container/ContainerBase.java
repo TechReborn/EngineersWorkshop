@@ -52,8 +52,9 @@ public abstract class ContainerBase extends RebornContainer {
 	@Override
 	protected Slot addSlot(Slot slot) {
 		slot.id = this.slotMap.size();
-		getSlots().add(slot);
-		getItems().add(ItemStack.EMPTY);
+//		getSlots().add(slot);
+//		getItems().add(ItemStack.EMPTY);
+		super.addSlot(slot);
 		return slot;
 	}
 

@@ -34,6 +34,8 @@ public class ContainerTable extends ContainerBase {
 		for (int x = 0; x < SLOTS_PER_ROW; x++) {
 			addSlot(new SlotPlayer(inventory, table, x, PLAYER_X + x * SLOT_SIZE, PLAYER_HOT_BAR_Y));
 		}
+
+		this.syncId = 122;
 	}
 
 	@Override

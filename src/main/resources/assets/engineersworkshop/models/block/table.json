@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "top": "engineersworkshop:blocks/top",
+    "front": "engineersworkshop:blocks/right",
+    "side": "engineersworkshop:blocks/left"
+  }
+}

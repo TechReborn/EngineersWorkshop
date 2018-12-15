@@ -2,6 +2,8 @@ package engineers.workshop.common.table;
 
 import engineers.workshop.EngineersWorkshop;
 import engineers.workshop.client.container.slot.SlotBase;
+import engineers.workshop.temp.AssemblyContainerHelper;
+import engineers.workshop.temp.FabricContainerProvider;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
@@ -9,7 +11,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -32,12 +37,29 @@ public class BlockTable extends BlockWithEntity {
 		return this.getDefaultState().with(FACING, itemPlacementContext.getPlayerFacing());
 	}
 
+	@Override
+	protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
+		super.appendProperties(builder);
+		builder.with(FACING);
+	}
 
 	@Override
 	public RenderTypeBlock getRenderType(BlockState state) {
 		return RenderTypeBlock.MODEL;
 	}
 
+
+	@Override
+	public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, Direction facing, float hitX, float hitY, float hitZ) {
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity instanceof FabricContainerProvider) {
+			if (!world.isRemote) {
+				AssemblyContainerHelper.openGui((FabricContainerProvider) blockEntity, pos, (ServerPlayerEntity) player);
+			}
+			return true;
+		}
+		return false;
+	}
 
 //	@Override
 //	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, PlayerEntity playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {

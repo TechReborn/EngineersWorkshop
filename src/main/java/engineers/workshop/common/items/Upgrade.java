@@ -3,8 +3,8 @@ package engineers.workshop.common.items;
 import engineers.workshop.EngineersWorkshop;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.TextComponent;
@@ -33,16 +33,17 @@ public enum Upgrade {
 	private MaxCount maxCount;
 	private EnumSet<ParentType> validParents;
 	private Upgrade dep;
-	private ItemUpgrade upgrade;
+	private ItemUpgrade item;
 
 	Upgrade(MaxCount maxCount, EnumSet<ParentType> validParents, Upgrade dep) {
 		this.validParents = validParents;
 		this.name = toString().toLowerCase();
-		this.description = String.format(MODID + ":" + "upgrade" + "." + "%s" + "." + "description", name);
+		this.description = String.format(MODID + ":" + "item" + "." + "%s" + "." + "description", name);
 		this.maxCount = maxCount;
 		maxCount.init(this);
 		this.dep = dep;
-		upgrade = new ItemUpgrade(this);
+		item = new ItemUpgrade(this);
+		EngineersWorkshop.registerItem(name, item);
 	}
 
 	Upgrade(MaxCount maxCount, EnumSet<ParentType> validParents) {
@@ -71,11 +72,11 @@ public enum Upgrade {
 	}
 
 	public ItemStack getItemStack() {
-		return new ItemStack(upgrade, 1);
+		return new ItemStack(item, 1);
 	}
 
 	public Item.Settings createSettings(){
-		return new Item.Settings();
+		return new Item.Settings().itemGroup(ItemGroup.MISC);
 	}
 
 	public void addInfo(List<TextComponent> info) {
@@ -88,9 +89,9 @@ public enum Upgrade {
 
 		if (Gui.isShiftPressed()) {
 			if (getMaxCount() == 1)
-				info.add(new TranslatableTextComponent("engineersworkshop:upgrade.unstackable"));
+				info.add(new TranslatableTextComponent("engineersworkshop:item.unstackable"));
 			else if (getMaxCount() > 1)
-				info.add(new TranslatableTextComponent("engineersworkshop:upgrade.stackable", getMaxCount()));
+				info.add(new TranslatableTextComponent("engineersworkshop:item.stackable", getMaxCount()));
 			info.addAll(validParents.stream().map(validParent -> new TranslatableTextComponent(validParent.description)).collect(Collectors.toList()));
 		}
 

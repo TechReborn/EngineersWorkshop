@@ -1,6 +1,7 @@
 package engineers.workshop.common.table;
 
 import engineers.workshop.EngineersWorkshop;
+import engineers.workshop.client.container.ContainerTable;
 import engineers.workshop.client.container.slot.SlotBase;
 import engineers.workshop.client.container.slot.SlotFuel;
 import engineers.workshop.client.menu.GuiMenu;
@@ -17,9 +18,11 @@ import engineers.workshop.common.network.*;
 import engineers.workshop.common.network.data.DataType;
 import engineers.workshop.common.unit.Unit;
 import engineers.workshop.common.unit.UnitCraft;
+import engineers.workshop.temp.FabricContainerProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.client.network.packet.BlockEntityUpdateClientPacket;
+import net.minecraft.container.Container;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,6 +34,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.TextComponent;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BoundingBox;
@@ -40,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class TileTable extends BlockEntity implements Inventory, SidedInventory, Tickable {
+public class TileTable extends BlockEntity implements Inventory, SidedInventory, Tickable, FabricContainerProvider {
 
 	private static final int MOVE_DELAY = 20;
 	private static final int SLOT_DELAY = 10;
@@ -749,6 +753,16 @@ public class TileTable extends BlockEntity implements Inventory, SidedInventory,
 	@Override
 	public TextComponent getName() {
 		return new StringTextComponent("Production Table");
+	}
+
+	@Override
+	public Container createContainer(PlayerEntity playerEntity) {
+		return new ContainerTable(this, playerEntity);
+	}
+
+	@Override
+	public Identifier getContainerIdentifier() {
+		return new Identifier("engineersworkshop", "table");
 	}
 
 	@Override

@@ -1,0 +1,20 @@
+{
+"variants": {
+  "facing=north": {
+    "model": "engineersworkshop:block/table"
+  },
+  "facing=south": {
+    "model": "engineersworkshop:block/table",
+    "y": 180
+  },
+  "facing=west": {
+    "model": "engineersworkshop:block/table",
+    "y": 270
+  },
+  "facing=east": {
+    "model": "engineersworkshop:block/table",
+    "y": 90
+  }
+}
+}
+

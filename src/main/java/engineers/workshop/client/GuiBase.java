@@ -94,7 +94,7 @@ public abstract class GuiBase extends ContainerGui {
 	}
 
 	public void drawRect(int x, int y, int u, int v, int w, int h) {
-		drawRect(x, y, u, v, w, h);
+		super.drawTexturedRect(x, y, u, v, w, h);
 	}
 
 	public void drawString(String str, int x, int y, int color) {

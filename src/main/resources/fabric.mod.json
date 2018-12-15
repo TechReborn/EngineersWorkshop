@@ -1,0 +1,13 @@
+{
+  "id": "engineersworkshop",
+  "name": "Engineers Workshop Reborn",
+  "version": "1.0.0",
+  "side": "universal",
+  "initializers": [
+    "engineers.workshop.EngineersWorkshop",
+    "engineers.workshop.temp.AssemblyContainerHelper"
+  ],
+  "requires": {
+    "fabric": "*"
+  }
+}
