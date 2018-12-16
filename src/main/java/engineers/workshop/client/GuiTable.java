@@ -67,9 +67,9 @@ public class GuiTable extends GuiBase {
 	}
 
 	@Override
-	protected void drawForeground(int mX, int mY) {
+	protected void drawBackground(float v, int mX, int mY) {
 		GlStateManager.pushMatrix();
-		//GlStateManager.translatef(left, top, 0);
+		GlStateManager.translatef(left, top, 0);
 		mX -= left;
 		mY -= top;
 
@@ -89,7 +89,7 @@ public class GuiTable extends GuiBase {
 	}
 
 	@Override
-	protected void drawBackground(float v, int i, int i1) {
+	protected void drawForeground(int i, int i1) {
 
 	}
 

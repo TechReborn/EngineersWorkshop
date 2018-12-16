@@ -1,5 +1,6 @@
 package engineers.workshop.client.container;
 
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -41,19 +42,23 @@ public abstract class ContainerBase extends RebornContainer {
 	private int dragMode;
 	private Set<PlayerEntity> invalidPlayers = new HashSet<>();
 
+	public ContainerBase(BlockEntity blockEntity) {
+		super(blockEntity);
+	}
+
 	private List<ItemStack> getItems() {
 		return stackList;
 	}
 
 	private List<Slot> getSlots() {
-		return new ArrayList<>(slotMap.values());
+		return slotList;
 	}
 
 	@Override
 	protected Slot addSlot(Slot slot) {
 		slot.id = this.slotMap.size();
-//		getSlots().add(slot);
-//		getItems().add(ItemStack.EMPTY);
+		getSlots().add(slot);
+		getItems().add(ItemStack.EMPTY);
 		super.addSlot(slot);
 		return slot;
 	}
@@ -67,6 +72,7 @@ public abstract class ContainerBase extends RebornContainer {
 
 	@Override
 	public Slot getSlot(int slotId) {
+
 		return getSlots().get(slotId);
 	}
 

@@ -20,6 +20,7 @@ public class ContainerTable extends ContainerBase {
 	public int power;
 	private TileTable table;
 	public ContainerTable(TileTable table, PlayerEntity player) {
+		super(table);
 		this.table = table;
 
 		table.getSlots().forEach(this::addSlot);

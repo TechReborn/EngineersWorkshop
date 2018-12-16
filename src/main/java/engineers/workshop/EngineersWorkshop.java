@@ -1,5 +1,6 @@
 package engineers.workshop;
 
+import engineers.workshop.common.items.Upgrade;
 import engineers.workshop.common.network.PacketHandler;
 import engineers.workshop.common.table.BlockTable;
 import engineers.workshop.common.table.TileTable;
@@ -29,6 +30,8 @@ public class EngineersWorkshop implements ModInitializer {
 		registerBlock("table", blockTable, ItemGroup.MISC);
 
 		blockEntityTable = register("table", BlockEntityType.Builder.create(TileTable::new));
+
+		Upgrade.values(); //Init the upgrades
 
 		PacketHandler.init();
 	}
